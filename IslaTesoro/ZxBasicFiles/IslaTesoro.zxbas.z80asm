@@ -1,0 +1,9403 @@
+	.zxbasic
+	org 32768
+	; Defines HEAP SIZE
+ZXBASIC_HEAP_SIZE EQU 4096
+__START_PROGRAM:
+	di
+	push ix
+	push iy
+	exx
+	push hl
+	exx
+	ld hl, 0
+	add hl, sp
+	ld (__CALL_BACK__), hl
+	ei
+	call __MEM_INIT
+	call __PRINT_INIT
+	ld a, 5
+	call _Sonido
+	ld a, 6
+	call _Sonido
+	ld a, 5
+	call _Sonido
+	call _IniciarGraficos
+	call _Instrucciones
+__LABEL__inicio:
+	ld de, 0
+	ld hl, 0
+	call RANDOMIZE
+	call _IniciarGraficos
+	call _GenerarPartida
+	ld a, (_Primera)
+	or a
+	jp nz, __LABEL1
+	ld a, 8
+	call _Sonido
+	ld a, 1
+	ld (_Primera), a
+__LABEL1:
+	xor a
+	push af
+	call _MostrarMapa
+	ld de, 0
+	ld hl, 0
+	call RANDOMIZE
+	ld a, 1
+	call _Sonido
+__LABEL__entrada:
+	call INKEY
+	ex de, hl
+	ld hl, _Accion
+	call __STORE_STR2
+	ld de, __LABEL2
+	ld hl, (_Accion)
+	xor a
+	call __STREQ
+	or a
+	jp z, __LABEL4
+	ld a, 255
+	push af
+	xor a
+	push af
+	call _DesplazarJugador
+	call _ComprobarCamino
+	or a
+	jp z, __LABEL__finPartida
+__LABEL6:
+__LABEL7:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STRNE
+	or a
+	jp nz, __LABEL7
+__LABEL8:
+__LABEL4:
+	ld de, __LABEL10
+	ld hl, (_Accion)
+	xor a
+	call __STREQ
+	or a
+	jp z, __LABEL12
+	ld a, 1
+	push af
+	xor a
+	push af
+	call _DesplazarJugador
+	call _ComprobarCamino
+	or a
+	jp z, __LABEL__finPartida
+__LABEL14:
+__LABEL15:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STRNE
+	or a
+	jp nz, __LABEL15
+__LABEL16:
+__LABEL12:
+	ld de, __LABEL17
+	ld hl, (_Accion)
+	xor a
+	call __STREQ
+	or a
+	jp z, __LABEL19
+	ld a, 1
+	push af
+	ld a, 255
+	push af
+	call _DesplazarJugador
+	call _ComprobarCamino
+	or a
+	jp z, __LABEL__finPartida
+__LABEL21:
+__LABEL22:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STRNE
+	or a
+	jp nz, __LABEL22
+__LABEL23:
+__LABEL19:
+	ld de, __LABEL24
+	ld hl, (_Accion)
+	xor a
+	call __STREQ
+	or a
+	jp z, __LABEL26
+	ld a, 1
+	push af
+	ld a, 1
+	push af
+	call _DesplazarJugador
+	call _ComprobarCamino
+	or a
+	jp z, __LABEL__finPartida
+__LABEL28:
+__LABEL29:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STRNE
+	or a
+	jp nz, __LABEL29
+__LABEL30:
+__LABEL26:
+	ld de, __LABEL31
+	ld hl, (_Accion)
+	xor a
+	call __STREQ
+	or a
+	jp z, __LABEL33
+	xor a
+	push af
+	call _MostrarMapa
+	ld a, 100
+	push af
+	call _DesplazarPiratas
+	ld a, 100
+	push af
+	call _DesplazarPiratas
+__LABEL34:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STRNE
+	or a
+	jp nz, __LABEL34
+__LABEL35:
+__LABEL33:
+	ld a, 1
+	push af
+	call _DesplazarPiratas
+	call _ActualizarOlas
+	call _ComprobarPiratas
+	or a
+	jp z, __LABEL__finPartida
+__LABEL37:
+	jp __LABEL__entrada
+__LABEL__finPartida:
+	xor a
+	call INK
+	call COPY_ATTR
+	ld a, 5
+	call PAPER
+	call COPY_ATTR
+	call CLS
+	ld a, 12
+	push af
+	ld a, 7
+	call PRINT_AT
+	ld hl, __LABEL38
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+__LABEL__esperaRespuesta:
+	call INKEY
+	ex de, hl
+	ld hl, _res
+	call __STORE_STR2
+	ld de, __LABEL39
+	ld hl, (_res)
+	xor a
+	call __STREQ
+	or a
+	jp nz, __LABEL__inicio
+__LABEL41:
+	ld de, __LABEL42
+	ld hl, (_res)
+	xor a
+	call __STREQ
+	or a
+	jp nz, __LABEL__fin
+__LABEL44:
+	jp __LABEL__esperaRespuesta
+__LABEL__fin:
+	call CLS
+	ld a, 12
+	push af
+	ld a, 14
+	call PRINT_AT
+	ld hl, __LABEL45
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, 0
+	ld b, h
+	ld c, l
+__END_PROGRAM:
+	di
+	ld hl, (__CALL_BACK__)
+	ld sp, hl
+	exx
+	pop hl
+	exx
+	pop iy
+	pop ix
+	ei
+	ret
+__CALL_BACK__:
+	DEFW 0
+_pos:
+#line 27
+		PROC
+		call __LOAD_S_POSN
+		ld a, e
+		ENDP
+#line 31
+_pos__leave:
+	ret
+_csrlin:
+#line 25
+		PROC
+		call __LOAD_S_POSN
+		ld a, d
+		ENDP
+#line 29
+_csrlin__leave:
+	ret
+_input:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, 0
+	push hl
+	push hl
+	ld de, __LABEL9
+	ld bc, -2
+	call __PSTORE_STR
+	ld a, (23611)
+	push af
+	ld h, 8
+	pop af
+	or h
+	ld (23611), a
+__LABEL46:
+	call _PRIVATEInputShowCursor
+	xor a
+	ld (_input_LastK), a
+__LABEL49:
+__LABEL51:
+	ld a, (_input_LastK)
+	or a
+	jp z, __LABEL49
+__LABEL50:
+	call _PRIVATEInputHideCursor
+	ld a, (_input_LastK)
+	sub 12
+	jp nz, __LABEL52
+	ld l, (ix-2)
+	ld h, (ix-1)
+	call __STRLEN
+	ld a, h
+	or l
+	jp z, __LABEL55
+	ld l, (ix-2)
+	ld h, (ix-1)
+	call __STRLEN
+	push hl
+	ld de, 1
+	pop hl
+	or a
+	sbc hl, de
+	jp nz, __LABEL56
+	ld de, __LABEL9
+	ld bc, -2
+	call __PSTORE_STR
+	jp __LABEL57
+__LABEL56:
+	ld l, (ix-2)
+	ld h, (ix-1)
+	push hl
+	ld hl, 0
+	push hl
+	ld l, (ix-2)
+	ld h, (ix-1)
+	call __STRLEN
+	dec hl
+	dec hl
+	push hl
+	xor a
+	call __STRSLICE
+	ld d, h
+	ld e, l
+	ld bc, -2
+	call __PSTORE_STR2
+__LABEL57:
+	ld hl, __LABEL58
+	xor a
+	call __PRINTSTR
+__LABEL55:
+	jp __LABEL53
+__LABEL52:
+	ld a, (_input_LastK)
+	sub 32
+	ccf
+	sbc a, a
+	push af
+	ld l, (ix-2)
+	ld h, (ix-1)
+	call __STRLEN
+	push hl
+	ld l, (ix+4)
+	ld h, (ix+5)
+	ex de, hl
+	pop hl
+	or a
+	sbc hl, de
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL292
+	ld a, h
+__LABEL292:
+	or a
+	jp z, __LABEL60
+	ld l, (ix-2)
+	ld h, (ix-1)
+	push hl
+	ld a, (_input_LastK)
+	push af
+	ld hl, 1
+	call CHR
+	ex de, hl
+	pop hl
+	push de
+	call __ADDSTR
+	ex (sp), hl
+	call __MEM_FREE
+	pop hl
+	ld d, h
+	ld e, l
+	ld bc, -2
+	call __PSTORE_STR2
+	ld a, (_input_LastK)
+	push af
+	ld hl, 1
+	call CHR
+	ld a, 1
+	call __PRINTSTR
+__LABEL60:
+__LABEL53:
+__LABEL48:
+	ld a, (_input_LastK)
+	sub 13
+	jp nz, __LABEL46
+__LABEL47:
+	ld (ix-4), 1
+	ld (ix-3), 0
+	jp __LABEL61
+__LABEL64:
+	xor a
+	call OVER_TMP
+	ld a, 8
+	push af
+	ld hl, 1
+	call CHR
+	push hl
+	ld de, __LABEL66
+	pop hl
+	push hl
+	call __ADDSTR
+	ex (sp), hl
+	call __MEM_FREE
+	pop hl
+	push hl
+	ld a, 8
+	push af
+	ld hl, 1
+	call CHR
+	ex de, hl
+	pop hl
+	push hl
+	push de
+	call __ADDSTR
+	pop de
+	ex (sp), hl
+	push de
+	call __MEM_FREE
+	pop hl
+	call __MEM_FREE
+	pop hl
+	ld a, 1
+	call __PRINTSTR
+	call COPY_ATTR
+__LABEL65:
+	ld l, (ix-4)
+	ld h, (ix-3)
+	inc hl
+	ld (ix-4), l
+	ld (ix-3), h
+__LABEL61:
+	ld l, (ix-4)
+	ld h, (ix-3)
+	push hl
+	ld l, (ix-2)
+	ld h, (ix-1)
+	call __STRLEN
+	pop de
+	or a
+	sbc hl, de
+	jp nc, __LABEL64
+__LABEL63:
+	ld l, (ix-2)
+	ld h, (ix-1)
+	call __LOADSTR
+_input__leave:
+	ex af, af'
+	exx
+	ld l, (ix-2)
+	ld h, (ix-1)
+	call __MEM_FREE
+	ex af, af'
+	exx
+	ld sp, ix
+	pop ix
+	exx
+	pop hl
+	ex (sp), hl
+	exx
+	ret
+_PRIVATEInputShowCursor:
+	call _csrlin
+	push af
+	call _pos
+	call PRINT_AT
+	xor a
+	call OVER_TMP
+	ld a, 1
+	call FLASH_TMP
+	ld de, __LABEL58
+	ld hl, __LABEL66
+	call __ADDSTR
+	ld a, 1
+	call __PRINTSTR
+	call COPY_ATTR
+_PRIVATEInputShowCursor__leave:
+	ret
+_PRIVATEInputHideCursor:
+	call _csrlin
+	push af
+	call _pos
+	call PRINT_AT
+	xor a
+	call OVER_TMP
+	xor a
+	call FLASH_TMP
+	ld de, __LABEL58
+	ld hl, __LABEL66
+	call __ADDSTR
+	ld a, 1
+	call __PRINTSTR
+	call COPY_ATTR
+_PRIVATEInputHideCursor__leave:
+	ret
+_Instrucciones:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld a, 7
+	call INK
+	call COPY_ATTR
+	xor a
+	call PAPER
+	call COPY_ATTR
+	xor a
+	call BORDER
+	call CLS
+	xor a
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL67
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 2
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL68
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL69
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld a, 7
+	call PAPER_TMP
+	ld hl, __LABEL70
+	xor a
+	call __PRINTSTR
+	ld a, 7
+	call INK_TMP
+	xor a
+	call PAPER_TMP
+	ld hl, __LABEL71
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld hl, __LABEL72
+	xor a
+	call __PRINTSTR
+	ld hl, __LABEL73
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL74
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
+	ld hl, __LABEL75
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL76
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL77
+	xor a
+	call __PRINTSTR
+	ld a, 6
+	call INK_TMP
+	xor a
+	call PAPER_TMP
+	ld a, 1
+	call BRIGHT_TMP
+	ld hl, __LABEL78
+	xor a
+	call __PRINTSTR
+	ld a, 7
+	call INK_TMP
+	xor a
+	call PAPER_TMP
+	xor a
+	call BRIGHT_TMP
+	ld hl, __LABEL79
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld hl, __LABEL80
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL81
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
+	ld hl, __LABEL82
+	xor a
+	call __PRINTSTR
+	ld hl, __LABEL83
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL84
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL85
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL86
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL87
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
+	ld hl, __LABEL88
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call _Esperar
+	call CLS
+	xor a
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL89
+	xor a
+	call __PRINTSTR
+	ld a, 1
+	call INK_TMP
+	ld a, 7
+	call PAPER_TMP
+	ld hl, __LABEL90
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 1
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL91
+	xor a
+	call __PRINTSTR
+	ld a, 2
+	call INK_TMP
+	ld hl, __LABEL92
+	xor a
+	call __PRINTSTR
+	ld a, 7
+	call INK_TMP
+	ld hl, __LABEL93
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld hl, __LABEL94
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL95
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL96
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
+	ld hl, __LABEL97
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL98
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL99
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL100
+	xor a
+	call __PRINTSTR
+	ld a, 3
+	call INK_TMP
+	ld hl, __LABEL101
+	xor a
+	call __PRINTSTR
+	ld a, 7
+	call INK_TMP
+	ld hl, __LABEL102
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld hl, __LABEL103
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
+	ld hl, __LABEL104
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL105
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL106
+	xor a
+	call __PRINTSTR
+	ld a, 1
+	call INK_TMP
+	ld hl, __LABEL107
+	xor a
+	call __PRINTSTR
+	ld a, 7
+	call INK_TMP
+	ld hl, __LABEL108
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld hl, __LABEL109
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL110
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
+	ld a, 21
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL88
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call _Esperar
+	call CLS
+	ld hl, __LABEL111
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL112
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL113
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL114
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL115
+	xor a
+	call __PRINTSTR
+	ld hl, __LABEL116
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
+	ld hl, __LABEL117
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL118
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL119
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL120
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL121
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
+	call PRINT_EOL
+	call PRINT_EOL
+	ld hl, __LABEL122
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 21
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL88
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call _Esperar
+_Instrucciones__leave:
+	ld sp, ix
+	pop ix
+	ret
+_ActualizarOlas:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, -10
+	add hl, sp
+	ld sp, hl
+	ld (hl), 0
+	ld bc, 9
+	ld d, h
+	ld e, l
+	inc de
+	ldir
+	ld (ix-1), 1
+	jp __LABEL123
+__LABEL126:
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 085h
+	ld de, 00020h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	ld a, l
+	ld (ix-3), a
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 086h
+	ld de, 00000h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	ld a, l
+	ld (ix-2), a
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-3)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	cp (hl)
+	sbc a, a
+	push af
+	ld a, (ix-2)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-3)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-3)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	pop hl
+	cp h
+	sbc a, a
+	pop de
+	or d
+	push af
+	ld a, (ix-2)
+	ld hl, (_Piratas.__DATA__ + 0 - 1)
+	sub h
+	push af
+	ld a, (ix-3)
+	ld hl, (_Piratas.__DATA__ + 1 - 1)
+	sub h
+	push af
+	ld a, (ix-3)
+	push af
+	ld a, (_Piratas.__DATA__ + 1)
+	dec a
+	ld h, a
+	pop af
+	sub h
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL293
+	ld a, h
+__LABEL293:
+	pop de
+	or d
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL294
+	ld a, h
+__LABEL294:
+	or a
+	jp z, __LABEL129
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 087h
+	ld de, 00048h
+	ld bc, 00000h
+	call __MULF
+	ld hl, -10
+	call __PSTOREF
+	push ix
+	pop hl
+	ld de, -10
+	add hl, de
+	call __PLOADF
+	push bc
+	push de
+	push af
+	ld a, 080h
+	ld de, 00000h
+	ld bc, 00000h
+	call __LTF
+	or a
+	jp z, __LABEL130
+	ld de, __LABEL132
+	ld bc, -5
+	call __PSTORE_STR
+	jp __LABEL131
+__LABEL130:
+	push ix
+	pop hl
+	ld de, -10
+	add hl, de
+	call __PLOADF
+	push bc
+	push de
+	push af
+	ld a, 082h
+	ld de, 00000h
+	ld bc, 00000h
+	call __LTF
+	or a
+	jp z, __LABEL133
+	ld de, __LABEL135
+	ld bc, -5
+	call __PSTORE_STR
+	jp __LABEL134
+__LABEL133:
+	ld de, __LABEL66
+	ld bc, -5
+	call __PSTORE_STR
+__LABEL134:
+__LABEL131:
+	ld a, (ix-3)
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld a, 1
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld l, (ix-5)
+	ld h, (ix-4)
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL129:
+__LABEL127:
+	inc (ix-1)
+__LABEL123:
+	ld a, (ix-1)
+	push af
+	ld a, 10
+	pop hl
+	cp h
+	jp nc, __LABEL126
+__LABEL125:
+_ActualizarOlas__leave:
+	ex af, af'
+	exx
+	ld l, (ix-5)
+	ld h, (ix-4)
+	call __MEM_FREE
+	ex af, af'
+	exx
+	ld sp, ix
+	pop ix
+	ret
+_ComprobarPiratas:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld a, (_Piratas.__DATA__ + 1)
+	sub 19
+	jp nz, __LABEL137
+	ld a, 12
+	call _Sonido
+	ld a, 20
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 1
+	call INK_TMP
+	ld a, 7
+	call PAPER_TMP
+	ld hl, __LABEL90
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 5
+	call PAPER_TMP
+	ld a, 2
+	call INK_TMP
+	ld hl, __LABEL92
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld hl, __LABEL138
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	call _Esperar
+	ld a, 13
+	call _Sonido
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 5
+	call PAPER_TMP
+	xor a
+	call INK_TMP
+	ld hl, __LABEL139
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	call _Esperar
+	xor a
+	jp _ComprobarPiratas__leave
+__LABEL137:
+	ld a, 1
+_ComprobarPiratas__leave:
+	ld sp, ix
+	pop ix
+	ret
+_ComprobarCamino:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, 0
+	push hl
+	inc sp
+	ld a, (_Jugador.__DATA__ + 0)
+	ld hl, (_Tesoro.__DATA__ + 0 - 1)
+	sub h
+	sub 1
+	sbc a, a
+	push af
+	ld a, (_Jugador.__DATA__ + 1)
+	ld hl, (_Tesoro.__DATA__ + 1 - 1)
+	sub h
+	sub 1
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL295
+	ld a, h
+__LABEL295:
+	or a
+	jp z, __LABEL140
+	ld a, 8
+	call _Sonido
+	ld a, 7
+	call _Sonido
+	ld a, 8
+	call _Sonido
+	ld a, 7
+	call _Sonido
+	ld a, 8
+	call _Sonido
+	ld a, 7
+	call _Sonido
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	xor a
+	call PAPER_TMP
+	ld a, 1
+	call BRIGHT_TMP
+	ld hl, __LABEL78
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	xor a
+	call BRIGHT_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL142
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	call _Esperar
+	xor a
+	jp _ComprobarCamino__leave
+__LABEL140:
+	ld a, (_Jugador.__DATA__ + 0)
+	push af
+	ld a, (_Jugador.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	pop af
+	sub (hl)
+	jp nz, __LABEL143
+	ld a, 3
+	call _Sonido
+	jp __LABEL144
+__LABEL143:
+	ld a, 2
+	call _Sonido
+	ld (ix-1), 0
+	jp __LABEL145
+__LABEL148:
+	ld hl, 0
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _ArenasMovedizas
+	call __ARRAY
+	ld a, (hl)
+	ld hl, (_Jugador.__DATA__ + 0 - 1)
+	sub h
+	sub 1
+	sbc a, a
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _ArenasMovedizas
+	call __ARRAY
+	ld a, (hl)
+	ld hl, (_Jugador.__DATA__ + 1 - 1)
+	sub h
+	sub 1
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL296
+	ld a, h
+__LABEL296:
+	or a
+	jp z, __LABEL151
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld a, (_Jugador.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 1
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL107
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 8
+	call _Sonido
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 1
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL107
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld hl, __LABEL152
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	call _Esperar
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 080h
+	ld de, 00040h
+	ld bc, 00000h
+	call __GTF
+	or a
+	jp z, __LABEL153
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL101
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld hl, __LABEL155
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld a, (_Jugador.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 3
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL101
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 11
+	call _Sonido
+	ld a, (_Jugador.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	ld (_Jugador.__DATA__ + 0), a
+	xor a
+	push af
+	xor a
+	push af
+	call _DesplazarJugador
+	call _Esperar
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL156
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 1
+	jp _ComprobarCamino__leave
+__LABEL153:
+	ld a, 13
+	call _Sonido
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 7
+	call PAPER_TMP
+	ld hl, __LABEL157
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL158
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld a, (_Jugador.__DATA__ + 0)
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 7
+	call PAPER_TMP
+	ld hl, __LABEL157
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	call _Esperar
+	xor a
+	jp _ComprobarCamino__leave
+__LABEL154:
+__LABEL151:
+__LABEL149:
+	inc (ix-1)
+__LABEL145:
+	ld a, (ix-1)
+	push af
+	ld a, 9
+	pop hl
+	cp h
+	jp nc, __LABEL148
+__LABEL147:
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 080h
+	ld de, 00000h
+	ld bc, 00000h
+	call __GTF
+	or a
+	jp z, __LABEL160
+	ld a, 4
+	call _Sonido
+	ld a, 4
+	call _Sonido
+	ld a, 4
+	call _Sonido
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld a, (_Jugador.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 3
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL101
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 3
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL101
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld hl, __LABEL161
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	call _Esperar
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 07Fh
+	ld de, 00000h
+	ld bc, 00000h
+	call __GTF
+	or a
+	jp z, __LABEL162
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 5
+	call PAPER_TMP
+	xor a
+	call INK_TMP
+	ld hl, __LABEL164
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 8
+	call _Sonido
+	ld a, 1
+	ld (_Jugador.__DATA__ + 1), a
+	ld l, a
+	ld h, 0
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	ld (_Jugador.__DATA__ + 0), a
+	xor a
+	push af
+	xor a
+	push af
+	call _DesplazarJugador
+	call _Esperar
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL156
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 1
+	jp _ComprobarCamino__leave
+__LABEL162:
+	ld a, 13
+	call _Sonido
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 7
+	call PAPER_TMP
+	ld hl, __LABEL157
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL165
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld a, (_Jugador.__DATA__ + 0)
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 7
+	call PAPER_TMP
+	ld hl, __LABEL157
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	call _Esperar
+	xor a
+	jp _ComprobarCamino__leave
+__LABEL163:
+__LABEL160:
+__LABEL144:
+__LABEL141:
+	ld a, 1
+_ComprobarCamino__leave:
+	ld sp, ix
+	pop ix
+	ret
+_Esperar:
+	push ix
+	ld ix, 0
+	add ix, sp
+__LABEL166:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STREQ
+	or a
+	jp nz, __LABEL166
+__LABEL167:
+__LABEL168:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STRNE
+	or a
+	jp nz, __LABEL168
+__LABEL169:
+_Esperar__leave:
+	ld sp, ix
+	pop ix
+	ret
+_DesplazarPiratas:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld a, (_MoverPiratas)
+	add a, (ix+5)
+	ld (_MoverPiratas), a
+	cp 75
+	jp c, _DesplazarPiratas__leave
+__LABEL171:
+	xor a
+	ld (_MoverPiratas), a
+	ld a, (_Piratas.__DATA__ + 1)
+	push af
+	ld a, (_Piratas.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 5
+	call PAPER_TMP
+	xor a
+	call INK_TMP
+	ld hl, __LABEL66
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, (_Piratas.__DATA__ + 1)
+	push af
+	xor a
+	pop hl
+	cp h
+	jp nc, __LABEL173
+	ld hl, 0
+	push hl
+	ld a, (_Piratas.__DATA__ + 1)
+	dec a
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	ld hl, (_Piratas.__DATA__ + 0 - 1)
+	sub h
+	jp nz, __LABEL174
+	ld a, (_Piratas.__DATA__ + 1)
+	dec a
+	and 1
+	jp nz, __LABEL176
+	ld a, (_Piratas.__DATA__ + 1)
+	dec a
+	push af
+	ld a, (_Piratas.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL178
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL177
+__LABEL176:
+	ld a, (_Piratas.__DATA__ + 1)
+	dec a
+	push af
+	ld a, (_Piratas.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL179
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL177:
+	jp __LABEL175
+__LABEL174:
+	ld a, (_Piratas.__DATA__ + 1)
+	dec a
+	push af
+	ld a, (_Piratas.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 5
+	call PAPER_TMP
+	xor a
+	call INK_TMP
+	ld hl, __LABEL66
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL175:
+__LABEL173:
+	ld hl, _Piratas.__DATA__ + 0
+	inc (hl)
+	ld hl, _Piratas.__DATA__ + 1
+	inc (hl)
+	ld a, (_Piratas.__DATA__ + 1)
+	push af
+	ld a, 19
+	pop hl
+	cp h
+	jp nc, __LABEL181
+	ld a, 19
+	ld (_Piratas.__DATA__ + 1), a
+__LABEL181:
+	ld a, (_Piratas.__DATA__ + 1)
+	push af
+	ld h, 1
+	pop af
+	cp h
+	jp nc, __LABEL183
+	xor a
+	ld (_Piratas.__DATA__ + 1), a
+__LABEL183:
+	ld a, (_Piratas.__DATA__ + 0)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (_Piratas.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	sub (hl)
+	ccf
+	jp nc, __LABEL185
+	ld hl, 0
+	push hl
+	ld a, (_Piratas.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	dec a
+	ld (_Piratas.__DATA__ + 0), a
+__LABEL185:
+	ld a, (_Piratas.__DATA__ + 1)
+	push af
+	ld a, (_Piratas.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL92
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, (_Piratas.__DATA__ + 1)
+	dec a
+	push af
+	ld a, (_Piratas.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 7
+	call PAPER_TMP
+	ld a, 1
+	call INK_TMP
+	ld hl, __LABEL90
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	xor a
+	call _Sonido
+_DesplazarPiratas__leave:
+	ld sp, ix
+	pop ix
+	exx
+	pop hl
+	ex (sp), hl
+	exx
+	ret
+_MostrarMapa:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, 0
+	call __PAUSE
+	ld a, (ix+5)
+	push af
+	xor a
+	pop hl
+	cp h
+	jp nc, __LABEL186
+	call CLS
+	jp __LABEL187
+__LABEL186:
+	ld a, 5
+	call _Sonido
+__LABEL187:
+	call _ImprimirIsla
+	call _ImprimirCamino
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 085h
+	ld de, 00020h
+	ld bc, 00000h
+	call __MULF
+	ld hl, 00000h
+	push hl
+	ld hl, 00048h
+	push hl
+	ld h, 086h
+	push hl
+	call __ADDF
+	call __FTOU32REG
+	call __PAUSE
+	call _ImprimirIsla
+	xor a
+	push af
+	xor a
+	push af
+	call _DesplazarJugador
+_MostrarMapa__leave:
+	ld sp, ix
+	pop ix
+	exx
+	pop hl
+	ex (sp), hl
+	exx
+	ret
+_DesplazarJugador:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld a, (_Jugador.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 4
+	call PAPER_TMP
+	xor a
+	call INK_TMP
+	ld hl, __LABEL188
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, (_Jugador.__DATA__ + 0)
+	add a, (ix+5)
+	ld (_Jugador.__DATA__ + 0), a
+	ld a, (_Jugador.__DATA__ + 1)
+	add a, (ix+7)
+	ld (_Jugador.__DATA__ + 1), a
+	push af
+	ld a, 19
+	pop hl
+	cp h
+	jp nc, __LABEL190
+	ld a, 19
+	ld (_Jugador.__DATA__ + 1), a
+__LABEL190:
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld h, 1
+	pop af
+	cp h
+	jp nc, __LABEL192
+	xor a
+	ld (_Jugador.__DATA__ + 1), a
+__LABEL192:
+	ld a, (_Jugador.__DATA__ + 0)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (_Jugador.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	pop hl
+	sub h
+	ccf
+	jp nc, __LABEL194
+	ld hl, 0
+	push hl
+	ld a, (_Jugador.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	inc a
+	ld (_Jugador.__DATA__ + 0), a
+__LABEL194:
+	ld a, (_Jugador.__DATA__ + 0)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (_Jugador.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (_Jugador.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	ld h, a
+	pop af
+	sub h
+	ccf
+	jp nc, __LABEL196
+	ld hl, 0
+	push hl
+	ld a, (_Jugador.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (_Jugador.__DATA__ + 1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	dec a
+	ld (_Jugador.__DATA__ + 0), a
+__LABEL196:
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld a, (_Jugador.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 7
+	call PAPER_TMP
+	xor a
+	call INK_TMP
+	ld hl, __LABEL70
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+_DesplazarJugador__leave:
+	ld sp, ix
+	pop ix
+	exx
+	pop hl
+	pop bc
+	ex (sp), hl
+	exx
+	ret
+_ImprimirArenasMovedizas:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, 0
+	push hl
+	inc sp
+	ld (ix-1), 0
+	jp __LABEL197
+__LABEL200:
+	ld hl, 1
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _ArenasMovedizas
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	ld h, 0
+	push hl
+	ld hl, _ArenasMovedizas
+	call __ARRAY
+	ld a, (hl)
+	call PRINT_AT
+	ld a, 1
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL107
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL201:
+	inc (ix-1)
+__LABEL197:
+	ld a, (ix-1)
+	push af
+	ld a, 9
+	pop hl
+	cp h
+	jp nc, __LABEL200
+__LABEL199:
+_ImprimirArenasMovedizas__leave:
+	ld sp, ix
+	pop ix
+	ret
+_ImprimirCamino:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, 0
+	push hl
+	inc sp
+	ld (ix-1), 1
+	jp __LABEL202
+__LABEL205:
+	ld a, (ix-1)
+	ld hl, (_Tesoro.__DATA__ + 1 - 1)
+	cp h
+	sbc a, a
+	push af
+	ld a, (ix-1)
+	ld l, a
+	ld h, 0
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	pop af
+	ld h, (hl)
+	or a
+	jr z, __LABEL297
+	ld a, h
+__LABEL297:
+	or a
+	jp z, __LABEL208
+	ld a, (ix-1)
+	and 1
+	jp nz, __LABEL209
+	ld a, (ix-1)
+	push af
+	ld a, (ix-1)
+	ld l, a
+	ld h, 0
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL211
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL210
+__LABEL209:
+	ld a, (ix-1)
+	push af
+	ld a, (ix-1)
+	ld l, a
+	ld h, 0
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL212
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL210:
+__LABEL208:
+__LABEL206:
+	inc (ix-1)
+__LABEL202:
+	ld a, (ix-1)
+	push af
+	ld a, 19
+	pop hl
+	cp h
+	jp nc, __LABEL205
+__LABEL204:
+	ld a, (_Tesoro.__DATA__ + 1)
+	push af
+	ld a, (_Tesoro.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL213
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL213
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld hl, __LABEL214
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+_ImprimirCamino__leave:
+	ld sp, ix
+	pop ix
+	ret
+_ImprimirIsla:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, -9
+	add hl, sp
+	ld sp, hl
+	ld (hl), 0
+	ld bc, 8
+	ld d, h
+	ld e, l
+	inc de
+	ldir
+	ld a, 5
+	call PAPER
+	call COPY_ATTR
+	ld a, 5
+	call BORDER
+	xor a
+	call INK
+	call COPY_ATTR
+	ld a, 4
+	call PAPER
+	call COPY_ATTR
+	ld a, 6
+	call INK
+	call COPY_ATTR
+	ld a, (_Isla.__DATA__ + 0)
+	ld (ix-1), a
+	jp __LABEL215
+__LABEL218:
+	xor a
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld hl, __LABEL220
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+__LABEL219:
+	inc (ix-1)
+__LABEL215:
+	ld a, (ix-1)
+	push af
+	ld a, (_Isla.__DATA__ + 1)
+	ld hl, (_Isla.__DATA__ + 0 - 1)
+	add a, h
+	pop hl
+	cp h
+	jp nc, __LABEL218
+__LABEL217:
+	ld a, (_Isla.__DATA__ + 40)
+	ld (ix-1), a
+	jp __LABEL221
+__LABEL224:
+	ld a, 20
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld hl, __LABEL226
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+__LABEL225:
+	inc (ix-1)
+__LABEL221:
+	ld a, (ix-1)
+	push af
+	ld a, (_Isla.__DATA__ + 41)
+	ld hl, (_Isla.__DATA__ + 40 - 1)
+	add a, h
+	pop hl
+	cp h
+	jp nc, __LABEL224
+__LABEL223:
+	ld (ix-5), 1
+	jp __LABEL227
+__LABEL230:
+	ld hl, 0
+	push hl
+	ld a, (ix-5)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	ld (ix-1), a
+	ld hl, 0
+	push hl
+	ld a, (ix-5)
+	dec a
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	ld (ix-2), a
+	ld hl, 0
+	push hl
+	ld a, (ix-5)
+	inc a
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	ld (ix-3), a
+	ld a, (ix-1)
+	inc a
+	ld (ix-6), a
+	ld a, (ix-1)
+	push af
+	ld a, (ix-2)
+	pop hl
+	cp h
+	sbc a, a
+	push af
+	ld a, (ix-1)
+	push af
+	ld a, (ix-3)
+	pop hl
+	cp h
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL298
+	ld a, h
+__LABEL298:
+	push af
+	ld a, (ix-1)
+	cp (ix-2)
+	sbc a, a
+	push af
+	ld a, (ix-1)
+	cp (ix-3)
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL299
+	ld a, h
+__LABEL299:
+	pop de
+	or d
+	jp z, __LABEL232
+	ld a, (ix-5)
+	and 1
+	jp nz, __LABEL234
+	ld de, __LABEL178
+	ld bc, -9
+	call __PSTORE_STR
+	jp __LABEL235
+__LABEL234:
+	ld de, __LABEL179
+	ld bc, -9
+	call __PSTORE_STR
+__LABEL235:
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld l, (ix-9)
+	ld h, (ix-8)
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL233
+__LABEL232:
+	ld a, (ix-1)
+	push af
+	ld a, (ix-2)
+	pop hl
+	cp h
+	jp nc, __LABEL236
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld hl, __LABEL238
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	jp __LABEL237
+__LABEL236:
+	ld a, (ix-1)
+	cp (ix-2)
+	jp nc, __LABEL239
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld hl, __LABEL241
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	jp __LABEL240
+__LABEL239:
+	ld a, (ix-5)
+	and 1
+	jp nz, __LABEL242
+	ld de, __LABEL178
+	ld bc, -9
+	call __PSTORE_STR
+	jp __LABEL243
+__LABEL242:
+	ld de, __LABEL179
+	ld bc, -9
+	call __PSTORE_STR
+__LABEL243:
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld l, (ix-9)
+	ld h, (ix-8)
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL240:
+__LABEL237:
+__LABEL233:
+	ld hl, 0
+	push hl
+	ld a, (ix-5)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-5)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	ld (ix-1), a
+	ld hl, 0
+	push hl
+	ld a, (ix-5)
+	dec a
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-5)
+	dec a
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	ld (ix-2), a
+	ld hl, 0
+	push hl
+	ld a, (ix-5)
+	inc a
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-5)
+	inc a
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	ld (ix-3), a
+	ld a, (ix-1)
+	dec a
+	ld (ix-7), a
+	ld a, (ix-1)
+	push af
+	ld a, (ix-2)
+	pop hl
+	cp h
+	sbc a, a
+	push af
+	ld a, (ix-1)
+	push af
+	ld a, (ix-3)
+	pop hl
+	cp h
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL300
+	ld a, h
+__LABEL300:
+	push af
+	ld a, (ix-1)
+	cp (ix-2)
+	sbc a, a
+	push af
+	ld a, (ix-1)
+	cp (ix-3)
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL301
+	ld a, h
+__LABEL301:
+	pop de
+	or d
+	jp z, __LABEL244
+	ld a, (ix-5)
+	and 1
+	jp nz, __LABEL246
+	ld de, __LABEL179
+	ld bc, -9
+	call __PSTORE_STR
+	jp __LABEL247
+__LABEL246:
+	ld de, __LABEL178
+	ld bc, -9
+	call __PSTORE_STR
+__LABEL247:
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld l, (ix-9)
+	ld h, (ix-8)
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL245
+__LABEL244:
+	ld a, (ix-1)
+	push af
+	ld a, (ix-2)
+	pop hl
+	cp h
+	jp nc, __LABEL248
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld hl, __LABEL238
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	jp __LABEL249
+__LABEL248:
+	ld a, (ix-1)
+	cp (ix-2)
+	jp nc, __LABEL250
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld hl, __LABEL241
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	jp __LABEL251
+__LABEL250:
+	ld a, (ix-5)
+	and 1
+	jp nz, __LABEL252
+	ld de, __LABEL179
+	ld bc, -9
+	call __PSTORE_STR
+	jp __LABEL253
+__LABEL252:
+	ld de, __LABEL178
+	ld bc, -9
+	call __PSTORE_STR
+__LABEL253:
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld l, (ix-9)
+	ld h, (ix-8)
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL251:
+__LABEL249:
+__LABEL245:
+	ld a, (ix-6)
+	ld (ix-1), a
+	jp __LABEL254
+__LABEL257:
+	ld a, (ix-5)
+	push af
+	ld a, (ix-1)
+	call PRINT_AT
+	ld a, 4
+	call PAPER_TMP
+	xor a
+	call INK_TMP
+	ld hl, __LABEL188
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL258:
+	inc (ix-1)
+__LABEL254:
+	ld a, (ix-1)
+	push af
+	ld a, (ix-7)
+	pop hl
+	cp h
+	jp nc, __LABEL257
+__LABEL256:
+__LABEL231:
+	inc (ix-5)
+__LABEL227:
+	ld a, (ix-5)
+	push af
+	ld a, 19
+	pop hl
+	call __LTI8
+	or a
+	jp z, __LABEL230
+__LABEL229:
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL156
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, (_Piratas.__DATA__ + 1)
+	or a
+	jp z, __LABEL260
+	ld a, (_Piratas.__DATA__ + 1)
+	push af
+	ld a, (_Piratas.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL92
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, (_Piratas.__DATA__ + 1)
+	dec a
+	push af
+	ld a, (_Piratas.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 7
+	call PAPER_TMP
+	ld a, 1
+	call INK_TMP
+	ld hl, __LABEL90
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL260:
+	ld hl, 1
+	call __PAUSE
+_ImprimirIsla__leave:
+	ex af, af'
+	exx
+	ld l, (ix-9)
+	ld h, (ix-8)
+	call __MEM_FREE
+	ex af, af'
+	exx
+	ld sp, ix
+	pop ix
+	ret
+_GenerarPartida:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, 0
+	push hl
+	push hl
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 082h
+	ld de, 00040h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	push de
+	push hl
+	ld de, 0
+	ld hl, 10
+	pop bc
+	add hl, bc
+	ex de, hl
+	pop bc
+	adc hl, bc
+	ex de, hl
+	ld a, l
+	ld (ix-2), a
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 082h
+	ld de, 00040h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	push de
+	push hl
+	ld de, 0
+	ld hl, 10
+	pop bc
+	add hl, bc
+	ex de, hl
+	pop bc
+	adc hl, bc
+	ex de, hl
+	ld a, l
+	ld (ix-3), a
+	ld (ix-1), 0
+	jp __LABEL261
+__LABEL264:
+	ld a, (ix-2)
+	push af
+	ld h, 5
+	pop af
+	call __LTI8
+	or a
+	jp z, __LABEL267
+	ld (ix-2), 5
+__LABEL267:
+	ld a, (ix-3)
+	push af
+	ld a, 30
+	pop hl
+	call __LTI8
+	or a
+	jp z, __LABEL269
+	ld (ix-3), 30
+__LABEL269:
+	ld a, (ix-2)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	ld (hl), a
+	ld a, (ix-3)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	ld (hl), a
+	ld a, (ix-1)
+	dec a
+	jp nz, __LABEL270
+	dec (ix-2)
+	ld a, (ix-3)
+	add a, 2
+	ld (ix-3), a
+	jp __LABEL271
+__LABEL270:
+	ld a, (ix-1)
+	sub 19
+	jp nz, __LABEL272
+	inc (ix-2)
+	ld a, (ix-3)
+	sub 2
+	ld (ix-3), a
+	jp __LABEL273
+__LABEL272:
+	ld a, (ix-2)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	ld e, h
+	ld d, h
+	push de
+	push hl
+	ld a, 10
+	sub (ix-1)
+	call __SGNI8
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	ld e, h
+	ld d, h
+	push de
+	push hl
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 082h
+	ld de, 00000h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	call __MUL32
+	call __SUB32
+	ld a, l
+	ld (ix-2), a
+	ld a, (ix-3)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	ld e, h
+	ld d, h
+	push de
+	push hl
+	ld a, 10
+	sub (ix-1)
+	call __SGNI8
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	ld e, h
+	ld d, h
+	push de
+	push hl
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 082h
+	ld de, 00000h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	call __MUL32
+	pop bc
+	add hl, bc
+	ex de, hl
+	pop bc
+	adc hl, bc
+	ex de, hl
+	ld a, l
+	ld (ix-3), a
+__LABEL273:
+__LABEL271:
+__LABEL265:
+	inc (ix-1)
+__LABEL261:
+	ld a, (ix-1)
+	push af
+	ld a, 20
+	pop hl
+	call __LTI8
+	or a
+	jp z, __LABEL264
+__LABEL263:
+	ld a, (_Isla.__DATA__ + 2)
+	ld l, a
+	ld h, 0
+	ld e, h
+	ld d, h
+	push de
+	push hl
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 083h
+	ld de, 00000h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	pop bc
+	add hl, bc
+	ex de, hl
+	pop bc
+	adc hl, bc
+	push hl
+	push de
+	ld de, 0
+	ld hl, 1
+	pop bc
+	add hl, bc
+	ex de, hl
+	pop bc
+	adc hl, bc
+	ex de, hl
+	ld a, l
+	ld (_Camino.__DATA__ + 0), a
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 082h
+	ld de, 00040h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	ld bc, 0
+	push bc
+	ld bc, 19
+	push bc
+	call __SUB32
+	ld a, l
+	ld (ix-4), a
+	ld (ix-1), 2
+	jp __LABEL274
+__LABEL277:
+	ld a, (ix-1)
+	dec a
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	ld l, a
+	ld h, 0
+	ld e, h
+	ld d, h
+	push de
+	push hl
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 082h
+	ld de, 00040h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	pop bc
+	add hl, bc
+	ex de, hl
+	pop bc
+	adc hl, bc
+	push hl
+	push de
+	ld de, 0
+	ld hl, 1
+	call __SUB32
+	ld a, l
+	push af
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	pop af
+	ld (hl), a
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	dec a
+	ld h, a
+	pop af
+	sub h
+	ccf
+	jp nc, __LABEL280
+	ld hl, 0
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	sub 2
+	push af
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	pop af
+	ld (hl), a
+__LABEL280:
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	inc a
+	pop hl
+	sub h
+	ccf
+	jp nc, __LABEL282
+	ld hl, 0
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	add a, 2
+	push af
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	pop af
+	ld (hl), a
+__LABEL282:
+__LABEL278:
+	inc (ix-1)
+__LABEL274:
+	ld a, (ix-1)
+	push af
+	ld a, (ix-4)
+	pop hl
+	call __LTI8
+	or a
+	jp z, __LABEL277
+__LABEL276:
+	ld a, (ix-4)
+	ld l, a
+	ld h, 0
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	ld (_Tesoro.__DATA__ + 0), a
+	ld a, (ix-4)
+	ld (_Tesoro.__DATA__ + 1), a
+	ld (ix-1), 0
+	jp __LABEL283
+__LABEL286:
+__LABEL__nuevoPunto:
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 085h
+	ld de, 00008h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	push de
+	push hl
+	ld de, 0
+	ld hl, 2
+	pop bc
+	add hl, bc
+	ex de, hl
+	pop bc
+	adc hl, bc
+	ex de, hl
+	ld a, l
+	ld (ix-3), a
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	or a
+	jp z, __LABEL__nuevoPunto
+__LABEL289:
+	ld a, (ix-3)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	push af
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 080h
+	ld de, 00000h
+	ld bc, 00000h
+	call __SUBF
+	call __SGNF
+	ld h, a
+	pop af
+	add a, h
+	ld (ix-2), a
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-3)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	ld h, (hl)
+	call __LEI8
+	push af
+	ld a, (ix-2)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-3)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	ld a, (hl)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-3)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _Isla
+	call __ARRAY
+	pop af
+	add a, (hl)
+	pop hl
+	call __LEI8
+	pop de
+	or d
+	jp nz, __LABEL__nuevoPunto
+__LABEL291:
+	ld a, (ix-2)
+	push af
+	ld hl, 0
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _ArenasMovedizas
+	call __ARRAY
+	pop af
+	ld (hl), a
+	ld a, (ix-3)
+	push af
+	ld hl, 1
+	push hl
+	ld a, (ix-1)
+	ld l, a
+	add a, a
+	sbc a, a
+	ld h, a
+	push hl
+	ld hl, _ArenasMovedizas
+	call __ARRAY
+	pop af
+	ld (hl), a
+__LABEL287:
+	inc (ix-1)
+__LABEL283:
+	ld a, (ix-1)
+	push af
+	ld a, 9
+	pop hl
+	call __LTI8
+	or a
+	jp z, __LABEL286
+__LABEL285:
+	ld a, (_Camino.__DATA__ + 0)
+	ld (_Jugador.__DATA__ + 0), a
+	ld a, 1
+	ld (_Jugador.__DATA__ + 1), a
+	xor a
+	ld (_Piratas.__DATA__ + 0), a
+	xor a
+	ld (_Piratas.__DATA__ + 1), a
+	xor a
+	ld (_MoverPiratas), a
+_GenerarPartida__leave:
+	ld sp, ix
+	pop ix
+	ret
+_IniciarGraficos:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, _graficos.__DATA__
+	ld (23675), hl
+	ld a, 5
+	call PAPER
+	call COPY_ATTR
+	ld a, 5
+	call BORDER
+	xor a
+	call INK
+	call COPY_ATTR
+	call CLS
+_IniciarGraficos__leave:
+	ld sp, ix
+	pop ix
+	ret
+_Sonido:
+#line 832
+		ld hl,sfxData
+		di
+		push ix
+		push iy
+		ld b,0
+		ld c,a
+		add hl,bc
+		add hl,bc
+		ld e,(hl)
+		inc hl
+		ld d,(hl)
+		push de
+		pop ix
+		ld a,(23624)
+		rra
+		rra
+		rra
+		and 7
+		ld (sfxRoutineToneBorder  +1),a
+		ld (sfxRoutineNoiseBorder +1),a
+		ld (sfxRoutineSampleBorder+1),a
+readData:
+		ld a,(ix+0)
+		ld c,(ix+1)
+		ld b,(ix+2)
+		ld e,(ix+3)
+		ld d,(ix+4)
+		push de
+		pop iy
+		dec a
+		jr z,sfxRoutineTone
+		dec a
+		jr z,sfxRoutineNoise
+		dec a
+		jr z,sfxRoutineSample
+		pop iy
+		pop ix
+		ei
+		ret
+sfxRoutineSample:
+		ex de,hl
+sfxRS0:
+		ld e,8
+		ld d,(hl)
+		inc hl
+sfxRS1:
+		ld a,(ix+5)
+sfxRS2:
+		dec a
+		jr nz,sfxRS2
+		rl d
+		sbc a,a
+		and 16
+sfxRoutineSampleBorder:
+		or 0
+		out (254),a
+		dec e
+		jr nz,sfxRS1
+		dec bc
+		ld a,b
+		or c
+		jr nz,sfxRS0
+		ld c,6
+nextData:
+		add ix,bc
+		jr readData
+sfxRoutineTone:
+		ld e,(ix+5)
+		ld d,(ix+6)
+		ld a,(ix+9)
+		ld (sfxRoutineToneDuty+1),a
+		ld hl,0
+sfxRT0:
+		push bc
+		push iy
+		pop bc
+sfxRT1:
+		add hl,de
+		ld a,h
+sfxRoutineToneDuty:
+		cp 0
+		sbc a,a
+		and 16
+sfxRoutineToneBorder:
+		or 0
+		out (254),a
+		dec bc
+		ld a,b
+		or c
+		jr nz,sfxRT1
+		ld a,(sfxRoutineToneDuty+1)
+		add a,(ix+10)
+		ld (sfxRoutineToneDuty+1),a
+		ld c,(ix+7)
+		ld b,(ix+8)
+		ex de,hl
+		add hl,bc
+		ex de,hl
+		pop bc
+		dec bc
+		ld a,b
+		or c
+		jr nz,sfxRT0
+		ld c,11
+		jr nextData
+sfxRoutineNoise:
+		ld e,(ix+5)
+		ld d,1
+		ld h,d
+		ld l,d
+sfxRN0:
+		push bc
+		push iy
+		pop bc
+sfxRN1:
+		ld a,(hl)
+		and 16
+sfxRoutineNoiseBorder:
+		or 0
+		out (254),a
+		dec d
+		jr nz,sfxRN2
+		ld d,e
+		inc hl
+		ld a,h
+		and 31
+		ld h,a
+sfxRN2:
+		dec bc
+		ld a,b
+		or c
+		jr nz,sfxRN1
+		ld a,e
+		add a,(ix+6)
+		ld e,a
+		pop bc
+		dec bc
+		ld a,b
+		or c
+		jr nz,sfxRN0
+		ld c,7
+		jr nextData
+sfxData:
+SoundEffectsData:
+		defw SoundEffect0Data
+		defw SoundEffect1Data
+		defw SoundEffect2Data
+		defw SoundEffect3Data
+		defw SoundEffect4Data
+		defw SoundEffect5Data
+		defw SoundEffect6Data
+		defw SoundEffect7Data
+		defw SoundEffect8Data
+		defw SoundEffect9Data
+		defw SoundEffect10Data
+		defw SoundEffect11Data
+		defw SoundEffect12Data
+		defw SoundEffect13Data
+SoundEffect0Data:
+		defb 1
+		defw 20,50,2000,65486,128
+		defb 0
+SoundEffect1Data:
+		defb 1
+		defw 10,100,2000,100,128
+		defb 0
+SoundEffect2Data:
+		defb 2
+		defw 100,50,356
+		defb 0
+SoundEffect3Data:
+		defb 2
+		defw 1,1000,10
+		defb 2
+		defw 1,1000,1
+		defb 0
+SoundEffect4Data:
+		defb 2
+		defw 1,1000,10
+		defb 1
+		defw 20,100,400,65526,128
+		defb 2
+		defw 1,2000,1
+		defb 0
+SoundEffect5Data:
+		defb 1
+		defw 1,1000,1000,0,128
+		defb 1
+		defw 1,1000,0,0,0
+		defb 1
+		defw 1,2000,2000,0,128
+		defb 1
+		defw 1,2000,2000,0,16
+		defb 0
+SoundEffect6Data:
+		defb 1
+		defw 32,1000,2000,16384,320
+		defb 0
+SoundEffect7Data:
+		defb 1
+		defw 20,100,200,10,1025
+		defb 1
+		defw 30,100,0,0,0
+		defb 1
+		defw 50,100,200,10,1025
+		defb 0
+SoundEffect8Data:
+		defb 1
+		defw 50,200,500,65516,128
+		defb 0
+SoundEffect9Data:
+		defb 1
+		defw 10,1000,200,2,272
+		defb 1
+		defw 1,4000,0,0,0
+		defb 1
+		defw 10,1000,200,65534,272
+		defb 0
+SoundEffect10Data:
+		defb 1
+		defw 20,500,200,5,272
+		defb 1
+		defw 1,1000,0,0,0
+		defb 1
+		defw 30,500,200,8,272
+		defb 0
+SoundEffect11Data:
+		defb 3
+		defw 262
+		defw Sample0Data+0
+		defb 45
+		defb 0
+SoundEffect12Data:
+		defb 3
+		defw 160
+		defw Sample1Data+0
+		defb 45
+		defb 0
+SoundEffect13Data:
+		defb 3
+		defw 262
+		defw Sample0Data+0
+		defb 100
+		defb 0
+Sample0Data:
+		defb 127,255,255,163,255,255,129,255,255,213,31,255,168,31,255,240
+		defb 63,255,232,15,255,171,253,71,254,128,127,224,127,128,255,208
+		defb 127,245,127,129,255,240,255,234,255,15,254,175,254,191,250,255
+		defb 245,127,250,255,111,255,249,255,175,250,253,250,151,253,127,135
+		defb 255,168,175,215,252,63,253,87,254,191,171,255,250,215,237,250
+		defb 255,255,87,254,175,255,255,245,127,235,250,255,191,171,127,95
+		defb 255,191,250,190,247,255,255,255,244,191,255,255,95,255,173,253
+		defb 127,255,255,235,171,251,255,255,255,87,223,254,254,255,245,117
+		defb 191,191,239,255,87,91,251,255,255,245,117,181,191,255,255,95
+		defb 95,235,255,191,250,191,255,223,121,249,213,242,250,223,215,206
+		defb 174,191,214,254,63,117,94,254,215,250,251,215,251,123,127,249
+		defb 255,175,183,246,223,233,127,175,167,243,223,227,239,215,219,233
+		defb 239,248,113,245,244,250,121,248,120,125,124,126,124,62,62,31
+		defb 151,207,143,143,207,7,252,158,124,60,126,60,127,248,120,240
+		defb 241,241,225,243,243,225,243,231,243,231,199,249,178,253,211,240
+		defb 227,227,239,14,30,60,124,120,241,255,227,227,199,143,143,31
+		defb 63,255,159,62,124,254
+Sample1Data:
+		defb 203,203,247,227,248,120,223,60,127,143,56,247,15,113,227,159
+		defb 225,238,60,115,248,127,207,252,255,15,225,243,223,195,252,63
+		defb 107,248,127,135,244,63,7,248,63,195,240,31,135,252,63,0
+		defb 252,63,225,241,135,195,255,31,30,126,63,249,241,243,227,247
+		defb 143,191,254,31,239,255,255,247,248,127,249,249,255,5,255,191
+		defb 191,199,223,143,239,240,7,254,3,252,3,255,192,254,1,255
+		defb 128,255,128,255,193,255,128,255,131,255,1,255,63,240,15,248
+		defb 127,224,63,225,255,128,127,227,255,0,255,227,255,0,255,225
+		defb 255,224,63,252,31,252,1,255,228,255,192,31,255,231,255,128
+		defb 127,255,240,127,224,31,255,255,255,255,192,63,255,255,255,255
+#line 1105
+_Sonido__leave:
+	ret
+__LABEL2:
+	DEFW 0001h
+	DEFB 71h
+__LABEL9:
+	DEFW 0000h
+__LABEL10:
+	DEFW 0001h
+	DEFB 61h
+__LABEL17:
+	DEFW 0001h
+	DEFB 6Fh
+__LABEL24:
+	DEFW 0001h
+	DEFB 70h
+__LABEL31:
+	DEFW 0001h
+	DEFB 6Dh
+__LABEL38:
+	DEFW 0012h
+	DEFB 4Fh
+	DEFB 54h
+	DEFB 52h
+	DEFB 41h
+	DEFB 20h
+	DEFB 50h
+	DEFB 41h
+	DEFB 52h
+	DEFB 54h
+	DEFB 49h
+	DEFB 44h
+	DEFB 41h
+	DEFB 20h
+	DEFB 28h
+	DEFB 53h
+	DEFB 2Fh
+	DEFB 4Eh
+	DEFB 29h
+__LABEL39:
+	DEFW 0001h
+	DEFB 73h
+__LABEL42:
+	DEFW 0001h
+	DEFB 6Eh
+__LABEL45:
+	DEFW 0004h
+	DEFB 42h
+	DEFB 59h
+	DEFB 45h
+	DEFB 21h
+__LABEL58:
+	DEFW 0001h
+	DEFB 08h
+__LABEL66:
+	DEFW 0001h
+	DEFB 20h
+__LABEL67:
+	DEFW 001Fh
+	DEFB 42h
+	DEFB 49h
+	DEFB 45h
+	DEFB 4Eh
+	DEFB 56h
+	DEFB 45h
+	DEFB 4Eh
+	DEFB 49h
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 20h
+	DEFB 41h
+	DEFB 20h
+	DEFB 4Ch
+	DEFB 41h
+	DEFB 20h
+	DEFB 49h
+	DEFB 53h
+	DEFB 4Ch
+	DEFB 41h
+	DEFB 20h
+	DEFB 44h
+	DEFB 45h
+	DEFB 4Ch
+	DEFB 20h
+	DEFB 54h
+	DEFB 45h
+	DEFB 53h
+	DEFB 4Fh
+	DEFB 52h
+	DEFB 4Fh
+__LABEL68:
+	DEFW 001Bh
+	DEFB 45h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 65h
+	DEFB 73h
+	DEFB 74h
+	DEFB 61h
+	DEFB 20h
+	DEFB 61h
+	DEFB 76h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 75h
+	DEFB 72h
+	DEFB 61h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 63h
+	DEFB 61h
+	DEFB 72h
+	DEFB 6Eh
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 61h
+__LABEL69:
+	DEFW 0015h
+	DEFB 52h
+	DEFB 69h
+	DEFB 63h
+	DEFB 6Bh
+	DEFB 79h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 50h
+	DEFB 65h
+	DEFB 72h
+	DEFB 6Eh
+	DEFB 69h
+	DEFB 63h
+	DEFB 69h
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 28h
+__LABEL70:
+	DEFW 0001h
+	DEFB 95h
+__LABEL71:
+	DEFW 0008h
+	DEFB 29h
+	DEFB 20h
+	DEFB 66h
+	DEFB 61h
+	DEFB 6Dh
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 6Fh
+__LABEL72:
+	DEFW 0020h
+	DEFB 63h
+	DEFB 61h
+	DEFB 6Dh
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 72h
+	DEFB 69h
+	DEFB 73h
+	DEFB 74h
+	DEFB 61h
+	DEFB 2Ch
+	DEFB 20h
+	DEFB 61h
+	DEFB 6Dh
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 65h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 70h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 65h
+	DEFB 61h
+	DEFB 73h
+__LABEL73:
+	DEFW 001Bh
+	DEFB 79h
+	DEFB 20h
+	DEFB 62h
+	DEFB 75h
+	DEFB 73h
+	DEFB 63h
+	DEFB 61h
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 20h
+	DEFB 63h
+	DEFB 68h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 63h
+	DEFB 68h
+	DEFB 75h
+	DEFB 6Ch
+	DEFB 6Ch
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 20h
+	DEFB 61h
+__LABEL74:
+	DEFW 000Fh
+	DEFB 74h
+	DEFB 69h
+	DEFB 65h
+	DEFB 6Dh
+	DEFB 70h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 70h
+	DEFB 61h
+	DEFB 72h
+	DEFB 63h
+	DEFB 69h
+	DEFB 61h
+	DEFB 6Ch
+	DEFB 2Eh
+__LABEL75:
+	DEFW 001Bh
+	DEFB 45h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 75h
+	DEFB 6Ch
+	DEFB 74h
+	DEFB 69h
+	DEFB 6Dh
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 66h
+	DEFB 72h
+	DEFB 65h
+	DEFB 67h
+	DEFB 61h
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 71h
+	DEFB 75h
+	DEFB 65h
+	DEFB 20h
+	DEFB 74h
+	DEFB 65h
+__LABEL76:
+	DEFW 001Fh
+	DEFB 6Dh
+	DEFB 65h
+	DEFB 74h
+	DEFB 69h
+	DEFB 73h
+	DEFB 74h
+	DEFB 65h
+	DEFB 20h
+	DEFB 63h
+	DEFB 6Fh
+	DEFB 6Eh
+	DEFB 73h
+	DEFB 65h
+	DEFB 67h
+	DEFB 75h
+	DEFB 69h
+	DEFB 73h
+	DEFB 74h
+	DEFB 65h
+	DEFB 73h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 6Dh
+	DEFB 61h
+	DEFB 70h
+	DEFB 61h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+__LABEL77:
+	DEFW 000Bh
+	DEFB 75h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 74h
+	DEFB 65h
+	DEFB 73h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 28h
+__LABEL78:
+	DEFW 0001h
+	DEFB 0A3h
+__LABEL79:
+	DEFW 0012h
+	DEFB 29h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 65h
+	DEFB 72h
+	DEFB 72h
+	DEFB 61h
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 75h
+	DEFB 6Eh
+	DEFB 61h
+__LABEL80:
+	DEFW 001Eh
+	DEFB 69h
+	DEFB 73h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 73h
+	DEFB 69h
+	DEFB 65h
+	DEFB 72h
+	DEFB 74h
+	DEFB 61h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 61h
+	DEFB 72h
+	DEFB 63h
+	DEFB 68h
+	DEFB 69h
+	DEFB 70h
+	DEFB 69h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 67h
+	DEFB 6Fh
+__LABEL81:
+	DEFW 000Bh
+	DEFB 41h
+	DEFB 71h
+	DEFB 75h
+	DEFB 69h
+	DEFB 6Eh
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 74h
+	DEFB 6Fh
+	DEFB 79h
+	DEFB 2Eh
+__LABEL82:
+	DEFW 0020h
+	DEFB 50h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 73h
+	DEFB 67h
+	DEFB 72h
+	DEFB 61h
+	DEFB 63h
+	DEFB 69h
+	DEFB 61h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 6Dh
+	DEFB 61h
+	DEFB 74h
+	DEFB 6Fh
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 61h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 71h
+	DEFB 75h
+	DEFB 65h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 65h
+__LABEL83:
+	DEFW 001Fh
+	DEFB 71h
+	DEFB 75h
+	DEFB 69h
+	DEFB 74h
+	DEFB 61h
+	DEFB 73h
+	DEFB 74h
+	DEFB 65h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 6Dh
+	DEFB 61h
+	DEFB 70h
+	DEFB 61h
+	DEFB 20h
+	DEFB 66h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 6Dh
+	DEFB 61h
+	DEFB 20h
+	DEFB 70h
+	DEFB 61h
+	DEFB 72h
+	DEFB 74h
+	DEFB 65h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+__LABEL84:
+	DEFW 0015h
+	DEFB 75h
+	DEFB 6Eh
+	DEFB 61h
+	DEFB 20h
+	DEFB 62h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 64h
+	DEFB 61h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 20h
+	DEFB 70h
+	DEFB 69h
+	DEFB 72h
+	DEFB 61h
+	DEFB 74h
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+__LABEL85:
+	DEFW 0011h
+	DEFB 2Dh
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 20h
+	DEFB 54h
+	DEFB 75h
+	DEFB 65h
+	DEFB 72h
+	DEFB 74h
+	DEFB 75h
+	DEFB 6Eh
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 20h
+	DEFB 2Dh
+__LABEL86:
+	DEFW 0018h
+	DEFB 6Ch
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 20h
+	DEFB 63h
+	DEFB 75h
+	DEFB 61h
+	DEFB 6Ch
+	DEFB 65h
+	DEFB 73h
+	DEFB 20h
+	DEFB 68h
+	DEFB 61h
+	DEFB 72h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 74h
+	DEFB 6Fh
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 6Fh
+__LABEL87:
+	DEFW 0017h
+	DEFB 70h
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 69h
+	DEFB 62h
+	DEFB 6Ch
+	DEFB 65h
+	DEFB 20h
+	DEFB 70h
+	DEFB 61h
+	DEFB 72h
+	DEFB 61h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 74h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 65h
+	DEFB 72h
+	DEFB 74h
+	DEFB 65h
+	DEFB 2Eh
+__LABEL88:
+	DEFW 0011h
+	DEFB 2Dh
+	DEFB 50h
+	DEFB 75h
+	DEFB 6Ch
+	DEFB 73h
+	DEFB 61h
+	DEFB 20h
+	DEFB 75h
+	DEFB 6Eh
+	DEFB 61h
+	DEFB 20h
+	DEFB 74h
+	DEFB 65h
+	DEFB 63h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 2Dh
+__LABEL89:
+	DEFW 0009h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+__LABEL90:
+	DEFW 0001h
+	DEFB 92h
+__LABEL91:
+	DEFW 0009h
+	DEFB 53h
+	DEFB 75h
+	DEFB 20h
+	DEFB 62h
+	DEFB 61h
+	DEFB 72h
+	DEFB 63h
+	DEFB 6Fh
+	DEFB 28h
+__LABEL92:
+	DEFW 0001h
+	DEFB 93h
+__LABEL93:
+	DEFW 0012h
+	DEFB 29h
+	DEFB 20h
+	DEFB 65h
+	DEFB 73h
+	DEFB 74h
+	DEFB 61h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 20h
+	DEFB 63h
+	DEFB 61h
+	DEFB 6Dh
+	DEFB 69h
+	DEFB 6Eh
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 61h
+__LABEL94:
+	DEFW 001Fh
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 69h
+	DEFB 73h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 2Ch
+	DEFB 20h
+	DEFB 74h
+	DEFB 75h
+	DEFB 20h
+	DEFB 6Dh
+	DEFB 69h
+	DEFB 73h
+	DEFB 69h
+	DEFB 6Fh
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 65h
+	DEFB 73h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 63h
+	DEFB 6Fh
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 72h
+	DEFB 61h
+	DEFB 72h
+__LABEL95:
+	DEFW 001Eh
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 74h
+	DEFB 65h
+	DEFB 73h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 65h
+	DEFB 73h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 20h
+	DEFB 71h
+	DEFB 75h
+	DEFB 65h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 6Ch
+	DEFB 65h
+	DEFB 67h
+	DEFB 75h
+	DEFB 65h
+	DEFB 6Eh
+__LABEL96:
+	DEFW 0015h
+	DEFB 79h
+	DEFB 20h
+	DEFB 74h
+	DEFB 65h
+	DEFB 20h
+	DEFB 70h
+	DEFB 75h
+	DEFB 65h
+	DEFB 64h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 63h
+	DEFB 61h
+	DEFB 70h
+	DEFB 74h
+	DEFB 75h
+	DEFB 72h
+	DEFB 61h
+	DEFB 72h
+	DEFB 2Eh
+__LABEL97:
+	DEFW 001Dh
+	DEFB 50h
+	DEFB 65h
+	DEFB 72h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 6Fh
+	DEFB 6Ah
+	DEFB 6Fh
+	DEFB 21h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 69h
+	DEFB 73h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 6Eh
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 65h
+	DEFB 73h
+	DEFB 74h
+	DEFB 61h
+	DEFB 20h
+	DEFB 74h
+	DEFB 61h
+	DEFB 6Eh
+__LABEL98:
+	DEFW 001Ah
+	DEFB 64h
+	DEFB 65h
+	DEFB 73h
+	DEFB 69h
+	DEFB 65h
+	DEFB 72h
+	DEFB 74h
+	DEFB 61h
+	DEFB 20h
+	DEFB 63h
+	DEFB 6Fh
+	DEFB 6Dh
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 70h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 73h
+	DEFB 61h
+	DEFB 62h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 6Fh
+	DEFB 73h
+__LABEL99:
+	DEFW 001Dh
+	DEFB 70h
+	DEFB 69h
+	DEFB 72h
+	DEFB 61h
+	DEFB 74h
+	DEFB 61h
+	DEFB 73h
+	DEFB 2Ch
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 74h
+	DEFB 72h
+	DEFB 69h
+	DEFB 62h
+	DEFB 75h
+	DEFB 20h
+	DEFB 4Dh
+	DEFB 61h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 73h
+	DEFB 70h
+	DEFB 75h
+	DEFB 6Ch
+	DEFB 67h
+	DEFB 61h
+	DEFB 73h
+__LABEL100:
+	DEFW 0001h
+	DEFB 28h
+__LABEL101:
+	DEFW 0001h
+	DEFB 91h
+__LABEL102:
+	DEFW 0016h
+	DEFB 29h
+	DEFB 20h
+	DEFB 76h
+	DEFB 69h
+	DEFB 76h
+	DEFB 65h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 79h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 62h
+	DEFB 65h
+	DEFB 73h
+__LABEL103:
+	DEFW 0016h
+	DEFB 65h
+	DEFB 76h
+	DEFB 69h
+	DEFB 74h
+	DEFB 61h
+	DEFB 72h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 61h
+	DEFB 20h
+	DEFB 74h
+	DEFB 6Fh
+	DEFB 64h
+	DEFB 61h
+	DEFB 20h
+	DEFB 63h
+	DEFB 6Fh
+	DEFB 73h
+	DEFB 74h
+	DEFB 61h
+	DEFB 2Eh
+__LABEL104:
+	DEFW 001Bh
+	DEFB 50h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 20h
+	DEFB 73h
+	DEFB 69h
+	DEFB 20h
+	DEFB 74h
+	DEFB 6Fh
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 65h
+	DEFB 73h
+	DEFB 74h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 66h
+	DEFB 75h
+	DEFB 65h
+	DEFB 72h
+	DEFB 61h
+	DEFB 20h
+	DEFB 70h
+	DEFB 6Fh
+	DEFB 63h
+	DEFB 6Fh
+__LABEL105:
+	DEFW 001Ch
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 69h
+	DEFB 73h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 65h
+	DEFB 73h
+	DEFB 74h
+	DEFB 61h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 6Ch
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 61h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 20h
+	DEFB 61h
+	DEFB 72h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 61h
+	DEFB 73h
+__LABEL106:
+	DEFW 000Bh
+	DEFB 6Dh
+	DEFB 6Fh
+	DEFB 76h
+	DEFB 65h
+	DEFB 64h
+	DEFB 69h
+	DEFB 7Ah
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 28h
+__LABEL107:
+	DEFW 0001h
+	DEFB 94h
+__LABEL108:
+	DEFW 000Ch
+	DEFB 29h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 63h
+	DEFB 75h
+	DEFB 61h
+	DEFB 6Ch
+	DEFB 65h
+	DEFB 73h
+__LABEL109:
+	DEFW 001Ch
+	DEFB 64h
+	DEFB 65h
+	DEFB 62h
+	DEFB 65h
+	DEFB 72h
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 65h
+	DEFB 76h
+	DEFB 69h
+	DEFB 74h
+	DEFB 61h
+	DEFB 72h
+	DEFB 20h
+	DEFB 73h
+	DEFB 69h
+	DEFB 20h
+	DEFB 6Eh
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 71h
+	DEFB 75h
+	DEFB 69h
+	DEFB 65h
+	DEFB 72h
+	DEFB 65h
+	DEFB 73h
+__LABEL110:
+	DEFW 0016h
+	DEFB 74h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 65h
+	DEFB 72h
+	DEFB 20h
+	DEFB 75h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 68h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 72h
+	DEFB 69h
+	DEFB 62h
+	DEFB 6Ch
+	DEFB 65h
+	DEFB 20h
+	DEFB 66h
+	DEFB 69h
+	DEFB 6Eh
+	DEFB 2Eh
+__LABEL111:
+	DEFW 001Eh
+	DEFB 50h
+	DEFB 61h
+	DEFB 72h
+	DEFB 61h
+	DEFB 20h
+	DEFB 63h
+	DEFB 6Fh
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 72h
+	DEFB 6Fh
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 72h
+	DEFB 20h
+	DEFB 61h
+	DEFB 20h
+	DEFB 52h
+	DEFB 69h
+	DEFB 63h
+	DEFB 6Bh
+	DEFB 79h
+	DEFB 20h
+	DEFB 75h
+	DEFB 73h
+	DEFB 61h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 73h
+__LABEL112:
+	DEFW 001Eh
+	DEFB 74h
+	DEFB 65h
+	DEFB 63h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 51h
+	DEFB 2Ch
+	DEFB 41h
+	DEFB 2Ch
+	DEFB 4Fh
+	DEFB 2Ch
+	DEFB 50h
+	DEFB 20h
+	DEFB 79h
+	DEFB 20h
+	DEFB 4Dh
+	DEFB 2Eh
+	DEFB 20h
+	DEFB 50h
+	DEFB 61h
+	DEFB 72h
+	DEFB 61h
+	DEFB 20h
+	DEFB 6Dh
+	DEFB 61h
+	DEFB 79h
+	DEFB 6Fh
+	DEFB 72h
+__LABEL113:
+	DEFW 001Eh
+	DEFB 64h
+	DEFB 65h
+	DEFB 73h
+	DEFB 67h
+	DEFB 72h
+	DEFB 61h
+	DEFB 63h
+	DEFB 69h
+	DEFB 61h
+	DEFB 20h
+	DEFB 52h
+	DEFB 69h
+	DEFB 63h
+	DEFB 6Bh
+	DEFB 79h
+	DEFB 20h
+	DEFB 65h
+	DEFB 73h
+	DEFB 20h
+	DEFB 75h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 62h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 72h
+	DEFB 61h
+	DEFB 63h
+	DEFB 68h
+	DEFB 6Fh
+__LABEL114:
+	DEFW 001Ch
+	DEFB 65h
+	DEFB 6Dh
+	DEFB 70h
+	DEFB 65h
+	DEFB 64h
+	DEFB 65h
+	DEFB 72h
+	DEFB 6Eh
+	DEFB 69h
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 79h
+	DEFB 20h
+	DEFB 6Eh
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 65h
+	DEFB 73h
+	DEFB 20h
+	DEFB 63h
+	DEFB 61h
+	DEFB 70h
+	DEFB 61h
+	DEFB 7Ah
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+__LABEL115:
+	DEFW 0020h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 64h
+	DEFB 61h
+	DEFB 72h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 69h
+	DEFB 6Eh
+	DEFB 65h
+	DEFB 61h
+	DEFB 20h
+	DEFB 72h
+	DEFB 65h
+	DEFB 63h
+	DEFB 74h
+	DEFB 61h
+	DEFB 2Ch
+	DEFB 20h
+	DEFB 70h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 71h
+	DEFB 75h
+	DEFB 65h
+__LABEL116:
+	DEFW 003Dh
+	DEFB 63h
+	DEFB 75h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 74h
+	DEFB 65h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 73h
+	DEFB 70h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 63h
+	DEFB 65h
+	DEFB 73h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 74h
+	DEFB 65h
+	DEFB 72h
+	DEFB 61h
+	DEFB 6Ch
+	DEFB 6Dh
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 65h
+	DEFB 74h
+	DEFB 61h
+	DEFB 6Dh
+	DEFB 62h
+	DEFB 69h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 68h
+	DEFB 61h
+	DEFB 72h
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 68h
+	DEFB 61h
+	DEFB 63h
+	DEFB 69h
+	DEFB 61h
+	DEFB 20h
+	DEFB 61h
+	DEFB 62h
+	DEFB 61h
+	DEFB 6Ah
+	DEFB 6Fh
+	DEFB 2Eh
+__LABEL117:
+	DEFW 001Bh
+	DEFB 4Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 74h
+	DEFB 65h
+	DEFB 63h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 4Dh
+	DEFB 20h
+	DEFB 61h
+	DEFB 62h
+	DEFB 72h
+	DEFB 65h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 6Dh
+	DEFB 61h
+	DEFB 70h
+	DEFB 61h
+	DEFB 20h
+	DEFB 64h
+	DEFB 65h
+	DEFB 6Ch
+__LABEL118:
+	DEFW 001Ch
+	DEFB 74h
+	DEFB 65h
+	DEFB 73h
+	DEFB 6Fh
+	DEFB 72h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 69h
+	DEFB 6Eh
+	DEFB 64h
+	DEFB 69h
+	DEFB 63h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 74h
+	DEFB 65h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Ch
+	DEFB 20h
+	DEFB 63h
+	DEFB 61h
+	DEFB 6Dh
+	DEFB 69h
+	DEFB 6Eh
+	DEFB 6Fh
+__LABEL119:
+	DEFW 001Eh
+	DEFB 70h
+	DEFB 65h
+	DEFB 72h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 63h
+	DEFB 75h
+	DEFB 69h
+	DEFB 64h
+	DEFB 61h
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 2Ch
+	DEFB 20h
+	DEFB 6Dh
+	DEFB 69h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 72h
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 70h
+	DEFB 69h
+	DEFB 65h
+	DEFB 72h
+	DEFB 64h
+	DEFB 61h
+	DEFB 73h
+__LABEL120:
+	DEFW 0018h
+	DEFB 74h
+	DEFB 69h
+	DEFB 65h
+	DEFB 6Dh
+	DEFB 70h
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 63h
+	DEFB 6Fh
+	DEFB 6Eh
+	DEFB 73h
+	DEFB 75h
+	DEFB 6Ch
+	DEFB 74h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 64h
+	DEFB 6Fh
+	DEFB 6Ch
+	DEFB 6Fh
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 6Fh
+	DEFB 73h
+__LABEL121:
+	DEFW 001Fh
+	DEFB 70h
+	DEFB 69h
+	DEFB 72h
+	DEFB 61h
+	DEFB 74h
+	DEFB 61h
+	DEFB 73h
+	DEFB 20h
+	DEFB 73h
+	DEFB 65h
+	DEFB 20h
+	DEFB 61h
+	DEFB 63h
+	DEFB 65h
+	DEFB 72h
+	DEFB 63h
+	DEFB 61h
+	DEFB 72h
+	DEFB 61h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 61h
+	DEFB 20h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 20h
+	DEFB 69h
+	DEFB 73h
+	DEFB 6Ch
+	DEFB 61h
+	DEFB 2Eh
+__LABEL122:
+	DEFW 001Ch
+	DEFB 4Dh
+	DEFB 75h
+	DEFB 63h
+	DEFB 68h
+	DEFB 61h
+	DEFB 20h
+	DEFB 73h
+	DEFB 75h
+	DEFB 65h
+	DEFB 72h
+	DEFB 74h
+	DEFB 65h
+	DEFB 20h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 20h
+	DEFB 74h
+	DEFB 75h
+	DEFB 20h
+	DEFB 61h
+	DEFB 76h
+	DEFB 65h
+	DEFB 6Eh
+	DEFB 74h
+	DEFB 75h
+	DEFB 72h
+	DEFB 61h
+	DEFB 21h
+__LABEL132:
+	DEFW 0001h
+	DEFB 0A0h
+__LABEL135:
+	DEFW 0001h
+	DEFB 0A1h
+__LABEL138:
+	DEFW 0019h
+	DEFB 20h
+	DEFB 4Ch
+	DEFB 4Fh
+	DEFB 53h
+	DEFB 20h
+	DEFB 50h
+	DEFB 49h
+	DEFB 52h
+	DEFB 41h
+	DEFB 54h
+	DEFB 41h
+	DEFB 53h
+	DEFB 20h
+	DEFB 48h
+	DEFB 41h
+	DEFB 4Eh
+	DEFB 20h
+	DEFB 4Ch
+	DEFB 4Ch
+	DEFB 45h
+	DEFB 47h
+	DEFB 41h
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 21h
+__LABEL139:
+	DEFW 001Ah
+	DEFB 20h
+	DEFB 20h
+	DEFB 48h
+	DEFB 41h
+	DEFB 53h
+	DEFB 20h
+	DEFB 53h
+	DEFB 49h
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 20h
+	DEFB 43h
+	DEFB 41h
+	DEFB 50h
+	DEFB 54h
+	DEFB 55h
+	DEFB 52h
+	DEFB 41h
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 2Eh
+	DEFB 2Eh
+	DEFB 2Eh
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+__LABEL142:
+	DEFW 001Bh
+	DEFB 20h
+	DEFB 48h
+	DEFB 41h
+	DEFB 53h
+	DEFB 20h
+	DEFB 43h
+	DEFB 4Fh
+	DEFB 4Eh
+	DEFB 53h
+	DEFB 45h
+	DEFB 47h
+	DEFB 55h
+	DEFB 49h
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 20h
+	DEFB 45h
+	DEFB 4Ch
+	DEFB 20h
+	DEFB 54h
+	DEFB 45h
+	DEFB 53h
+	DEFB 4Fh
+	DEFB 52h
+	DEFB 4Fh
+	DEFB 21h
+	DEFB 20h
+__LABEL152:
+	DEFW 001Eh
+	DEFB 20h
+	DEFB 41h
+	DEFB 52h
+	DEFB 45h
+	DEFB 4Eh
+	DEFB 41h
+	DEFB 53h
+	DEFB 20h
+	DEFB 4Dh
+	DEFB 4Fh
+	DEFB 56h
+	DEFB 45h
+	DEFB 44h
+	DEFB 49h
+	DEFB 5Ah
+	DEFB 41h
+	DEFB 53h
+	DEFB 21h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+__LABEL155:
+	DEFW 001Eh
+	DEFB 20h
+	DEFB 54h
+	DEFB 45h
+	DEFB 20h
+	DEFB 41h
+	DEFB 59h
+	DEFB 55h
+	DEFB 44h
+	DEFB 41h
+	DEFB 20h
+	DEFB 55h
+	DEFB 4Eh
+	DEFB 20h
+	DEFB 4Eh
+	DEFB 41h
+	DEFB 54h
+	DEFB 49h
+	DEFB 56h
+	DEFB 4Fh
+	DEFB 21h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+__LABEL156:
+	DEFW 001Dh
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+__LABEL157:
+	DEFW 0001h
+	DEFB 0A2h
+__LABEL158:
+	DEFW 001Eh
+	DEFB 20h
+	DEFB 48h
+	DEFB 41h
+	DEFB 53h
+	DEFB 20h
+	DEFB 4Dh
+	DEFB 55h
+	DEFB 45h
+	DEFB 52h
+	DEFB 54h
+	DEFB 4Fh
+	DEFB 20h
+	DEFB 41h
+	DEFB 48h
+	DEFB 4Fh
+	DEFB 47h
+	DEFB 41h
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 2Eh
+	DEFB 2Eh
+	DEFB 2Eh
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+__LABEL161:
+	DEFW 001Ah
+	DEFB 20h
+	DEFB 4Eh
+	DEFB 41h
+	DEFB 54h
+	DEFB 49h
+	DEFB 56h
+	DEFB 4Fh
+	DEFB 53h
+	DEFB 20h
+	DEFB 48h
+	DEFB 4Fh
+	DEFB 53h
+	DEFB 54h
+	DEFB 49h
+	DEFB 4Ch
+	DEFB 45h
+	DEFB 53h
+	DEFB 20h
+	DEFB 41h
+	DEFB 54h
+	DEFB 41h
+	DEFB 43h
+	DEFB 41h
+	DEFB 4Eh
+	DEFB 21h
+	DEFB 20h
+__LABEL164:
+	DEFW 001Ch
+	DEFB 20h
+	DEFB 20h
+	DEFB 50h
+	DEFB 4Fh
+	DEFB 52h
+	DEFB 20h
+	DEFB 53h
+	DEFB 55h
+	DEFB 45h
+	DEFB 52h
+	DEFB 54h
+	DEFB 45h
+	DEFB 20h
+	DEFB 45h
+	DEFB 53h
+	DEFB 43h
+	DEFB 41h
+	DEFB 50h
+	DEFB 41h
+	DEFB 53h
+	DEFB 2Eh
+	DEFB 2Eh
+	DEFB 2Eh
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+__LABEL165:
+	DEFW 0019h
+	DEFB 20h
+	DEFB 4Dh
+	DEFB 55h
+	DEFB 45h
+	DEFB 52h
+	DEFB 45h
+	DEFB 53h
+	DEFB 20h
+	DEFB 50h
+	DEFB 4Fh
+	DEFB 52h
+	DEFB 20h
+	DEFB 55h
+	DEFB 4Eh
+	DEFB 41h
+	DEFB 20h
+	DEFB 4Ch
+	DEFB 41h
+	DEFB 4Eh
+	DEFB 5Ah
+	DEFB 41h
+	DEFB 2Eh
+	DEFB 2Eh
+	DEFB 2Eh
+	DEFB 20h
+__LABEL178:
+	DEFW 0001h
+	DEFB 98h
+__LABEL179:
+	DEFW 0001h
+	DEFB 99h
+__LABEL188:
+	DEFW 0001h
+	DEFB 9Fh
+__LABEL211:
+	DEFW 0001h
+	DEFB 9Ch
+__LABEL212:
+	DEFW 0001h
+	DEFB 9Dh
+__LABEL213:
+	DEFW 0001h
+	DEFB 9Eh
+__LABEL214:
+	DEFW 001Bh
+	DEFB 20h
+	DEFB 49h
+	DEFB 4Eh
+	DEFB 44h
+	DEFB 49h
+	DEFB 43h
+	DEFB 41h
+	DEFB 20h
+	DEFB 45h
+	DEFB 4Ch
+	DEFB 20h
+	DEFB 4Ch
+	DEFB 55h
+	DEFB 47h
+	DEFB 41h
+	DEFB 52h
+	DEFB 20h
+	DEFB 44h
+	DEFB 45h
+	DEFB 4Ch
+	DEFB 20h
+	DEFB 54h
+	DEFB 45h
+	DEFB 53h
+	DEFB 4Fh
+	DEFB 52h
+	DEFB 4Fh
+__LABEL220:
+	DEFW 0001h
+	DEFB 9Bh
+__LABEL226:
+	DEFW 0001h
+	DEFB 9Ah
+__LABEL238:
+	DEFW 0001h
+	DEFB 97h
+__LABEL241:
+	DEFW 0001h
+	DEFB 96h
+#line 1 "addf.asm"
+
+#line 1 "stackf.asm"
+
+	; -------------------------------------------------------------
+	; Functions to manage FP-Stack of the ZX Spectrum ROM CALC
+	; -------------------------------------------------------------
+
+
+	__FPSTACK_PUSH EQU 2AB6h	; Stores an FP number into the ROM FP stack (A, ED CB)
+	__FPSTACK_POP  EQU 2BF1h	; Pops an FP number out of the ROM FP stack (A, ED CB)
+
+__FPSTACK_PUSH2: ; Pushes Current A ED CB registers and top of the stack on (SP + 4)
+	                 ; Second argument to push into the stack calculator is popped out of the stack
+	                 ; Since the caller routine also receives the parameters into the top of the stack
+	                 ; four bytes must be removed from SP before pop them out
+
+	    call __FPSTACK_PUSH ; Pushes A ED CB into the FP-STACK
+	    exx
+	    pop hl       ; Caller-Caller return addr
+	    exx
+	    pop hl       ; Caller return addr
+
+	    pop af
+	    pop de
+	    pop bc
+
+	    push hl      ; Caller return addr
+	    exx
+	    push hl      ; Caller-Caller return addr
+	    exx
+
+	    jp __FPSTACK_PUSH
+
+
+__FPSTACK_I16:	; Pushes 16 bits integer in HL into the FP ROM STACK
+					; This format is specified in the ZX 48K Manual
+					; You can push a 16 bit signed integer as
+					; 0 SS LL HH 0, being SS the sign and LL HH the low
+					; and High byte respectively
+		ld a, h
+		rla			; sign to Carry
+		sbc	a, a	; 0 if positive, FF if negative
+		ld e, a
+		ld d, l
+		ld c, h
+		xor a
+		ld b, a
+		jp __FPSTACK_PUSH
+#line 2 "addf.asm"
+
+	; -------------------------------------------------------------
+	; Floating point library using the FP ROM Calculator (ZX 48K)
+	; All of them uses A EDCB registers as 1st paramter.
+	; For binary operators, the 2n operator must be pushed into the
+	; stack, in the order AF DE BC (F not used).
+	;
+	; Uses CALLEE convention
+	; -------------------------------------------------------------
+
+__ADDF:	; Addition
+		call __FPSTACK_PUSH2
+
+		; ------------- ROM ADD
+		rst 28h
+		defb 0fh	; ADD
+		defb 38h;   ; END CALC
+
+		jp __FPSTACK_POP
+
+#line 5214 "IslaTesoro.zxbas"
+#line 1 "alloc.asm"
+
+; vim: ts=4:et:sw=4:
+	; Copyleft (K) by Jose M. Rodriguez de la Rosa
+	;  (a.k.a. Boriel)
+;  http://www.boriel.com
+	;
+	; This ASM library is licensed under the MIT license
+	; you can use it for any purpose (even for commercial
+	; closed source programs).
+	;
+	; Please read the MIT license on the internet
+
+	; ----- IMPLEMENTATION NOTES ------
+	; The heap is implemented as a linked list of free blocks.
+
+; Each free block contains this info:
+	;
+	; +----------------+ <-- HEAP START
+	; | Size (2 bytes) |
+	; |        0       | <-- Size = 0 => DUMMY HEADER BLOCK
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   | <-- If Size > 4, then this contains (size - 4) bytes
+	; | (0 if Size = 4)|   |
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   |
+	; | (0 if Size = 4)|   |
+	; +----------------+   |
+	;   <Allocated>        | <-- This zone is in use (Already allocated)
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   |
+	; | (0 if Size = 4)|   |
+	; +----------------+ <-+
+	; | Next (2 bytes) |--> NULL => END OF LIST
+	; |    0 = NULL    |
+	; +----------------+
+	; | <free bytes...>|
+	; | (0 if Size = 4)|
+	; +----------------+
+
+
+	; When a block is FREED, the previous and next pointers are examined to see
+	; if we can defragment the heap. If the block to be freed is just next to the
+	; previous, or to the next (or both) they will be converted into a single
+	; block (so defragmented).
+
+
+	;   MEMORY MANAGER
+	;
+	; This library must be initialized calling __MEM_INIT with
+	; HL = BLOCK Start & DE = Length.
+
+	; An init directive is useful for initialization routines.
+	; They will be added automatically if needed.
+
+#line 1 "error.asm"
+
+	; Simple error control routines
+; vim:ts=4:et:
+
+	ERR_NR    EQU    23610    ; Error code system variable
+
+
+	; Error code definitions (as in ZX spectrum manual)
+
+; Set error code with:
+	;    ld a, ERROR_CODE
+	;    ld (ERR_NR), a
+
+
+	ERROR_Ok                EQU    -1
+	ERROR_SubscriptWrong    EQU     2
+	ERROR_OutOfMemory       EQU     3
+	ERROR_OutOfScreen       EQU     4
+	ERROR_NumberTooBig      EQU     5
+	ERROR_InvalidArg        EQU     9
+	ERROR_IntOutOfRange     EQU    10
+	ERROR_NonsenseInBasic   EQU    11
+	ERROR_InvalidFileName   EQU    14
+	ERROR_InvalidColour     EQU    19
+	ERROR_BreakIntoProgram  EQU    20
+	ERROR_TapeLoadingErr    EQU    26
+
+
+	; Raises error using RST #8
+__ERROR:
+	    ld (__ERROR_CODE), a
+	    rst 8
+__ERROR_CODE:
+	    nop
+	    ret
+
+	; Sets the error system variable, but keeps running.
+	; Usually this instruction if followed by the END intermediate instruction.
+__STOP:
+	    ld (ERR_NR), a
+	    ret
+#line 69 "alloc.asm"
+#line 1 "heapinit.asm"
+
+; vim: ts=4:et:sw=4:
+	; Copyleft (K) by Jose M. Rodriguez de la Rosa
+	;  (a.k.a. Boriel)
+;  http://www.boriel.com
+	;
+	; This ASM library is licensed under the BSD license
+	; you can use it for any purpose (even for commercial
+	; closed source programs).
+	;
+	; Please read the BSD license on the internet
+
+	; ----- IMPLEMENTATION NOTES ------
+	; The heap is implemented as a linked list of free blocks.
+
+; Each free block contains this info:
+	;
+	; +----------------+ <-- HEAP START
+	; | Size (2 bytes) |
+	; |        0       | <-- Size = 0 => DUMMY HEADER BLOCK
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   | <-- If Size > 4, then this contains (size - 4) bytes
+	; | (0 if Size = 4)|   |
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   |
+	; | (0 if Size = 4)|   |
+	; +----------------+   |
+	;   <Allocated>        | <-- This zone is in use (Already allocated)
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   |
+	; | (0 if Size = 4)|   |
+	; +----------------+ <-+
+	; | Next (2 bytes) |--> NULL => END OF LIST
+	; |    0 = NULL    |
+	; +----------------+
+	; | <free bytes...>|
+	; | (0 if Size = 4)|
+	; +----------------+
+
+
+	; When a block is FREED, the previous and next pointers are examined to see
+	; if we can defragment the heap. If the block to be breed is just next to the
+	; previous, or to the next (or both) they will be converted into a single
+	; block (so defragmented).
+
+
+	;   MEMORY MANAGER
+	;
+	; This library must be initialized calling __MEM_INIT with
+	; HL = BLOCK Start & DE = Length.
+
+	; An init directive is useful for initialization routines.
+	; They will be added automatically if needed.
+
+
+
+
+	; ---------------------------------------------------------------------
+	;  __MEM_INIT must be called to initalize this library with the
+	; standard parameters
+	; ---------------------------------------------------------------------
+__MEM_INIT: ; Initializes the library using (RAMTOP) as start, and
+	        ld hl, ZXBASIC_MEM_HEAP  ; Change this with other address of heap start
+	        ld de, ZXBASIC_HEAP_SIZE ; Change this with your size
+
+	; ---------------------------------------------------------------------
+	;  __MEM_INIT2 initalizes this library
+; Parameters:
+;   HL : Memory address of 1st byte of the memory heap
+;   DE : Length in bytes of the Memory Heap
+	; ---------------------------------------------------------------------
+__MEM_INIT2:
+	        ; HL as TOP
+	        PROC
+
+	        dec de
+	        dec de
+	        dec de
+	        dec de        ; DE = length - 4; HL = start
+	        ; This is done, because we require 4 bytes for the empty dummy-header block
+
+	        xor a
+	        ld (hl), a
+	        inc hl
+        ld (hl), a ; First "free" block is a header: size=0, Pointer=&(Block) + 4
+	        inc hl
+
+	        ld b, h
+	        ld c, l
+	        inc bc
+	        inc bc      ; BC = starts of next block
+
+	        ld (hl), c
+	        inc hl
+	        ld (hl), b
+	        inc hl      ; Pointer to next block
+
+	        ld (hl), e
+	        inc hl
+	        ld (hl), d
+	        inc hl      ; Block size (should be length - 4 at start); This block contains all the available memory
+
+	        ld (hl), a ; NULL (0000h) ; No more blocks (a list with a single block)
+	        inc hl
+	        ld (hl), a
+
+	        ld a, 201
+	        ld (__MEM_INIT), a; "Pokes" with a RET so ensure this routine is not called again
+	        ret
+
+	        ENDP
+
+#line 70 "alloc.asm"
+
+
+	; ---------------------------------------------------------------------
+	; MEM_ALLOC
+	;  Allocates a block of memory in the heap.
+	;
+	; Parameters
+	;  BC = Length of requested memory block
+	;
+; Returns:
+	;  HL = Pointer to the allocated block in memory. Returns 0 (NULL)
+	;       if the block could not be allocated (out of memory)
+	; ---------------------------------------------------------------------
+
+MEM_ALLOC:
+__MEM_ALLOC: ; Returns the 1st free block found of the given length (in BC)
+	        PROC
+
+	        LOCAL __MEM_LOOP
+	        LOCAL __MEM_DONE
+	        LOCAL __MEM_SUBTRACT
+	        LOCAL __MEM_START
+	        LOCAL TEMP, TEMP0
+
+	TEMP EQU TEMP0 + 1
+
+	        ld hl, 0
+	        ld (TEMP), hl
+
+__MEM_START:
+	        ld hl, ZXBASIC_MEM_HEAP  ; This label point to the heap start
+	        inc bc
+	        inc bc  ; BC = BC + 2 ; block size needs 2 extra bytes for hidden pointer
+
+__MEM_LOOP:  ; Loads lengh at (HL, HL+). If Lenght >= BC, jump to __MEM_DONE
+	        ld a, h ;  HL = NULL (No memory available?)
+	        or l
+#line 111 "C:/ZXBasic/library-asm/alloc.asm"
+	        ret z ; NULL
+#line 113 "C:/ZXBasic/library-asm/alloc.asm"
+	        ; HL = Pointer to Free block
+	        ld e, (hl)
+	        inc hl
+	        ld d, (hl)
+	        inc hl          ; DE = Block Length
+
+	        push hl         ; HL = *pointer to -> next block
+	        ex de, hl
+	        or a            ; CF = 0
+	        sbc hl, bc      ; FREE >= BC (Length)  (HL = BlockLength - Length)
+	        jp nc, __MEM_DONE
+	        pop hl
+	        ld (TEMP), hl
+
+	        ex de, hl
+	        ld e, (hl)
+	        inc hl
+	        ld d, (hl)
+	        ex de, hl
+	        jp __MEM_LOOP
+
+__MEM_DONE:  ; A free block has been found.
+	             ; Check if at least 4 bytes remains free (HL >= 4)
+	        push hl
+	        exx  ; exx to preserve bc
+	        pop hl
+	        ld bc, 4
+	        or a
+	        sbc hl, bc
+	        exx
+	        jp nc, __MEM_SUBTRACT
+	        ; At this point...
+	        ; less than 4 bytes remains free. So we return this block entirely
+	        ; We must link the previous block with the next to this one
+	        ; (DE) => Pointer to next block
+	        ; (TEMP) => &(previous->next)
+	        pop hl     ; Discard current block pointer
+	        push de
+	        ex de, hl  ; DE = Previous block pointer; (HL) = Next block pointer
+	        ld a, (hl)
+	        inc hl
+	        ld h, (hl)
+	        ld l, a    ; HL = (HL)
+	        ex de, hl  ; HL = Previous block pointer; DE = Next block pointer
+TEMP0:
+	        ld hl, 0   ; Pre-previous block pointer
+
+	        ld (hl), e
+	        inc hl
+	        ld (hl), d ; LINKED
+	        pop hl ; Returning block.
+
+	        ret
+
+__MEM_SUBTRACT:
+	        ; At this point we have to store HL value (Length - BC) into (DE - 2)
+	        ex de, hl
+	        dec hl
+	        ld (hl), d
+	        dec hl
+	        ld (hl), e ; Store new block length
+
+	        add hl, de ; New length + DE => free-block start
+	        pop de     ; Remove previous HL off the stack
+
+	        ld (hl), c ; Store length on its 1st word
+	        inc hl
+	        ld (hl), b
+	        inc hl     ; Return hl
+	        ret
+
+	        ENDP
+
+#line 5215 "IslaTesoro.zxbas"
+#line 1 "array.asm"
+
+; vim: ts=4:et:sw=4:
+	; Copyleft (K) by Jose M. Rodriguez de la Rosa
+	;  (a.k.a. Boriel)
+;  http://www.boriel.com
+	; -------------------------------------------------------------------
+	; Simple array Index routine
+	; Number of total indexes dimensions - 1 at beginning of memory
+	; HL = Start of array memory (First two bytes contains N-1 dimensions)
+	; Dimension values on the stack, (top of the stack, highest dimension)
+	; E.g. A(2, 4) -> PUSH <4>; PUSH <2>
+
+	; For any array of N dimension A(aN-1, ..., a1, a0)
+	; and dimensions D[bN-1, ..., b1, b0], the offset is calculated as
+	; O = [a0 + b0 * (a1 + b1 * (a2 + ... bN-2(aN-1)))]
+; What I will do here is to calculate the following sequence:
+	; ((aN-1 * bN-2) + aN-2) * bN-3 + ...
+
+
+#line 1 "mul16.asm"
+
+__MUL16:	; Mutiplies HL with the last value stored into de stack
+				; Works for both signed and unsigned
+
+			PROC
+
+			LOCAL __MUL16LOOP
+	        LOCAL __MUL16NOADD
+
+			ex de, hl
+			pop hl		; Return address
+			ex (sp), hl ; CALLEE caller convention
+
+__MUL16_FAST:
+	        ld b, 16
+	        ld a, h
+	        ld c, l
+	        ld hl, 0
+
+__MUL16LOOP:
+	        add hl, hl  ; hl << 1
+	        sla c
+	        rla         ; a,c << 1
+	        jp nc, __MUL16NOADD
+	        add hl, de
+
+__MUL16NOADD:
+	        djnz __MUL16LOOP
+
+			ret	; Result in hl (16 lower bits)
+
+			ENDP
+
+#line 20 "array.asm"
+
+#line 24 "C:/ZXBasic/library-asm/array.asm"
+
+__ARRAY_PTR:   ;; computes an array offset from a pointer
+	    ld c, (hl)
+	    inc hl
+	    ld h, (hl)
+	    ld l, c
+
+__ARRAY:
+		PROC
+
+		LOCAL LOOP
+		LOCAL ARRAY_END
+		LOCAL RET_ADDRESS ; Stores return address
+		LOCAL TMP_ARR_PTR ; Stores pointer temporarily
+
+	    ld e, (hl)
+	    inc hl
+	    ld d, (hl)
+	    inc hl
+	    ld (TMP_ARR_PTR), hl
+	    ex de, hl
+		ex (sp), hl	; Return address in HL, array address in the stack
+		ld (RET_ADDRESS + 1), hl ; Stores it for later
+
+		exx
+		pop hl		; Will use H'L' as the pointer
+		ld c, (hl)	; Loads Number of dimensions from (hl)
+		inc hl
+		ld b, (hl)
+		inc hl		; Ready
+		exx
+
+		ld hl, 0	; HL = Offset "accumulator"
+
+LOOP:
+#line 62 "C:/ZXBasic/library-asm/array.asm"
+		pop bc		; Get next index (Ai) from the stack
+
+#line 72 "C:/ZXBasic/library-asm/array.asm"
+
+		add hl, bc	; Adds current index
+
+		exx			; Checks if B'C' = 0
+		ld a, b		; Which means we must exit (last element is not multiplied by anything)
+		or c
+		jr z, ARRAY_END		; if B'Ci == 0 we are done
+
+		ld e, (hl)			; Loads next dimension into D'E'
+		inc hl
+		ld d, (hl)
+		inc hl
+		push de
+		dec bc				; Decrements loop counter
+		exx
+		pop de				; DE = Max bound Number (i-th dimension)
+
+	    call __FNMUL
+		jp LOOP
+
+ARRAY_END:
+		ld a, (hl)
+		exx
+
+#line 101 "C:/ZXBasic/library-asm/array.asm"
+	    LOCAL ARRAY_SIZE_LOOP
+
+	    ex de, hl
+	    ld hl, 0
+	    ld b, a
+ARRAY_SIZE_LOOP:
+	    add hl, de
+	    djnz ARRAY_SIZE_LOOP
+
+#line 111 "C:/ZXBasic/library-asm/array.asm"
+
+	    ex de, hl
+		ld hl, (TMP_ARR_PTR)
+		ld a, (hl)
+		inc hl
+		ld h, (hl)
+		ld l, a
+		add hl, de  ; Adds element start
+
+RET_ADDRESS:
+		jp 0
+
+	    ;; Performs a faster multiply for little 16bit numbs
+	    LOCAL __FNMUL, __FNMUL2
+
+__FNMUL:
+	    xor a
+	    or h
+	    jp nz, __MUL16_FAST
+	    or l
+	    ret z
+
+	    cp 33
+	    jp nc, __MUL16_FAST
+
+	    ld b, l
+	    ld l, h  ; HL = 0
+
+__FNMUL2:
+	    add hl, de
+	    djnz __FNMUL2
+	    ret
+
+TMP_ARR_PTR:
+	    DW 0  ; temporary storage for pointer to tables
+
+		ENDP
+
+#line 5216 "IslaTesoro.zxbas"
+#line 1 "border.asm"
+
+	; __FASTCALL__ Routine to change de border
+	; Parameter (color) specified in A register
+
+	BORDER EQU 229Bh
+
+	; Nothing to do! (Directly from the ZX Spectrum ROM)
+
+#line 5217 "IslaTesoro.zxbas"
+#line 1 "bright.asm"
+
+	; Sets bright flag in ATTR_P permanently
+; Parameter: Paper color in A register
+
+#line 1 "const.asm"
+
+	; Global constants
+
+	P_FLAG	EQU 23697
+	FLAGS2	EQU 23681
+	ATTR_P	EQU 23693	; permanet ATTRIBUTES
+	ATTR_T	EQU 23695	; temporary ATTRIBUTES
+	CHARS	EQU 23606 ; Pointer to ROM/RAM Charset
+	UDG	EQU 23675 ; Pointer to UDG Charset
+	MEM0	EQU 5C92h ; Temporary memory buffer used by ROM chars
+
+#line 5 "bright.asm"
+
+BRIGHT:
+		ld hl, ATTR_P
+
+	    PROC
+	    LOCAL IS_TR
+	    LOCAL IS_ZERO
+
+__SET_BRIGHT:
+		; Another entry. This will set the bright flag at location pointer by DE
+		cp 8
+		jr z, IS_TR
+
+		; # Convert to 0/1
+		or a
+		jr z, IS_ZERO
+		ld a, 0x40
+
+IS_ZERO:
+		ld b, a	; Saves the color
+		ld a, (hl)
+		and 0BFh ; Clears previous value
+		or b
+		ld (hl), a
+		inc hl
+		res 6, (hl)  ;Reset bit 6 to disable transparency
+		ret
+
+IS_TR:  ; transparent
+		inc hl ; Points DE to MASK_T or MASK_P
+	    set 6, (hl)  ;Set bit 6 to enable transparency
+		ret
+
+	; Sets the BRIGHT flag passed in A register in the ATTR_T variable
+BRIGHT_TMP:
+		ld hl, ATTR_T
+		jr __SET_BRIGHT
+	    ENDP
+#line 5218 "IslaTesoro.zxbas"
+#line 1 "chr.asm"
+
+	; CHR$(x, y, x) returns the string CHR$(x) + CHR$(y) + CHR$(z)
+	;
+
+
+
+CHR:	; Returns HL = Pointer to STRING (NULL if no memory)
+			; Requires alloc.asm for dynamic memory heap.
+		; Parameters: HL = Number of bytes to insert (already push onto the stack)
+			; STACK => parameters (16 bit, only the High byte is considered)
+			; Used registers A, A', BC, DE, HL, H'L'
+
+			PROC
+
+			LOCAL __POPOUT
+			LOCAL TMP
+
+	TMP		EQU 23629 ; (DEST System variable)
+
+			ld a, h
+			or l
+			ret z	; If Number of parameters is ZERO, return NULL STRING
+
+			ld b, h
+			ld c, l
+
+			pop hl	; Return address
+			ld (TMP), hl
+
+			push bc
+			inc bc
+			inc bc	; BC = BC + 2 => (2 bytes for the length number)
+			call __MEM_ALLOC
+			pop bc
+
+			ld d, h
+			ld e, l			; Saves HL in DE
+
+			ld a, h
+			or l
+			jr z, __POPOUT	; No Memory, return
+
+			ld (hl), c
+			inc hl
+			ld (hl), b
+			inc hl
+
+__POPOUT:	; Removes out of the stack every byte and return
+				; If Zero Flag is set, don't store bytes in memory
+			ex af, af' ; Save Zero Flag
+
+			ld a, b
+			or c
+			jr z, __CHR_END
+
+			dec bc
+			pop af 	   ; Next byte
+
+			ex af, af' ; Recovers Zero flag
+			jr z, __POPOUT
+
+			ex af, af' ; Saves Zero flag
+			ld (hl), a
+			inc hl
+	        ex af, af' ; Recovers Zero Flag
+
+			jp __POPOUT
+
+__CHR_END:
+			ld hl, (TMP)
+			push hl		; Restores return addr
+			ex de, hl	; Recovers original HL ptr
+			ret
+
+			ENDP
+
+#line 5219 "IslaTesoro.zxbas"
+#line 1 "cls.asm"
+
+	; JUMPS directly to spectrum CLS
+	; This routine does not clear lower screen
+
+	;CLS	EQU	0DAFh
+
+	; Our faster implementation
+
+#line 1 "sposn.asm"
+
+	; Printing positioning library.
+			PROC
+			LOCAL ECHO_E
+
+__LOAD_S_POSN:		; Loads into DE current ROW, COL print position from S_POSN mem var.
+			ld de, (S_POSN)
+			ld hl, (MAXX)
+			or a
+			sbc hl, de
+			ex de, hl
+			ret
+
+
+__SAVE_S_POSN:		; Saves ROW, COL from DE into S_POSN mem var.
+			ld hl, (MAXX)
+			or a
+			sbc hl, de
+			ld (S_POSN), hl ; saves it again
+			ret
+
+
+	ECHO_E	EQU 23682
+	MAXX	EQU ECHO_E   ; Max X position + 1
+	MAXY	EQU MAXX + 1 ; Max Y position + 1
+
+	S_POSN	EQU 23688
+	POSX	EQU S_POSN		; Current POS X
+	POSY	EQU S_POSN + 1	; Current POS Y
+
+			ENDP
+
+#line 9 "cls.asm"
+
+CLS:
+		PROC
+
+		LOCAL COORDS
+		LOCAL __CLS_SCR
+		LOCAL ATTR_P
+		LOCAL SCREEN
+
+		ld hl, 0
+		ld (COORDS), hl
+	    ld hl, 1821h
+		ld (S_POSN), hl
+__CLS_SCR:
+		ld hl, SCREEN
+		ld (hl), 0
+		ld d, h
+		ld e, l
+		inc de
+		ld bc, 6144
+		ldir
+
+		; Now clear attributes
+
+		ld a, (ATTR_P)
+		ld (hl), a
+		ld bc, 767
+		ldir
+		ret
+
+	COORDS	EQU	23677
+	SCREEN	EQU 16384 ; Default start of the screen (can be changed)
+	ATTR_P	EQU 23693
+	;you can poke (SCREEN_SCRADDR) to change CLS, DRAW & PRINTing address
+
+	SCREEN_ADDR EQU (__CLS_SCR + 1) ; Address used by print and other screen routines
+								    ; to get the start of the screen
+		ENDP
+
+#line 5220 "IslaTesoro.zxbas"
+#line 1 "copy_attr.asm"
+
+
+#line 1 "print.asm"
+
+; vim:ts=4:sw=4:et:
+	; PRINT command routine
+	; Does not print attribute. Use PRINT_STR or PRINT_NUM for that
+
+
+
+#line 1 "in_screen.asm"
+
+
+
+
+__IN_SCREEN:
+		; Returns NO carry if current coords (D, E)
+		; are OUT of the screen limits (MAXX, MAXY)
+
+		PROC
+		LOCAL __IN_SCREEN_ERR
+
+		ld hl, MAXX
+		ld a, e
+		cp (hl)
+		jr nc, __IN_SCREEN_ERR	; Do nothing and return if out of range
+
+		ld a, d
+		inc hl
+		cp (hl)
+		;; jr nc, __IN_SCREEN_ERR	; Do nothing and return if out of range
+		;; ret
+	    ret c                       ; Return if carry (OK)
+
+__IN_SCREEN_ERR:
+__OUT_OF_SCREEN_ERR:
+		; Jumps here if out of screen
+		ld a, ERROR_OutOfScreen
+	    jp __STOP   ; Saves error code and exits
+
+		ENDP
+#line 8 "print.asm"
+#line 1 "table_jump.asm"
+
+
+JUMP_HL_PLUS_2A: ; Does JP (HL + A*2) Modifies DE. Modifies A
+		add a, a
+
+JUMP_HL_PLUS_A:	 ; Does JP (HL + A) Modifies DE
+		ld e, a
+		ld d, 0
+
+JUMP_HL_PLUS_DE: ; Does JP (HL + DE)
+		add hl, de
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+		ex de, hl
+CALL_HL:
+		jp (hl)
+
+#line 9 "print.asm"
+#line 1 "ink.asm"
+
+	; Sets ink color in ATTR_P permanently
+; Parameter: Paper color in A register
+
+
+
+INK:
+		PROC
+		LOCAL __SET_INK
+		LOCAL __SET_INK2
+
+		ld de, ATTR_P
+
+__SET_INK:
+		cp 8
+		jr nz, __SET_INK2
+
+		inc de ; Points DE to MASK_T or MASK_P
+		ld a, (de)
+		or 7 ; Set bits 0,1,2 to enable transparency
+		ld (de), a
+		ret
+
+__SET_INK2:
+		; Another entry. This will set the ink color at location pointer by DE
+		and 7	; # Gets color mod 8
+		ld b, a	; Saves the color
+		ld a, (de)
+		and 0F8h ; Clears previous value
+		or b
+		ld (de), a
+		inc de ; Points DE to MASK_T or MASK_P
+		ld a, (de)
+		and 0F8h ; Reset bits 0,1,2 sign to disable transparency
+		ld (de), a ; Store new attr
+		ret
+
+	; Sets the INK color passed in A register in the ATTR_T variable
+INK_TMP:
+		ld de, ATTR_T
+		jp __SET_INK
+
+		ENDP
+
+#line 10 "print.asm"
+#line 1 "paper.asm"
+
+	; Sets paper color in ATTR_P permanently
+; Parameter: Paper color in A register
+
+
+
+PAPER:
+		PROC
+		LOCAL __SET_PAPER
+		LOCAL __SET_PAPER2
+
+		ld de, ATTR_P
+
+__SET_PAPER:
+		cp 8
+		jr nz, __SET_PAPER2
+		inc de
+		ld a, (de)
+		or 038h
+		ld (de), a
+		ret
+
+		; Another entry. This will set the paper color at location pointer by DE
+__SET_PAPER2:
+		and 7	; # Remove
+		rlca
+		rlca
+		rlca		; a *= 8
+
+		ld b, a	; Saves the color
+		ld a, (de)
+		and 0C7h ; Clears previous value
+		or b
+		ld (de), a
+		inc de ; Points to MASK_T or MASK_P accordingly
+		ld a, (de)
+		and 0C7h  ; Resets bits 3,4,5
+		ld (de), a
+		ret
+
+
+	; Sets the PAPER color passed in A register in the ATTR_T variable
+PAPER_TMP:
+		ld de, ATTR_T
+		jp __SET_PAPER
+		ENDP
+
+#line 11 "print.asm"
+#line 1 "flash.asm"
+
+	; Sets flash flag in ATTR_P permanently
+; Parameter: Paper color in A register
+
+
+
+FLASH:
+		ld hl, ATTR_P
+
+	    PROC
+	    LOCAL IS_TR
+	    LOCAL IS_ZERO
+
+__SET_FLASH:
+		; Another entry. This will set the flash flag at location pointer by DE
+		cp 8
+		jr z, IS_TR
+
+		; # Convert to 0/1
+		or a
+		jr z, IS_ZERO
+		ld a, 0x80
+
+IS_ZERO:
+		ld b, a	; Saves the color
+		ld a, (hl)
+		and 07Fh ; Clears previous value
+		or b
+		ld (hl), a
+		inc hl
+		res 7, (hl)  ;Reset bit 7 to disable transparency
+		ret
+
+IS_TR:  ; transparent
+		inc hl ; Points DE to MASK_T or MASK_P
+		set 7, (hl)  ;Set bit 7 to enable transparency
+		ret
+
+	; Sets the FLASH flag passed in A register in the ATTR_T variable
+FLASH_TMP:
+		ld hl, ATTR_T
+		jr __SET_FLASH
+	    ENDP
+
+#line 12 "print.asm"
+
+#line 1 "over.asm"
+
+	; Sets OVER flag in P_FLAG permanently
+; Parameter: OVER flag in bit 0 of A register
+
+
+
+OVER:
+		PROC
+
+		ld c, a ; saves it for later
+		and 2
+		ld hl, FLAGS2
+		res 1, (HL)
+		or (hl)
+		ld (hl), a
+
+		ld a, c	; Recovers previous value
+		and 1	; # Convert to 0/1
+		add a, a; # Shift left 1 bit for permanent
+
+		ld hl, P_FLAG
+		res 1, (hl)
+		or (hl)
+		ld (hl), a
+		ret
+
+	; Sets OVER flag in P_FLAG temporarily
+OVER_TMP:
+		ld c, a ; saves it for later
+		and 2	; gets bit 1; clears carry
+		rra
+		ld hl, FLAGS2
+		res 0, (hl)
+		or (hl)
+		ld (hl), a
+
+		ld a, c	; Recovers previous value
+		and 1
+		ld hl, P_FLAG
+		res 0, (hl)
+	    or (hl)
+		ld (hl), a
+		jp __SET_ATTR_MODE
+
+		ENDP
+
+#line 14 "print.asm"
+#line 1 "inverse.asm"
+
+	; Sets INVERSE flag in P_FLAG permanently
+; Parameter: INVERSE flag in bit 0 of A register
+
+
+
+INVERSE:
+		PROC
+
+		and 1	; # Convert to 0/1
+		add a, a; # Shift left 3 bits for permanent
+		add a, a
+		add a, a
+		ld hl, P_FLAG
+		res 3, (hl)
+		or (hl)
+		ld (hl), a
+		ret
+
+	; Sets INVERSE flag in P_FLAG temporarily
+INVERSE_TMP:
+		and 1
+		add a, a
+		add a, a; # Shift left 2 bits for temporary
+		ld hl, P_FLAG
+		res 2, (hl)
+		or (hl)
+		ld (hl), a
+		jp __SET_ATTR_MODE
+
+		ENDP
+
+#line 15 "print.asm"
+#line 1 "bold.asm"
+
+	; Sets BOLD flag in P_FLAG permanently
+; Parameter: BOLD flag in bit 0 of A register
+
+
+BOLD:
+		PROC
+
+		and 1
+		rlca
+	    rlca
+	    rlca
+		ld hl, FLAGS2
+		res 3, (HL)
+		or (hl)
+		ld (hl), a
+		ret
+
+	; Sets BOLD flag in P_FLAG temporarily
+BOLD_TMP:
+		and 1
+		rlca
+		rlca
+		ld hl, FLAGS2
+		res 2, (hl)
+		or (hl)
+		ld (hl), a
+		ret
+
+		ENDP
+
+#line 16 "print.asm"
+#line 1 "italic.asm"
+
+	; Sets ITALIC flag in P_FLAG permanently
+; Parameter: ITALIC flag in bit 0 of A register
+
+
+ITALIC:
+		PROC
+
+		and 1
+	    rrca
+	    rrca
+	    rrca
+		ld hl, FLAGS2
+		res 5, (HL)
+		or (hl)
+		ld (hl), a
+		ret
+
+	; Sets ITALIC flag in P_FLAG temporarily
+ITALIC_TMP:
+		and 1
+		rrca
+		rrca
+		rrca
+		rrca
+		ld hl, FLAGS2
+		res 4, (hl)
+		or (hl)
+		ld (hl), a
+		ret
+
+		ENDP
+
+#line 17 "print.asm"
+
+#line 1 "attr.asm"
+
+	; Attribute routines
+; vim:ts=4:et:sw:
+
+
+
+
+
+
+
+__ATTR_ADDR:
+	    ; calc start address in DE (as (32 * d) + e)
+    ; Contributed by Santiago Romero at http://www.speccy.org
+	    ld h, 0                     ;  7 T-States
+	    ld a, d                     ;  4 T-States
+	    add a, a     ; a * 2        ;  4 T-States
+	    add a, a     ; a * 4        ;  4 T-States
+	    ld l, a      ; HL = A * 4   ;  4 T-States
+
+	    add hl, hl   ; HL = A * 8   ; 15 T-States
+	    add hl, hl   ; HL = A * 16  ; 15 T-States
+	    add hl, hl   ; HL = A * 32  ; 15 T-States
+
+    ld d, 18h ; DE = 6144 + E. Note: 6144 is the screen size (before attr zone)
+	    add hl, de
+
+	    ld de, (SCREEN_ADDR)    ; Adds the screen address
+	    add hl, de
+
+	    ; Return current screen address in HL
+	    ret
+
+
+	; Sets the attribute at a given screen coordinate (D, E).
+	; The attribute is taken from the ATTR_T memory variable
+	; Used by PRINT routines
+SET_ATTR:
+
+	    ; Checks for valid coords
+	    call __IN_SCREEN
+	    ret nc
+
+__SET_ATTR:
+	    ; Internal __FASTCALL__ Entry used by printing routines
+	    PROC
+
+	    call __ATTR_ADDR
+
+__SET_ATTR2:  ; Sets attr from ATTR_T to (HL) which points to the scr address
+	    ld de, (ATTR_T)    ; E = ATTR_T, D = MASK_T
+
+	    ld a, d
+	    and (hl)
+	    ld c, a    ; C = current screen color, masked
+
+	    ld a, d
+	    cpl        ; Negate mask
+	    and e    ; Mask current attributes
+	    or c    ; Mix them
+	    ld (hl), a ; Store result in screen
+
+	    ret
+
+	    ENDP
+
+
+	; Sets the attribute at a given screen pixel address in hl
+	; HL contains the address in RAM for a given pixel (not a coordinate)
+SET_PIXEL_ADDR_ATTR:
+	    ;; gets ATTR position with offset given in SCREEN_ADDR
+	    ld a, h
+	    rrca
+	    rrca
+	    rrca
+	    and 3
+	    or 18h
+	    ld h, a
+	    ld de, (SCREEN_ADDR)
+	    add hl, de  ;; Final screen addr
+	    jp __SET_ATTR2
+#line 19 "print.asm"
+
+	; Putting a comment starting with @INIT <address>
+	; will make the compiler to add a CALL to <address>
+	; It is useful for initialization routines.
+
+
+__PRINT_INIT: ; To be called before program starts (initializes library)
+	        PROC
+
+	        ld hl, __PRINT_START
+	        ld (PRINT_JUMP_STATE), hl
+
+	        ld hl, 1821h
+	        ld (MAXX), hl  ; Sets current maxX and maxY
+
+	        xor a
+	        ld (FLAGS2), a
+
+	        ret
+
+
+__PRINTCHAR: ; Print character store in accumulator (A register)
+	             ; Modifies H'L', B'C', A'F', D'E', A
+
+	        LOCAL PO_GR_1
+
+	        LOCAL __PRCHAR
+	        LOCAL __PRINT_CONT
+	        LOCAL __PRINT_CONT2
+	        LOCAL __PRINT_JUMP
+	        LOCAL __SRCADDR
+	        LOCAL __PRINT_UDG
+	        LOCAL __PRGRAPH
+	        LOCAL __PRINT_START
+	        LOCAL __NO_SCROLL
+	        LOCAL __ROM_SCROLL_SCR
+	        LOCAL __TVFLAGS
+
+	        __ROM_SCROLL_SCR EQU 0DFEh
+	        __TVFLAGS EQU 5C3Ch
+
+	PRINT_JUMP_STATE EQU __PRINT_JUMP + 1
+
+__PRINT_JUMP:
+	        jp __PRINT_START    ; Where to jump. If we print 22 (AT), next two calls jumps to AT1 and AT2 respectively
+
+__PRINT_START:
+	        cp ' '
+	        jp c, __PRINT_SPECIAL    ; Characters below ' ' are special ones
+
+	        exx               ; Switch to alternative registers
+	        ex af, af'        ; Saves a value (char to print) for later
+
+	        ld hl, __TVFLAGS
+	        bit 1, (hl)
+	        jp z, __NO_SCROLL
+	        call __ROM_SCROLL_SCR
+	        ld hl, __TVFLAGS
+	        res 1, (hl)
+__NO_SCROLL:
+	        call __LOAD_S_POSN
+
+	; At this point we have the new coord
+	        ld hl, (SCREEN_ADDR)
+
+	        ld a, d
+	        ld c, a        ; Saves it for later
+
+	        and 0F8h    ; Masks 3 lower bit ; zy
+	        ld d, a
+
+	        ld a, c        ; Recovers it
+	        and 07h     ; MOD 7 ; y1
+	        rrca
+	        rrca
+	        rrca
+
+	        or e
+	        ld e, a
+	        add hl, de    ; HL = Screen address + DE
+	        ex de, hl     ; DE = Screen address
+
+	        ex af, af'
+
+	        cp 80h    ; Is it an UDG or a ?
+	        jp c, __SRCADDR
+
+	        cp 90h
+	        jp nc, __PRINT_UDG
+
+	        ; Print a 8 bit pattern (80h to 8Fh)
+
+	        ld b, a
+	        call PO_GR_1 ; This ROM routine will generate the bit pattern at MEM0
+	        ld hl, MEM0
+	        jp __PRGRAPH
+
+	PO_GR_1 EQU 0B38h
+
+__PRINT_UDG:
+	        sub 90h ; Sub ASC code
+	        ld bc, (UDG)
+	        jp __PRGRAPH0
+
+	__SOURCEADDR EQU (__SRCADDR + 1)    ; Address of the pointer to chars source
+__SRCADDR:
+	        ld bc, (CHARS)
+
+__PRGRAPH0:
+        add a, a    ; A = a * 2 (since a < 80h) ; Thanks to Metalbrain at http://foro.speccy.org
+	        ld l, a
+	        ld h, 0        ; HL = a * 2 (accumulator)
+	        add hl, hl
+	        add hl, hl ; HL = a * 8
+	        add hl, bc ; HL = CHARS address
+
+__PRGRAPH:
+	        ex de, hl  ; HL = Write Address, DE = CHARS address
+	        bit 2, (iy + $47)
+	        call nz, __BOLD
+	        bit 4, (iy + $47)
+	        call nz, __ITALIC
+	        ld b, 8 ; 8 bytes per char
+__PRCHAR:
+	        ld a, (de) ; DE *must* be ALWAYS source, and HL destiny
+
+PRINT_MODE:        ; Which operation is used to write on the screen
+                ; Set it with:
+	                ; LD A, <OPERATION>
+	                ; LD (PRINT_MODE), A
+	                ;
+                ; Available opertions:
+                ; NORMAL: 0h  --> NOP    ; OVER 0
+                ; XOR    : AEh --> XOR (HL)        ; OVER 1
+                ; OR    : B6h --> OR (HL)        ; PUTSPRITE
+                ; AND   : A6h --> AND (HL)        ; PUTMASK
+	        nop        ;
+
+INVERSE_MODE:    ; 00 -> NOP -> INVERSE 0
+	        nop        ; 2F -> CPL -> INVERSE 1
+
+	        ld (hl), a
+
+	        inc de
+	        inc h     ; Next line
+	        djnz __PRCHAR
+
+	        call __LOAD_S_POSN
+	        push de
+	        call __SET_ATTR
+	        pop de
+	        inc e            ; COL = COL + 1
+	        ld hl, (MAXX)
+	        ld a, e
+	        dec l            ; l = MAXX
+	        cp l            ; Lower than max?
+	        jp c, __PRINT_CONT; Nothing to do
+	        call __PRINT_EOL1
+	        exx            ; counteracts __PRINT_EOL1 exx
+	        jp __PRINT_CONT2
+
+__PRINT_CONT:
+	        call __SAVE_S_POSN
+
+__PRINT_CONT2:
+	        exx
+	        ret
+
+	; ------------- SPECIAL CHARS (< 32) -----------------
+
+__PRINT_SPECIAL:    ; Jumps here if it is a special char
+	        exx
+	        ld hl, __PRINT_TABLE
+	        jp JUMP_HL_PLUS_2A
+
+
+PRINT_EOL:        ; Called WHENEVER there is no ";" at end of PRINT sentence
+	        exx
+
+__PRINT_0Dh:        ; Called WHEN printing CHR$(13)
+	        call __LOAD_S_POSN
+
+__PRINT_EOL1:        ; Another entry called from PRINT when next line required
+	        ld e, 0
+
+__PRINT_EOL2:
+	        ld a, d
+	        inc a
+
+__PRINT_AT1_END:
+	        ld hl, (MAXY)
+	        cp l
+	        jr c, __PRINT_EOL_END    ; Carry if (MAXY) < d
+	        ld hl, __TVFLAGS
+	        set 1, (hl)
+	        ld a, d
+
+__PRINT_EOL_END:
+	        ld d, a
+
+__PRINT_AT2_END:
+	        call __SAVE_S_POSN
+	        exx
+	        ret
+
+__PRINT_COM:
+	        exx
+	        push hl
+	        push de
+	        push bc
+	        call PRINT_COMMA
+	        pop bc
+	        pop de
+	        pop hl
+	        ret
+
+__PRINT_TAB:
+	        ld hl, __PRINT_TAB1
+	        jp __PRINT_SET_STATE
+
+__PRINT_TAB1:
+	        ld (MEM0), a
+	        ld hl, __PRINT_TAB2
+	        ld (PRINT_JUMP_STATE), hl
+	        ret
+
+__PRINT_TAB2:
+	        ld a, (MEM0)        ; Load tab code (ignore the current one)
+	        push hl
+	        push de
+	        push bc
+	        ld hl, __PRINT_START
+	        ld (PRINT_JUMP_STATE), hl
+	        call PRINT_TAB
+	        pop bc
+	        pop de
+	        pop hl
+	        ret
+
+__PRINT_NOP:
+__PRINT_RESTART:
+	        ld hl, __PRINT_START
+	        jp __PRINT_SET_STATE
+
+__PRINT_AT:
+	        ld hl, __PRINT_AT1
+
+__PRINT_SET_STATE:
+	        ld (PRINT_JUMP_STATE), hl    ; Saves next entry call
+	        exx
+	        ret
+
+__PRINT_AT1:    ; Jumps here if waiting for 1st parameter
+	        exx
+	        ld hl, __PRINT_AT2
+	        ld (PRINT_JUMP_STATE), hl    ; Saves next entry call
+	        call __LOAD_S_POSN
+	        jp __PRINT_AT1_END
+
+__PRINT_AT2:
+	        exx
+	        ld hl, __PRINT_START
+	        ld (PRINT_JUMP_STATE), hl    ; Saves next entry call
+	        call __LOAD_S_POSN
+	        ld e, a
+	        ld hl, (MAXX)
+	        cp (hl)
+	        jr c, __PRINT_AT2_END
+	        jr __PRINT_EOL1
+
+__PRINT_DEL:
+	        call __LOAD_S_POSN        ; Gets current screen position
+	        dec e
+	        ld a, -1
+	        cp e
+	        jp nz, __PRINT_AT2_END
+	        ld hl, (MAXX)
+	        ld e, l
+	        dec e
+	        dec e
+	        dec d
+	        cp d
+	        jp nz, __PRINT_AT2_END
+	        ld d, h
+	        dec d
+	        jp __PRINT_AT2_END
+
+__PRINT_INK:
+	        ld hl, __PRINT_INK2
+	        jp __PRINT_SET_STATE
+
+__PRINT_INK2:
+	        exx
+	        call INK_TMP
+	        jp __PRINT_RESTART
+
+__PRINT_PAP:
+	        ld hl, __PRINT_PAP2
+	        jp __PRINT_SET_STATE
+
+__PRINT_PAP2:
+	        exx
+	        call PAPER_TMP
+	        jp __PRINT_RESTART
+
+__PRINT_FLA:
+	        ld hl, __PRINT_FLA2
+	        jp __PRINT_SET_STATE
+
+__PRINT_FLA2:
+	        exx
+	        call FLASH_TMP
+	        jp __PRINT_RESTART
+
+__PRINT_BRI:
+	        ld hl, __PRINT_BRI2
+	        jp __PRINT_SET_STATE
+
+__PRINT_BRI2:
+	        exx
+	        call BRIGHT_TMP
+	        jp __PRINT_RESTART
+
+__PRINT_INV:
+	        ld hl, __PRINT_INV2
+	        jp __PRINT_SET_STATE
+
+__PRINT_INV2:
+	        exx
+	        call INVERSE_TMP
+	        jp __PRINT_RESTART
+
+__PRINT_OVR:
+	        ld hl, __PRINT_OVR2
+	        jp __PRINT_SET_STATE
+
+__PRINT_OVR2:
+	        exx
+	        call OVER_TMP
+	        jp __PRINT_RESTART
+
+__PRINT_BOLD:
+	        ld hl, __PRINT_BOLD2
+	        jp __PRINT_SET_STATE
+
+__PRINT_BOLD2:
+	        exx
+	        call BOLD_TMP
+	        jp __PRINT_RESTART
+
+__PRINT_ITA:
+	        ld hl, __PRINT_ITA2
+	        jp __PRINT_SET_STATE
+
+__PRINT_ITA2:
+	        exx
+	        call ITALIC_TMP
+	        jp __PRINT_RESTART
+
+
+__BOLD:
+	        push hl
+	        ld hl, MEM0
+	        ld b, 8
+__BOLD_LOOP:
+	        ld a, (de)
+	        ld c, a
+	        rlca
+	        or c
+	        ld (hl), a
+	        inc hl
+	        inc de
+	        djnz __BOLD_LOOP
+	        pop hl
+	        ld de, MEM0
+	        ret
+
+
+__ITALIC:
+	        push hl
+	        ld hl, MEM0
+	        ex de, hl
+	        ld bc, 8
+	        ldir
+	        ld hl, MEM0
+	        srl (hl)
+	        inc hl
+	        srl (hl)
+	        inc hl
+	        srl (hl)
+	        inc hl
+	        inc hl
+	        inc hl
+	        sla (hl)
+	        inc hl
+	        sla (hl)
+	        inc hl
+	        sla (hl)
+	        pop hl
+	        ld de, MEM0
+	        ret
+
+PRINT_COMMA:
+	        call __LOAD_S_POSN
+	        ld a, e
+	        and 16
+	        add a, 16
+
+PRINT_TAB:
+	        PROC
+	        LOCAL LOOP, CONTINUE
+
+	        inc a
+	        call __LOAD_S_POSN ; e = current row
+	        ld d, a
+	        ld a, e
+	        cp 21h
+	        jr nz, CONTINUE
+	        ld e, -1
+CONTINUE:
+	        ld a, d
+	        inc e
+	        sub e  ; A = A - E
+	        and 31 ;
+	        ret z  ; Already at position E
+	        ld b, a
+LOOP:
+	        ld a, ' '
+	        call __PRINTCHAR
+	        djnz LOOP
+	        ret
+	        ENDP
+
+PRINT_AT: ; CHanges cursor to ROW, COL
+	         ; COL in A register
+	         ; ROW in stack
+
+	        pop hl    ; Ret address
+	        ex (sp), hl ; callee H = ROW
+	        ld l, a
+	        ex de, hl
+
+	        call __IN_SCREEN
+	        ret nc    ; Return if out of screen
+
+	        jp __SAVE_S_POSN
+
+	        LOCAL __PRINT_COM
+	        LOCAL __BOLD
+	        LOCAL __BOLD_LOOP
+	        LOCAL __ITALIC
+	        LOCAL __PRINT_EOL1
+	        LOCAL __PRINT_EOL2
+	        LOCAL __PRINT_AT1
+	        LOCAL __PRINT_AT2
+	        LOCAL __PRINT_AT2_END
+	        LOCAL __PRINT_BOLD
+	        LOCAL __PRINT_BOLD2
+	        LOCAL __PRINT_ITA
+	        LOCAL __PRINT_ITA2
+	        LOCAL __PRINT_INK
+	        LOCAL __PRINT_PAP
+	        LOCAL __PRINT_SET_STATE
+	        LOCAL __PRINT_TABLE
+	        LOCAL __PRINT_TAB, __PRINT_TAB1, __PRINT_TAB2
+
+__PRINT_TABLE:    ; Jump table for 0 .. 22 codes
+
+	        DW __PRINT_NOP    ;  0
+	        DW __PRINT_NOP    ;  1
+	        DW __PRINT_NOP    ;  2
+	        DW __PRINT_NOP    ;  3
+	        DW __PRINT_NOP    ;  4
+	        DW __PRINT_NOP    ;  5
+	        DW __PRINT_COM    ;  6 COMMA
+	        DW __PRINT_NOP    ;  7
+	        DW __PRINT_DEL    ;  8 DEL
+	        DW __PRINT_NOP    ;  9
+	        DW __PRINT_NOP    ; 10
+	        DW __PRINT_NOP    ; 11
+	        DW __PRINT_NOP    ; 12
+	        DW __PRINT_0Dh    ; 13
+	        DW __PRINT_BOLD    ; 14
+	        DW __PRINT_ITA    ; 15
+	        DW __PRINT_INK    ; 16
+	        DW __PRINT_PAP    ; 17
+	        DW __PRINT_FLA    ; 18
+	        DW __PRINT_BRI    ; 19
+	        DW __PRINT_INV    ; 20
+	        DW __PRINT_OVR    ; 21
+	        DW __PRINT_AT    ; 22 AT
+	        DW __PRINT_TAB  ; 23 TAB
+
+	        ENDP
+
+
+#line 3 "copy_attr.asm"
+#line 4 "C:/ZXBasic/library-asm/copy_attr.asm"
+
+
+
+COPY_ATTR:
+		; Just copies current permanent attribs to temporal attribs
+		; and sets print mode
+		PROC
+
+		LOCAL INVERSE1
+		LOCAL __REFRESH_TMP
+
+	INVERSE1 EQU 02Fh
+
+		ld hl, (ATTR_P)
+		ld (ATTR_T), hl
+
+		ld hl, FLAGS2
+		call __REFRESH_TMP
+
+		ld hl, P_FLAG
+		call __REFRESH_TMP
+
+
+__SET_ATTR_MODE:		; Another entry to set print modes. A contains (P_FLAG)
+
+
+		LOCAL TABLE
+		LOCAL CONT2
+
+		rra					; Over bit to carry
+		ld a, (FLAGS2)
+		rla					; Over bit in bit 1, Over2 bit in bit 2
+		and 3				; Only bit 0 and 1 (OVER flag)
+
+		ld c, a
+		ld b, 0
+
+		ld hl, TABLE
+		add hl, bc
+		ld a, (hl)
+		ld (PRINT_MODE), a
+
+		ld hl, (P_FLAG)
+		xor a			; NOP -> INVERSE0
+		bit 2, l
+		jr z, CONT2
+		ld a, INVERSE1 	; CPL -> INVERSE1
+
+CONT2:
+		ld (INVERSE_MODE), a
+		ret
+
+TABLE:
+		nop				; NORMAL MODE
+		xor (hl)		; OVER 1 MODE
+		and (hl)		; OVER 2 MODE
+		or  (hl)		; OVER 3 MODE
+
+#line 65 "C:/ZXBasic/library-asm/copy_attr.asm"
+
+__REFRESH_TMP:
+		ld a, (hl)
+		and 10101010b
+		ld c, a
+		rra
+		or c
+		ld (hl), a
+		ret
+
+		ENDP
+
+#line 5221 "IslaTesoro.zxbas"
+#line 1 "eq16.asm"
+
+__EQ16:	; Test if 16bit values HL == DE
+		; Returns result in A: 0 = False, FF = True
+			xor a	; Reset carry flag
+			sbc hl, de
+			ret nz
+			inc a
+			ret
+
+#line 5222 "IslaTesoro.zxbas"
+
+#line 1 "free.asm"
+
+; vim: ts=4:et:sw=4:
+	; Copyleft (K) by Jose M. Rodriguez de la Rosa
+	;  (a.k.a. Boriel)
+;  http://www.boriel.com
+	;
+	; This ASM library is licensed under the BSD license
+	; you can use it for any purpose (even for commercial
+	; closed source programs).
+	;
+	; Please read the BSD license on the internet
+
+	; ----- IMPLEMENTATION NOTES ------
+	; The heap is implemented as a linked list of free blocks.
+
+; Each free block contains this info:
+	;
+	; +----------------+ <-- HEAP START
+	; | Size (2 bytes) |
+	; |        0       | <-- Size = 0 => DUMMY HEADER BLOCK
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   | <-- If Size > 4, then this contains (size - 4) bytes
+	; | (0 if Size = 4)|   |
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   |
+	; | (0 if Size = 4)|   |
+	; +----------------+   |
+	;   <Allocated>        | <-- This zone is in use (Already allocated)
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   |
+	; | (0 if Size = 4)|   |
+	; +----------------+ <-+
+	; | Next (2 bytes) |--> NULL => END OF LIST
+	; |    0 = NULL    |
+	; +----------------+
+	; | <free bytes...>|
+	; | (0 if Size = 4)|
+	; +----------------+
+
+
+	; When a block is FREED, the previous and next pointers are examined to see
+	; if we can defragment the heap. If the block to be breed is just next to the
+	; previous, or to the next (or both) they will be converted into a single
+	; block (so defragmented).
+
+
+	;   MEMORY MANAGER
+	;
+	; This library must be initialized calling __MEM_INIT with
+	; HL = BLOCK Start & DE = Length.
+
+	; An init directive is useful for initialization routines.
+	; They will be added automatically if needed.
+
+
+
+	; ---------------------------------------------------------------------
+	; MEM_FREE
+	;  Frees a block of memory
+	;
+; Parameters:
+	;  HL = Pointer to the block to be freed. If HL is NULL (0) nothing
+	;  is done
+	; ---------------------------------------------------------------------
+
+MEM_FREE:
+__MEM_FREE: ; Frees the block pointed by HL
+	            ; HL DE BC & AF modified
+	        PROC
+
+	        LOCAL __MEM_LOOP2
+	        LOCAL __MEM_LINK_PREV
+	        LOCAL __MEM_JOIN_TEST
+	        LOCAL __MEM_BLOCK_JOIN
+
+	        ld a, h
+	        or l
+	        ret z       ; Return if NULL pointer
+
+	        dec hl
+	        dec hl
+	        ld b, h
+	        ld c, l    ; BC = Block pointer
+
+	        ld hl, ZXBASIC_MEM_HEAP  ; This label point to the heap start
+
+__MEM_LOOP2:
+	        inc hl
+	        inc hl     ; Next block ptr
+
+	        ld e, (hl)
+	        inc hl
+	        ld d, (hl) ; Block next ptr
+	        ex de, hl  ; DE = &(block->next); HL = block->next
+
+	        ld a, h    ; HL == NULL?
+	        or l
+	        jp z, __MEM_LINK_PREV; if so, link with previous
+
+	        or a       ; Clear carry flag
+	        sbc hl, bc ; Carry if BC > HL => This block if before
+	        add hl, bc ; Restores HL, preserving Carry flag
+	        jp c, __MEM_LOOP2 ; This block is before. Keep searching PASS the block
+
+	;------ At this point current HL is PAST BC, so we must link (DE) with BC, and HL in BC->next
+
+__MEM_LINK_PREV:    ; Link (DE) with BC, and BC->next with HL
+	        ex de, hl
+	        push hl
+	        dec hl
+
+	        ld (hl), c
+	        inc hl
+	        ld (hl), b ; (DE) <- BC
+
+	        ld h, b    ; HL <- BC (Free block ptr)
+	        ld l, c
+	        inc hl     ; Skip block length (2 bytes)
+	        inc hl
+	        ld (hl), e ; Block->next = DE
+	        inc hl
+	        ld (hl), d
+	        ; --- LINKED ; HL = &(BC->next) + 2
+
+	        call __MEM_JOIN_TEST
+	        pop hl
+
+__MEM_JOIN_TEST:   ; Checks for fragmented contiguous blocks and joins them
+	                   ; hl = Ptr to current block + 2
+	        ld d, (hl)
+	        dec hl
+	        ld e, (hl)
+	        dec hl
+	        ld b, (hl) ; Loads block length into BC
+	        dec hl
+	        ld c, (hl) ;
+
+	        push hl    ; Saves it for later
+	        add hl, bc ; Adds its length. If HL == DE now, it must be joined
+	        or a
+	        sbc hl, de ; If Z, then HL == DE => We must join
+	        pop hl
+	        ret nz
+
+__MEM_BLOCK_JOIN:  ; Joins current block (pointed by HL) with next one (pointed by DE). HL->length already in BC
+	        push hl    ; Saves it for later
+	        ex de, hl
+
+	        ld e, (hl) ; DE -> block->next->length
+	        inc hl
+	        ld d, (hl)
+	        inc hl
+
+	        ex de, hl  ; DE = &(block->next)
+	        add hl, bc ; HL = Total Length
+
+	        ld b, h
+	        ld c, l    ; BC = Total Length
+
+	        ex de, hl
+	        ld e, (hl)
+	        inc hl
+	        ld d, (hl) ; DE = block->next
+
+	        pop hl     ; Recovers Pointer to block
+	        ld (hl), c
+	        inc hl
+	        ld (hl), b ; Length Saved
+	        inc hl
+	        ld (hl), e
+	        inc hl
+	        ld (hl), d ; Next saved
+	        ret
+
+	        ENDP
+
+#line 5224 "IslaTesoro.zxbas"
+#line 1 "ftou32reg.asm"
+
+#line 1 "neg32.asm"
+
+__ABS32:
+		bit 7, d
+		ret z
+
+__NEG32: ; Negates DEHL (Two's complement)
+		ld a, l
+		cpl
+		ld l, a
+
+		ld a, h
+		cpl
+		ld h, a
+
+		ld a, e
+		cpl
+		ld e, a
+
+		ld a, d
+		cpl
+		ld d, a
+
+		inc l
+		ret nz
+
+		inc h
+		ret nz
+
+		inc de
+		ret
+
+#line 2 "ftou32reg.asm"
+
+__FTOU32REG:	; Converts a Float to (un)signed 32 bit integer (NOTE: It's ALWAYS 32 bit signed)
+					; Input FP number in A EDCB (A exponent, EDCB mantissa)
+				; Output: DEHL 32 bit number (signed)
+		PROC
+
+		LOCAL __IS_FLOAT
+		LOCAL __NEGATE
+
+		or a
+		jr nz, __IS_FLOAT
+		; Here if it is a ZX ROM Integer
+
+		ld h, c
+		ld l, d
+	ld a, e	 ; Takes sign: FF = -, 0 = +
+		ld de, 0
+		inc a
+		jp z, __NEG32	; Negates if negative
+		ret
+
+__IS_FLOAT:  ; Jumps here if it is a true floating point number
+		ld h, e
+		push hl  ; Stores it for later (Contains Sign in H)
+
+		push de
+		push bc
+
+		exx
+		pop de   ; Loads mantissa into C'B' E'D'
+		pop bc	 ;
+
+		set 7, c ; Highest mantissa bit is always 1
+		exx
+
+		ld hl, 0 ; DEHL = 0
+		ld d, h
+		ld e, l
+
+		;ld a, c  ; Get exponent
+		sub 128  ; Exponent -= 128
+		jr z, __FTOU32REG_END	; If it was <= 128, we are done (Integers must be > 128)
+		jr c, __FTOU32REG_END	; It was decimal (0.xxx). We are done (return 0)
+
+		ld b, a  ; Loop counter = exponent - 128
+
+__FTOU32REG_LOOP:
+		exx 	 ; Shift C'B' E'D' << 1, output bit stays in Carry
+		sla d
+		rl e
+		rl b
+		rl c
+
+	    exx		 ; Shift DEHL << 1, inserting the carry on the right
+		rl l
+		rl h
+		rl e
+		rl d
+
+		djnz __FTOU32REG_LOOP
+
+__FTOU32REG_END:
+		pop af   ; Take the sign bit
+		or a	 ; Sets SGN bit to 1 if negative
+		jp m, __NEGATE ; Negates DEHL
+
+		ret
+
+__NEGATE:
+	    exx
+	    ld a, d
+	    or e
+	    or b
+	    or c
+	    exx
+	    jr z, __END
+	    inc l
+	    jr nz, __END
+	    inc h
+	    jr nz, __END
+	    inc de
+	LOCAL __END
+__END:
+	    jp __NEG32
+		ENDP
+
+
+__FTOU8:	; Converts float in C ED LH to Unsigned byte in A
+		call __FTOU32REG
+		ld a, l
+		ret
+
+#line 5225 "IslaTesoro.zxbas"
+#line 1 "gtf.asm"
+
+#line 1 "u32tofreg.asm"
+
+
+__I8TOFREG:
+		ld l, a
+		rlca
+		sbc a, a	; A = SGN(A)
+		ld h, a
+		ld e, a
+		ld d, a
+
+__I32TOFREG:	; Converts a 32bit signed integer (stored in DEHL)
+					; to a Floating Point Number returned in (A ED CB)
+
+		ld a, d
+		or a		; Test sign
+
+		jp p, __U32TOFREG	; It was positive, proceed as 32bit unsigned
+
+		call __NEG32		; Convert it to positive
+		call __U32TOFREG	; Convert it to Floating point
+
+		set 7, e			; Put the sign bit (negative) in the 31bit of mantissa
+		ret
+
+__U8TOFREG:
+					; Converts an unsigned 8 bit (A) to Floating point
+		ld l, a
+		ld h, 0
+		ld e, h
+		ld d, h
+
+__U32TOFREG:	; Converts an unsigned 32 bit integer (DEHL)
+					; to a Floating point number returned in A ED CB
+
+	    PROC
+
+	    LOCAL __U32TOFREG_END
+
+		ld a, d
+		or e
+		or h
+		or l
+	    ld b, d
+		ld c, e		; Returns 00 0000 0000 if ZERO
+		ret z
+
+		push de
+		push hl
+
+		exx
+		pop de  ; Loads integer into B'C' D'E'
+		pop bc
+		exx
+
+		ld l, 128	; Exponent
+		ld bc, 0	; DEBC = 0
+		ld d, b
+		ld e, c
+
+__U32TOFREG_LOOP: ; Also an entry point for __F16TOFREG
+		exx
+		ld a, d 	; B'C'D'E' == 0 ?
+		or e
+		or b
+		or c
+		jp z, __U32TOFREG_END	; We are done
+
+		srl b ; Shift B'C' D'E' >> 1, output bit stays in Carry
+		rr c
+		rr d
+		rr e
+		exx
+
+		rr e ; Shift EDCB >> 1, inserting the carry on the left
+		rr d
+		rr c
+		rr b
+
+		inc l	; Increment exponent
+		jp __U32TOFREG_LOOP
+
+
+__U32TOFREG_END:
+		exx
+	    ld a, l     ; Puts the exponent in a
+		res 7, e	; Sets the sign bit to 0 (positive)
+
+		ret
+	    ENDP
+
+#line 2 "gtf.asm"
+
+
+
+	; -------------------------------------------------------------
+	; Floating point library using the FP ROM Calculator (ZX 48K)
+
+	; All of them uses A EDCB registers as 1st paramter.
+	; For binary operators, the 2n operator must be pushed into the
+	; stack, in the order A DE BC.
+	;
+	; Uses CALLEE convention
+	; -------------------------------------------------------------
+
+__GTF:	; A > B
+		call __FPSTACK_PUSH2 ; ENTERS B, A
+
+		; ------------- ROM NOS-GRTR
+		ld b, 0Dh	; B < A
+		rst 28h
+		defb 0Dh	; B < A
+		defb 38h;   ; END CALC
+
+		call __FPSTACK_POP
+		jp __FTOU8; Convert to 8 bits
+
+#line 5226 "IslaTesoro.zxbas"
+
+#line 1 "inkey.asm"
+
+	; INKEY Function
+	; Returns a string allocated in dynamic memory
+	; containing the string.
+	; An empty string otherwise.
+
+
+
+INKEY:
+		PROC
+		LOCAL __EMPTY_INKEY
+		LOCAL KEY_SCAN
+		LOCAL KEY_TEST
+		LOCAL KEY_CODE
+
+		ld bc, 3	; 1 char length string
+		call __MEM_ALLOC
+
+		ld a, h
+		or l
+		ret z	; Return if NULL (No memory)
+
+		push hl ; Saves memory pointer
+
+		call KEY_SCAN
+		jp nz, __EMPTY_INKEY
+
+		call KEY_TEST
+		jp nc, __EMPTY_INKEY
+
+		dec d	; D is expected to be FLAGS so set bit 3 $FF
+				; 'L' Mode so no keywords.
+		ld e, a	; main key to A
+				; C is MODE 0 'KLC' from above still.
+		call KEY_CODE ; routine K-DECODE
+		pop hl
+
+		ld (hl), 1
+		inc hl
+		ld (hl), 0
+		inc hl
+		ld (hl), a
+		dec hl
+		dec hl	; HL Points to string result
+		ret
+
+__EMPTY_INKEY:
+		pop hl
+		xor a
+		ld (hl), a
+		inc hl
+		ld (hl), a
+		dec hl
+		ret
+
+	KEY_SCAN	EQU 028Eh
+	KEY_TEST	EQU 031Eh
+	KEY_CODE	EQU 0333h
+
+		ENDP
+
+#line 5228 "IslaTesoro.zxbas"
+#line 1 "lei8.asm"
+
+__LEI8: ; Signed <= comparison for 8bit int
+	        ; A <= H (registers)
+	    PROC
+	    LOCAL checkParity
+	    sub h
+	    jr nz, __LTI
+	    inc a
+	    ret
+
+__LTI8:  ; Test 8 bit values A < H
+	    sub h
+
+__LTI:   ; Generic signed comparison
+	    jp po, checkParity
+	    xor 0x80
+checkParity:
+	    ld a, 0     ; False
+	    ret p
+	    inc a       ; True
+	    ret
+	    ENDP
+#line 5229 "IslaTesoro.zxbas"
+#line 1 "loadstr.asm"
+
+
+
+	; Loads a string (ptr) from HL
+	; and duplicates it on dynamic memory again
+	; Finally, it returns result pointer in HL
+
+__ILOADSTR:		; This is the indirect pointer entry HL = (HL)
+			ld a, h
+			or l
+			ret z
+			ld a, (hl)
+			inc hl
+			ld h, (hl)
+			ld l, a
+
+__LOADSTR:		; __FASTCALL__ entry
+			ld a, h
+			or l
+			ret z	; Return if NULL
+
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			dec hl  ; BC = LEN(a$)
+
+			inc bc
+			inc bc	; BC = LEN(a$) + 2 (two bytes for length)
+
+			push hl
+			push bc
+			call __MEM_ALLOC
+			pop bc  ; Recover length
+			pop de  ; Recover origin
+
+			ld a, h
+			or l
+			ret z	; Return if NULL (No memory)
+
+			ex de, hl ; ldir takes HL as source, DE as destiny, so SWAP HL,DE
+			push de	; Saves destiny start
+			ldir	; Copies string (length number included)
+			pop hl	; Recovers destiny in hl as result
+			ret
+#line 5230 "IslaTesoro.zxbas"
+#line 1 "ltf.asm"
+
+
+
+
+
+	; -------------------------------------------------------------
+	; Floating point library using the FP ROM Calculator (ZX 48K)
+
+	; All of them uses A EDCB registers as 1st paramter.
+	; For binary operators, the 2n operator must be pushed into the
+	; stack, in the order A HL BC.
+	;
+	; Uses CALLEE convention
+	; -------------------------------------------------------------
+
+__LTF:	; A < B
+		call __FPSTACK_PUSH2 ; Enters B, A
+
+		; ------------- ROM NOS-LESS
+		ld b, 0Ch	; A > B (Operands stack-reversed)
+		rst 28h
+		defb 0Ch;	; A > B
+		defb 38h;   ; END CALC
+
+		call __FPSTACK_POP
+		jp __FTOU8 ; Convert to 8 bits
+
+#line 5231 "IslaTesoro.zxbas"
+#line 1 "lti8.asm"
+
+
+#line 5232 "IslaTesoro.zxbas"
+#line 1 "mul32.asm"
+
+#line 1 "_mul32.asm"
+
+
+; Ripped from: http://www.andreadrian.de/oldcpu/z80_number_cruncher.html#moztocid784223
+	; Used with permission.
+	; Multiplies 32x32 bit integer (DEHL x D'E'H'L')
+	; 64bit result is returned in H'L'H L B'C'A C
+
+
+__MUL32_64START:
+			push hl
+			exx
+			ld b, h
+			ld c, l		; BC = Low Part (A)
+			pop hl		; HL = Load Part (B)
+			ex de, hl	; DE = Low Part (B), HL = HightPart(A) (must be in B'C')
+			push hl
+
+			exx
+			pop bc		; B'C' = HightPart(A)
+			exx			; A = B'C'BC , B = D'E'DE
+
+				; multiply routine 32 * 32bit = 64bit
+				; h'l'hlb'c'ac = b'c'bc * d'e'de
+				; needs register a, changes flags
+				;
+				; this routine was with tiny differences in the
+				; sinclair zx81 rom for the mantissa multiply
+
+__LMUL:
+	        and     a               ; reset carry flag
+	        sbc     hl,hl           ; result bits 32..47 = 0
+	        exx
+	        sbc     hl,hl           ; result bits 48..63 = 0
+	        exx
+	        ld      a,b             ; mpr is b'c'ac
+	        ld      b,33            ; initialize loop counter
+	        jp      __LMULSTART
+
+__LMULLOOP:
+	        jr      nc,__LMULNOADD  ; JP is 2 cycles faster than JR. Since it's inside a LOOP
+	                                ; it can save up to 33 * 2 = 66 cycles
+	                                ; But JR if 3 cycles faster if JUMP not taken!
+	        add     hl,de           ; result += mpd
+	        exx
+	        adc     hl,de
+	        exx
+
+__LMULNOADD:
+	        exx
+	        rr      h               ; right shift upper
+	        rr      l               ; 32bit of result
+	        exx
+	        rr      h
+	        rr      l
+
+__LMULSTART:
+	        exx
+	        rr      b               ; right shift mpr/
+	        rr      c               ; lower 32bit of result
+	        exx
+	        rra                     ; equivalent to rr a
+	        rr      c
+	        djnz    __LMULLOOP
+
+			ret						; result in h'l'hlb'c'ac
+
+#line 2 "mul32.asm"
+
+__MUL32:	; multiplies 32 bit un/signed integer.
+				; First operand stored in DEHL, and 2nd onto stack
+				; Lowest part of 2nd operand on top of the stack
+				; returns the result in DE.HL
+			exx
+			pop hl	; Return ADDRESS
+			pop de	; Low part
+			ex (sp), hl ; CALLEE -> HL = High part
+			ex de, hl
+			call __MUL32_64START
+
+__TO32BIT:  ; Converts H'L'HLB'C'AC to DEHL (Discards H'L'HL)
+			exx
+			push bc
+			exx
+			pop de
+			ld h, a
+			ld l, c
+			ret
+
+
+#line 5233 "IslaTesoro.zxbas"
+#line 1 "mulf.asm"
+
+
+
+	; -------------------------------------------------------------
+	; Floating point library using the FP ROM Calculator (ZX 48K)
+	; All of them uses A EDCB registers as 1st paramter.
+	; For binary operators, the 2n operator must be pushed into the
+	; stack, in the order A DE BC.
+	;
+	; Uses CALLEE convention
+	; -------------------------------------------------------------
+
+__MULF:	; Multiplication
+		call __FPSTACK_PUSH2
+
+		; ------------- ROM MUL
+		rst 28h
+		defb 04h	;
+		defb 38h;   ; END CALC
+
+		jp __FPSTACK_POP
+
+#line 5234 "IslaTesoro.zxbas"
+
+
+#line 1 "pause.asm"
+
+	; The PAUSE statement (Calling the ROM)
+
+__PAUSE:
+		ld b, h
+	    ld c, l
+	    jp 1F3Dh  ; PAUSE_1
+#line 5237 "IslaTesoro.zxbas"
+#line 1 "ploadf.asm"
+
+	; Parameter / Local var load
+	; A => Offset
+	; IX = Stack Frame
+; RESULT: HL => IX + DE
+
+#line 1 "iloadf.asm"
+
+	; __FASTCALL__ routine which
+	; loads a 40 bits floating point into A ED CB
+	; stored at position pointed by POINTER HL
+	;A DE, BC <-- ((HL))
+
+__ILOADF:
+	    ld a, (hl)
+	    inc hl
+	    ld h, (hl)
+	    ld l, a
+
+	; __FASTCALL__ routine which
+	; loads a 40 bits floating point into A ED CB
+	; stored at position pointed by POINTER HL
+	;A DE, BC <-- (HL)
+
+__LOADF:    ; Loads a 40 bits FP number from address pointed by HL
+		ld a, (hl)
+		inc hl
+		ld e, (hl)
+		inc hl
+		ld d, (hl)
+		inc hl
+		ld c, (hl)
+		inc hl
+		ld b, (hl)
+		ret
+
+#line 7 "ploadf.asm"
+
+__PLOADF:
+	    push ix
+	    pop hl
+	    add hl, de
+	    jp __LOADF
+
+#line 5238 "IslaTesoro.zxbas"
+
+#line 1 "print_eol_attr.asm"
+
+	; Calls PRINT_EOL and then COPY_ATTR, so saves
+	; 3 bytes
+
+
+
+
+PRINT_EOL_ATTR:
+		call PRINT_EOL
+		jp COPY_ATTR
+#line 5240 "IslaTesoro.zxbas"
+#line 1 "printstr.asm"
+
+
+
+
+
+
+	; PRINT command routine
+	; Prints string pointed by HL
+
+PRINT_STR:
+__PRINTSTR:		; __FASTCALL__ Entry to print_string
+			PROC
+			LOCAL __PRINT_STR_LOOP
+	        LOCAL __PRINT_STR_END
+
+	        ld d, a ; Saves A reg (Flag) for later
+
+			ld a, h
+			or l
+			ret z	; Return if the pointer is NULL
+
+	        push hl
+
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			inc hl	; BC = LEN(a$); HL = &a$
+
+__PRINT_STR_LOOP:
+			ld a, b
+			or c
+			jr z, __PRINT_STR_END 	; END if BC (counter = 0)
+
+			ld a, (hl)
+			call __PRINTCHAR
+			inc hl
+			dec bc
+			jp __PRINT_STR_LOOP
+
+__PRINT_STR_END:
+	        pop hl
+	        ld a, d ; Recovers A flag
+	        or a   ; If not 0 this is a temporary string. Free it
+	        ret z
+	        jp __MEM_FREE ; Frees str from heap and return from there
+
+__PRINT_STR:
+	        ; Fastcall Entry
+	        ; It ONLY prints strings
+	        ; HL = String start
+	        ; BC = String length (Number of chars)
+	        push hl ; Push str address for later
+	        ld d, a ; Saves a FLAG
+	        jp __PRINT_STR_LOOP
+
+			ENDP
+
+#line 5241 "IslaTesoro.zxbas"
+#line 1 "pstoref.asm"
+
+	; Stores FP number in A ED CB at location HL+IX
+	; HL = Offset
+	; IX = Stack Frame
+	; A ED CB = FP Number
+
+#line 1 "storef.asm"
+
+__PISTOREF:	; Indect Stores a float (A, E, D, C, B) at location stored in memory, pointed by (IX + HL)
+			push de
+			ex de, hl	; DE <- HL
+			push ix
+			pop hl		; HL <- IX
+			add hl, de  ; HL <- IX + HL
+			pop de
+
+__ISTOREF:  ; Load address at hl, and stores A,E,D,C,B registers at that address. Modifies A' register
+	        ex af, af'
+			ld a, (hl)
+			inc hl
+			ld h, (hl)
+			ld l, a     ; HL = (HL)
+	        ex af, af'
+
+__STOREF:	; Stores the given FP number in A EDCB at address HL
+			ld (hl), a
+			inc hl
+			ld (hl), e
+			inc hl
+			ld (hl), d
+			inc hl
+			ld (hl), c
+			inc hl
+			ld (hl), b
+			ret
+
+#line 7 "pstoref.asm"
+
+	; Stored a float number in A ED CB into the address pointed by IX + HL
+__PSTOREF:
+		push de
+	    ex de, hl  ; DE <- HL
+	    push ix
+		pop hl	   ; HL <- IX
+	    add hl, de ; HL <- IX + DE
+		pop de
+	    jp __STOREF
+
+#line 5242 "IslaTesoro.zxbas"
+#line 1 "pstorestr.asm"
+
+; vim:ts=4:et:sw=4
+	;
+	; Stores an string (pointer to the HEAP by DE) into the address pointed
+	; by (IX + BC). A new copy of the string is created into the HEAP
+	;
+
+#line 1 "storestr.asm"
+
+; vim:ts=4:et:sw=4
+	; Stores value of current string pointed by DE register into address pointed by HL
+	; Returns DE = Address pointer  (&a$)
+	; Returns HL = HL               (b$ => might be needed later to free it from the heap)
+	;
+	; e.g. => HL = _variableName    (DIM _variableName$)
+	;         DE = Address into the HEAP
+	;
+	; This function will resize (REALLOC) the space pointed by HL
+	; before copying the content of b$ into a$
+
+
+#line 1 "strcpy.asm"
+
+#line 1 "realloc.asm"
+
+; vim: ts=4:et:sw=4:
+	; Copyleft (K) by Jose M. Rodriguez de la Rosa
+	;  (a.k.a. Boriel)
+;  http://www.boriel.com
+	;
+	; This ASM library is licensed under the BSD license
+	; you can use it for any purpose (even for commercial
+	; closed source programs).
+	;
+	; Please read the BSD license on the internet
+
+	; ----- IMPLEMENTATION NOTES ------
+	; The heap is implemented as a linked list of free blocks.
+
+; Each free block contains this info:
+	;
+	; +----------------+ <-- HEAP START
+	; | Size (2 bytes) |
+	; |        0       | <-- Size = 0 => DUMMY HEADER BLOCK
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   | <-- If Size > 4, then this contains (size - 4) bytes
+	; | (0 if Size = 4)|   |
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   |
+	; | (0 if Size = 4)|   |
+	; +----------------+   |
+	;   <Allocated>        | <-- This zone is in use (Already allocated)
+	; +----------------+ <-+
+	; | Size (2 bytes) |
+	; +----------------+
+	; | Next (2 bytes) |---+
+	; +----------------+   |
+	; | <free bytes...>|   |
+	; | (0 if Size = 4)|   |
+	; +----------------+ <-+
+	; | Next (2 bytes) |--> NULL => END OF LIST
+	; |    0 = NULL    |
+	; +----------------+
+	; | <free bytes...>|
+	; | (0 if Size = 4)|
+	; +----------------+
+
+
+	; When a block is FREED, the previous and next pointers are examined to see
+	; if we can defragment the heap. If the block to be breed is just next to the
+	; previous, or to the next (or both) they will be converted into a single
+	; block (so defragmented).
+
+
+	;   MEMORY MANAGER
+	;
+	; This library must be initialized calling __MEM_INIT with
+	; HL = BLOCK Start & DE = Length.
+
+	; An init directive is useful for initialization routines.
+	; They will be added automatically if needed.
+
+
+
+
+
+
+
+	; ---------------------------------------------------------------------
+	; MEM_REALLOC
+	;  Reallocates a block of memory in the heap.
+	;
+	; Parameters
+	;  HL = Pointer to the original block
+	;  BC = New Length of requested memory block
+	;
+; Returns:
+	;  HL = Pointer to the allocated block in memory. Returns 0 (NULL)
+	;       if the block could not be allocated (out of memory)
+	;
+; Notes:
+	;  If BC = 0, the block is freed, otherwise
+	;  the content of the original block is copied to the new one, and
+	;  the new size is adjusted. If BC < original length, the content
+	;  will be truncated. Otherwise, extra block content might contain
+	;  memory garbage.
+	;
+	; ---------------------------------------------------------------------
+__REALLOC:    ; Reallocates block pointed by HL, with new length BC
+	        PROC
+
+	        LOCAL __REALLOC_END
+
+	        ld a, h
+	        or l
+	        jp z, __MEM_ALLOC    ; If HL == NULL, just do a malloc
+
+	        ld e, (hl)
+	        inc hl
+	        ld d, (hl)    ; DE = First 2 bytes of HL block
+
+	        push hl
+	        exx
+	        pop de
+	        inc de        ; DE' <- HL + 2
+	        exx            ; DE' <- HL (Saves current pointer into DE')
+
+	        dec hl        ; HL = Block start
+
+	        push de
+	        push bc
+	        call __MEM_FREE        ; Frees current block
+	        pop bc
+	        push bc
+	        call __MEM_ALLOC    ; Gets a new block of length BC
+	        pop bc
+	        pop de
+
+	        ld a, h
+	        or l
+	        ret z        ; Return if HL == NULL (No memory)
+
+	        ld (hl), e
+	        inc hl
+	        ld (hl), d
+	        inc hl        ; Recovers first 2 bytes in HL
+
+	        dec bc
+	        dec bc        ; BC = BC - 2 (Two bytes copied)
+
+	        ld a, b
+	        or c
+	        jp z, __REALLOC_END        ; Ret if nothing to copy (BC == 0)
+
+	        exx
+	        push de
+	        exx
+	        pop de        ; DE <- DE' ; Start of remaining block
+
+	        push hl        ; Saves current Block + 2 start
+        ex de, hl    ; Exchanges them: DE is destiny block
+	        ldir        ; Copies BC Bytes
+	        pop hl        ; Recovers Block + 2 start
+
+__REALLOC_END:
+
+	        dec hl        ; Set HL
+	        dec hl        ; To begin of block
+	        ret
+
+	        ENDP
+
+#line 2 "strcpy.asm"
+
+	; String library
+
+
+__STRASSIGN: ; Performs a$ = b$ (HL = address of a$; DE = Address of b$)
+			PROC
+
+			LOCAL __STRREALLOC
+			LOCAL __STRCONTINUE
+			LOCAL __B_IS_NULL
+			LOCAL __NOTHING_TO_COPY
+
+			ld b, d
+			ld c, e
+			ld a, b
+			or c
+			jr z, __B_IS_NULL
+
+			ex de, hl
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			dec hl		; BC = LEN(b$)
+			ex de, hl	; DE = &b$
+
+__B_IS_NULL:		; Jumps here if B$ pointer is NULL
+			inc bc
+			inc bc		; BC = BC + 2  ; (LEN(b$) + 2 bytes for storing length)
+
+			push de
+			push hl
+
+			ld a, h
+			or l
+			jr z, __STRREALLOC
+
+			dec hl
+			ld d, (hl)
+			dec hl
+			ld e, (hl)	; DE = MEMBLOCKSIZE(a$)
+			dec de
+			dec de		; DE = DE - 2  ; (Membloksize takes 2 bytes for memblock length)
+
+			ld h, b
+			ld l, c		; HL = LEN(b$) + 2  => Minimum block size required
+			ex de, hl	; Now HL = BLOCKSIZE(a$), DE = LEN(b$) + 2
+
+			or a		; Prepare to subtract BLOCKSIZE(a$) - LEN(b$)
+			sbc hl, de  ; Carry if len(b$) > Blocklen(a$)
+			jr c, __STRREALLOC ; No need to realloc
+			; Need to reallocate at least to len(b$) + 2
+			ex de, hl	; DE = Remaining bytes in a$ mem block.
+			ld hl, 4
+			sbc hl, de  ; if remaining bytes < 4 we can continue
+			jr nc,__STRCONTINUE ; Otherwise, we realloc, to free some bytes
+
+__STRREALLOC:
+			pop hl
+			call __REALLOC	; Returns in HL a new pointer with BC bytes allocated
+			push hl
+
+__STRCONTINUE:	;   Pops hl and de SWAPPED
+			pop de	;	DE = &a$
+			pop hl	; 	HL = &b$
+
+			ld a, d		; Return if not enough memory for new length
+			or e
+			ret z		; Return if DE == NULL (0)
+
+__STRCPY:	; Copies string pointed by HL into string pointed by DE
+				; Returns DE as HL (new pointer)
+			ld a, h
+			or l
+			jr z, __NOTHING_TO_COPY
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			dec hl
+			inc bc
+			inc bc
+			push de
+			ldir
+			pop hl
+			ret
+
+__NOTHING_TO_COPY:
+			ex de, hl
+			ld (hl), e
+			inc hl
+			ld (hl), d
+			dec hl
+			ret
+
+			ENDP
+
+#line 14 "storestr.asm"
+
+__PISTORE_STR:          ; Indirect assignement at (IX + BC)
+	    push ix
+	    pop hl
+	    add hl, bc
+
+__ISTORE_STR:           ; Indirect assignement, hl point to a pointer to a pointer to the heap!
+	    ld c, (hl)
+	    inc hl
+	    ld h, (hl)
+	    ld l, c             ; HL = (HL)
+
+__STORE_STR:
+	    push de             ; Pointer to b$
+	    push hl             ; Array pointer to variable memory address
+
+	    ld c, (hl)
+	    inc hl
+	    ld h, (hl)
+	    ld l, c             ; HL = (HL)
+
+	    call __STRASSIGN    ; HL (a$) = DE (b$); HL changed to a new dynamic memory allocation
+	    ex de, hl           ; DE = new address of a$
+	    pop hl              ; Recover variable memory address pointer
+
+	    ld (hl), e
+	    inc hl
+	    ld (hl), d          ; Stores a$ ptr into elemem ptr
+
+	    pop hl              ; Returns ptr to b$ in HL (Caller might needed to free it from memory)
+	    ret
+
+#line 8 "pstorestr.asm"
+
+__PSTORE_STR:
+	    push ix
+	    pop hl
+	    add hl, bc
+	    jp __STORE_STR
+
+#line 5243 "IslaTesoro.zxbas"
+#line 1 "pstorestr2.asm"
+
+; vim:ts=4:et:sw=4
+	;
+	; Stores an string (pointer to the HEAP by DE) into the address pointed
+	; by (IX + BC). No new copy of the string is created into the HEAP, since
+	; it's supposed it's already created (temporary string)
+	;
+
+#line 1 "storestr2.asm"
+
+	; Similar to __STORE_STR, but this one is called when
+	; the value of B$ if already duplicated onto the stack.
+	; So we needn't call STRASSING to create a duplication
+	; HL = address of string memory variable
+	; DE = address of 2n string. It just copies DE into (HL)
+	; 	freeing (HL) previously.
+
+
+
+__PISTORE_STR2: ; Indirect store temporary string at (IX + BC)
+	    push ix
+	    pop hl
+	    add hl, bc
+
+__ISTORE_STR2:
+		ld c, (hl)  ; Dereferences HL
+		inc hl
+		ld h, (hl)
+		ld l, c		; HL = *HL (real string variable address)
+
+__STORE_STR2:
+		push hl
+		ld c, (hl)
+		inc hl
+		ld h, (hl)
+		ld l, c		; HL = *HL (real string address)
+
+		push de
+		call __MEM_FREE
+		pop de
+
+		pop hl
+		ld (hl), e
+		inc hl
+		ld (hl), d
+		dec hl		; HL points to mem address variable. This might be useful in the future.
+
+		ret
+
+#line 9 "pstorestr2.asm"
+
+__PSTORE_STR2:
+	    push ix
+	    pop hl
+	    add hl, bc
+	    jp __STORE_STR2
+
+#line 5244 "IslaTesoro.zxbas"
+#line 1 "random.asm"
+
+	; RANDOM functions
+
+RANDOMIZE:
+	    ; Randomize with 32 bit seed in DE HL
+	    ; if SEED = 0, calls ROM to take frames as seed
+	    PROC
+
+	    LOCAL TAKE_FRAMES
+	    LOCAL FRAMES
+
+	    ld a, h
+	    or l
+	    or d
+	    or e
+	    jr z, TAKE_FRAMES
+
+	    ld (RANDOM_SEED_LOW), hl
+	    ld (RANDOM_SEED_HIGH), de
+	    ret
+
+TAKE_FRAMES:
+	    ; Takes the seed from frames
+	    ld hl, (FRAMES)
+	    ld (RANDOM_SEED_LOW), hl
+	    ld hl, (FRAMES + 2)
+	    ld (RANDOM_SEED_HIGH), hl
+	    ret
+
+	FRAMES EQU    23672
+	    ENDP
+
+	RANDOM_SEED_HIGH EQU RAND+6    ; RANDOM seed, 16 higher bits
+	RANDOM_SEED_LOW     EQU 23670  ; RANDOM seed, 16 lower bits
+
+
+RAND:
+	    PROC
+	    LOCAL RAND_LOOP
+	    ld b, 4
+RAND_LOOP:
+	    ld  hl,(RANDOM_SEED_LOW)   ; xz -> yw
+	    ld  de,0C0DEh   ; yw -> zt
+	    ld  (RANDOM_SEED_LOW),de  ; x = y, z = w
+	    ld  a,e         ; w = w ^ ( w << 3 )
+	    add a,a
+	    add a,a
+	    add a,a
+	    xor e
+	    ld  e,a
+	    ld  a,h         ; t = x ^ (x << 1)
+	    add a,a
+	    xor h
+	    ld  d,a
+	    rra             ; t = t ^ (t >> 1) ^ w
+	    xor d
+	    xor e
+	    ld  h,l         ; y = z
+	    ld  l,a         ; w = t
+	    ld  (RANDOM_SEED_HIGH),hl
+	    push af
+	    djnz RAND_LOOP
+	    pop af
+	    pop af
+	    ld d, a
+	    pop af
+	    ld e, a
+	    pop af
+	    ld h, a
+	    ret
+	    ENDP
+
+RND:
+	    ; Returns a FLOATING point integer
+	    ; using RAND as a mantissa
+	    PROC
+	    LOCAL RND_LOOP
+
+	    call RAND
+	    ; BC = HL since ZX BASIC uses ED CB A registers for FP
+	    ld b, h
+	    ld c, l
+
+	    ld a, e
+	    or d
+	    or c
+	    or b
+	    ret z   ; Returns 0 if BC=DE=0
+
+	    ; We already have a random 32 bit mantissa in ED CB
+	    ; From 0001h to FFFFh
+
+	    ld l, 81h	; Exponent
+	    ; At this point we have [0 .. 1) FP number;
+
+	    ; Now we must shift mantissa left until highest bit goes into carry
+	    ld a, e ; Use A register for rotating E faster (using RLA instead of RL E)
+RND_LOOP:
+	    dec l
+	    sla b
+	    rl c
+	    rl d
+	    rla
+	    jp nc, RND_LOOP
+
+	    ; Now undo last mantissa left-shift once
+	    ccf ; Clears carry to insert a 0 bit back into mantissa -> positive FP number
+	    rra
+	    rr d
+	    rr c
+	    rr b
+
+	    ld e, a     ; E must have the highest byte
+	    ld a, l     ; exponent in A
+	    ret
+
+	    ENDP
+
+#line 5245 "IslaTesoro.zxbas"
+#line 1 "sgnf.asm"
+
+#line 1 "sgn.asm"
+
+	; Returns SGN (SIGN) for 32, 16 and 8 bits signed integers, Fixed and FLOAT
+
+	    PROC
+	    LOCAL __ENDSGN
+
+__SGNF:
+	    or b
+	    or c
+	    or d
+	    or e
+	    ret z
+	    ld a, e
+	    jr __ENDSGN
+
+__SGNF16:
+__SGNI32:
+		ld a, h
+		or l
+		or e
+		or d
+		ret z
+
+	    ld a, d
+	    jr __ENDSGN
+
+__SGNI16:
+		ld a, h
+		or l
+		ret z
+		ld a, h
+
+__ENDSGN:
+		or a
+		ld a, 1
+		ret p
+		neg
+		ret
+
+	    ENDP
+
+#line 2 "sgnf.asm"
+
+#line 5246 "IslaTesoro.zxbas"
+#line 1 "sgni8.asm"
+
+	; Returns SGN (SIGN) for 8 bits signed integer
+
+__SGNI8:
+		or a
+		ret z
+		ld a, 1
+		ret p
+		neg
+		ret
+
+#line 5247 "IslaTesoro.zxbas"
+
+
+#line 1 "strcat.asm"
+
+
+#line 1 "strlen.asm"
+
+	; Returns len if a string
+	; If a string is NULL, its len is also 0
+	; Result returned in HL
+
+__STRLEN:	; Direct FASTCALL entry
+			ld a, h
+			or l
+			ret z
+
+			ld a, (hl)
+			inc hl
+			ld h, (hl)  ; LEN(str) in HL
+			ld l, a
+			ret
+
+
+#line 3 "strcat.asm"
+
+__ADDSTR:	; Implements c$ = a$ + b$
+				; hl = &a$, de = &b$ (pointers)
+
+
+__STRCAT2:	; This routine creates a new string in dynamic space
+				; making room for it. Then copies a$ + b$ into it.
+				; HL = a$, DE = b$
+
+			PROC
+
+			LOCAL __STR_CONT
+			LOCAL __STRCATEND
+
+			push hl
+			call __STRLEN
+			ld c, l
+			ld b, h		; BC = LEN(a$)
+			ex (sp), hl ; (SP) = LEN (a$), HL = a$
+			push hl		; Saves pointer to a$
+
+			inc bc
+			inc bc		; +2 bytes to store length
+
+			ex de, hl
+			push hl
+			call __STRLEN
+			; HL = len(b$)
+
+			add hl, bc	; Total str length => 2 + len(a$) + len(b$)
+
+			ld c, l
+			ld b, h		; BC = Total str length + 2
+			call __MEM_ALLOC
+			pop de		; HL = c$, DE = b$
+
+			ex de, hl	; HL = b$, DE = c$
+			ex (sp), hl ; HL = a$, (SP) = b$
+
+			exx
+			pop de		; D'E' = b$
+			exx
+
+			pop bc		; LEN(a$)
+
+			ld a, d
+			or e
+		ret z		; If no memory: RETURN
+
+__STR_CONT:
+			push de		; Address of c$
+
+			ld a, h
+			or l
+			jr nz, __STR_CONT1 ; If len(a$) != 0 do copy
+
+	        ; a$ is NULL => uses HL = DE for transfer
+			ld h, d
+			ld l, e
+			ld (hl), a	; This will copy 00 00 at (DE) location
+	        inc de      ;
+	        dec bc      ; Ensure BC will be set to 1 in the next step
+
+__STR_CONT1:        ; Copies a$ (HL) into c$ (DE)
+			inc bc
+			inc bc		; BC = BC + 2
+		ldir		; MEMCOPY: c$ = a$
+			pop hl		; HL = c$
+
+			exx
+			push de		; Recovers b$; A ex hl,hl' would be very handy
+			exx
+
+			pop de		; DE = b$
+
+__STRCAT: ; ConCATenate two strings a$ = a$ + b$. HL = ptr to a$, DE = ptr to b$
+		  ; NOTE: Both DE, BC and AF are modified and lost
+			  ; Returns HL (pointer to a$)
+			  ; a$ Must be NOT NULL
+			ld a, d
+			or e
+			ret z		; Returns if de is NULL (nothing to copy)
+
+			push hl		; Saves HL to return it later
+
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			inc hl
+			add hl, bc	; HL = end of (a$) string ; bc = len(a$)
+			push bc		; Saves LEN(a$) for later
+
+			ex de, hl	; DE = end of string (Begin of copy addr)
+			ld c, (hl)
+			inc hl
+			ld b, (hl)	; BC = len(b$)
+
+			ld a, b
+			or c
+			jr z, __STRCATEND; Return if len(b$) == 0
+
+			push bc			 ; Save LEN(b$)
+			inc hl			 ; Skip 2nd byte of len(b$)
+			ldir			 ; Concatenate b$
+
+			pop bc			 ; Recovers length (b$)
+			pop hl			 ; Recovers length (a$)
+			add hl, bc		 ; HL = LEN(a$) + LEN(b$) = LEN(a$+b$)
+			ex de, hl		 ; DE = LEN(a$+b$)
+			pop hl
+
+			ld (hl), e		 ; Updates new LEN and return
+			inc hl
+			ld (hl), d
+			dec hl
+			ret
+
+__STRCATEND:
+			pop hl		; Removes Len(a$)
+			pop hl		; Restores original HL, so HL = a$
+			ret
+
+			ENDP
+
+#line 5250 "IslaTesoro.zxbas"
+#line 1 "string.asm"
+
+	; String library
+
+
+
+__STR_ISNULL:	; Returns A = FF if HL is 0, 0 otherwise
+			ld a, h
+			or l
+			sub 1		; Only CARRY if HL is NULL
+			sbc a, a	; Only FF if HL is NULL (0 otherwise)
+			ret
+
+
+__STRCMP:	; Compares strings at HL, DE: Returns 0 if EQual, -1 if HL < DE, +1 if HL > DE
+				; A register is preserved and returned in A'
+			PROC ; __FASTCALL__
+
+			LOCAL __STRCMPZERO
+			LOCAL __STRCMPEXIT
+			LOCAL __STRCMPLOOP
+			LOCAL __NOPRESERVEBC
+			LOCAL __EQULEN
+			LOCAL __EQULEN1
+			LOCAL __HLZERO
+
+			ex af, af'	; Saves current A register in A' (it's used by STRXX comparison functions)
+
+			ld a, h
+			or l
+			jr z, __HLZERO
+
+			ld a, d
+			or e
+			ld a, 1
+			ret z		; Returns +1 if HL is not NULL and DE is NULL
+
+			ld c, (hl)
+			inc hl
+			ld b, (hl)
+			inc hl		; BC = LEN(a$)
+			push hl		; HL = &a$, saves it
+
+			ex de, hl
+			ld e, (hl)
+			inc hl
+			ld d, (hl)
+			inc hl
+			ex de, hl	; HL = LEN(b$), de = &b$
+
+			; At this point Carry is cleared, and A reg. = 1
+			sbc hl, bc	; Carry if len(b$) > len(a$)
+			jr z, __EQULEN	; Jump if they have the same length so A reg. = 0
+			jr c, __EQULEN1 ; Jump if len(b$) > len(a$) so A reg. = 1
+__NOPRESERVEBC:
+			add hl, bc	; Restore HL (original length)
+			ld b, h		; len(b$) <= len(a$)
+			ld c, l		; so BC = hl
+			dec a		; At this point A register = 0, it must be -1 since len(a$) > len(b$)
+__EQULEN:
+			dec a		; A = 0 if len(a$) = len(b$), -1 otherwise
+__EQULEN1:
+			pop hl		; Recovers A$ pointer
+			push af		; Saves A for later (Value to return if strings reach the end)
+	        ld a, b
+	        or c
+	        jr z, __STRCMPZERO ; empty string being compared
+
+		; At this point: BC = lesser length, DE and HL points to b$ and a$ chars respectively
+__STRCMPLOOP:
+			ld a, (de)
+			cpi
+			jr nz, __STRCMPEXIT ; (HL) != (DE). Examine carry
+			jp po, __STRCMPZERO ; END of string (both are equal)
+			inc de
+			jp __STRCMPLOOP
+
+__STRCMPZERO:
+			pop af		; This is -1 if len(a$) < len(b$), +1 if len(b$) > len(a$), 0 otherwise
+			ret
+
+__STRCMPEXIT:		; Sets A with the following value
+			dec hl		; Get back to the last char
+			cp (hl)
+			sbc a, a	; A = -1 if carry => (DE) < (HL); 0 otherwise (DE) > (HL)
+			cpl			; A = -1 if (HL) < (DE), 0 otherwise
+			add a, a    ; A = A * 2 (thus -2 or 0)
+			inc a		; A = A + 1 (thus -1 or 1)
+
+			pop bc		; Discard top of the stack
+			ret
+
+__HLZERO:
+			or d
+			or e
+			ret z		; Returns 0 (EQ) if HL == DE == NULL
+			ld a, -1
+			ret			; Returns -1 if HL is NULL and DE is not NULL
+
+			ENDP
+
+			; The following routines perform string comparison operations (<, >, ==, etc...)
+			; On return, A will contain 0 for False, other value for True
+			; Register A' will determine whether the incoming strings (HL, DE) will be freed
+		; from dynamic memory on exit:
+			;		Bit 0 => 1 means HL will be freed.
+			;		Bit 1 => 1 means DE will be freed.
+
+__STREQ:	; Compares a$ == b$ (HL = ptr a$, DE = ptr b$). Returns FF (True) or 0 (False)
+			push hl
+			push de
+			call __STRCMP
+			pop de
+			pop hl
+
+			;inc a		; If A == -1, return 0
+			;jp z, __FREE_STR
+
+			;dec a		;
+			;dec a		; Return -1 if a = 0 (True), returns 0 if A == 1 (False)
+	        sub 1
+	        sbc a, a
+			jp __FREE_STR
+
+
+__STRNE:	; Compares a$ != b$ (HL = ptr a$, DE = ptr b$). Returns FF (True) or 0 (False)
+			push hl
+			push de
+			call __STRCMP
+			pop de
+			pop hl
+
+			;jp z, __FREE_STR
+
+			;ld a, 0FFh	; Returns 0xFFh (True)
+			jp __FREE_STR
+
+
+__STRLT:	; Compares a$ < b$ (HL = ptr a$, DE = ptr b$). Returns FF (True) or 0 (False)
+			push hl
+			push de
+			call __STRCMP
+			pop de
+			pop hl
+
+			jp z, __FREE_STR ; Returns 0 if A == B
+
+			dec a		; Returns 0 if A == 1 => a$ > b$
+			;jp z, __FREE_STR
+
+			;inc a		; A = FE now (-2). Set it to FF and return
+			jp __FREE_STR
+
+
+__STRLE:	; Compares a$ <= b$ (HL = ptr a$, DE = ptr b$). Returns FF (True) or 0 (False)
+			push hl
+			push de
+			call __STRCMP
+			pop de
+			pop hl
+
+			dec a		; Returns 0 if A == 1 => a$ < b$
+			;jp z, __FREE_STR
+
+			;ld a, 0FFh	; A = FE now (-2). Set it to FF and return
+			jp __FREE_STR
+
+
+__STRGT:	; Compares a$ > b$ (HL = ptr a$, DE = ptr b$). Returns FF (True) or 0 (False)
+			push hl
+			push de
+			call __STRCMP
+			pop de
+			pop hl
+
+			jp z, __FREE_STR		; Returns 0 if A == B
+
+			inc a		; Returns 0 if A == -1 => a$ < b$
+			;jp z, __FREE_STR		; Returns 0 if A == B
+
+			;ld a, 0FFh	; A = FE now (-2). Set it to FF and return
+			jp __FREE_STR
+
+
+__STRGE:	; Compares a$ >= b$ (HL = ptr a$, DE = ptr b$). Returns FF (True) or 0 (False)
+			push hl
+			push de
+			call __STRCMP
+			pop de
+			pop hl
+
+			inc a		; Returns 0 if A == -1 => a$ < b$
+			;jr z, __FREE_STR
+
+			;ld a, 0FFh	; A = FE now (-2). Set it to FF and return
+
+__FREE_STR: ; This exit point will test A' for bits 0 and 1
+				; If bit 0 is 1 => Free memory from HL pointer
+				; If bit 1 is 1 => Free memory from DE pointer
+				; Finally recovers A, to return the result
+			PROC
+
+			LOCAL __FREE_STR2
+			LOCAL __FREE_END
+
+			ex af, af'
+			bit 0, a
+			jr z, __FREE_STR2
+
+			push af
+			push de
+			call __MEM_FREE
+			pop de
+			pop af
+
+__FREE_STR2:
+			bit 1, a
+			jr z, __FREE_END
+
+			ex de, hl
+			call __MEM_FREE
+
+__FREE_END:
+			ex af, af'
+			ret
+
+			ENDP
+
+#line 5251 "IslaTesoro.zxbas"
+
+#line 1 "strslice.asm"
+
+	; String slicing library
+	; HL = Str pointer
+	; DE = String start
+	; BC = String character end
+	; A register => 0 => the HL pointer wont' be freed from the HEAP
+	; e.g. a$(5 TO 10) => HL = a$; DE = 5; BC = 10
+
+	; This implements a$(X to Y) being X and Y first and
+	; last characters respectively. If X > Y, NULL is returned
+
+	; Otherwise returns a pointer to a$ FROM X to Y (starting from 0)
+	; if Y > len(a$), then a$ will be padded with spaces (reallocating
+	; it in dynamic memory if needed). Returns pointer (HL) to resulting
+	; string. NULL (0) if no memory for padding.
+	;
+
+
+
+
+
+__STRSLICE:			; Callee entry
+		pop hl			; Return ADDRESS
+		pop bc			; Last char pos
+		pop de			; 1st char pos
+		ex (sp), hl		; CALLEE. -> String start
+
+__STRSLICE_FAST:	; __FASTCALL__ Entry
+		PROC
+
+		LOCAL __CONT
+		LOCAL __EMPTY
+		LOCAL __FREE_ON_EXIT
+
+		push hl			; Stores original HL pointer to be recovered on exit
+		ex af, af'		; Saves A register for later
+
+		push hl
+		call __STRLEN
+		inc bc			; Last character position + 1 (string starts from 0)
+		or a
+		sbc hl, bc		; Compares length with last char position
+		jr nc, __CONT	; If Carry => We must copy to end of string
+		add hl, bc		; Restore back original LEN(a$) in HL
+		ld b, h
+		ld c, l			; Copy to the end of str
+		ccf				; Clears Carry flag for next subtraction
+
+__CONT:
+		ld h, b
+		ld l, c			; HL = Last char position to copy (1 for char 0, 2 for char 1, etc)
+		sbc hl, de		; HL = LEN(a$) - DE => Number of chars to copy
+		jr z, __EMPTY	; 0 Chars to copy => Return HL = 0 (NULL STR)
+		jr c, __EMPTY	; If Carry => Nothing to return (NULL STR)
+
+		ld b, h
+		ld c, l			; BC = Number of chars to copy
+		inc bc
+		inc bc			; +2 bytes for string length number
+
+		push bc
+		push de
+		call __MEM_ALLOC
+		pop de
+		pop bc
+		ld a, h
+		or l
+		jr z, __EMPTY	; Return if NULL (no memory)
+
+		dec bc
+		dec bc			; Number of chars to copy (Len of slice)
+
+		ld (hl), c
+		inc hl
+		ld (hl), b
+		inc hl			; Stores new string length
+
+		ex (sp), hl		; Pointer to A$ now in HL; Pointer to new string chars in Stack
+		inc hl
+		inc hl			; Skip string length
+		add hl, de		; Were to start from A$
+		pop de			; Start of new string chars
+		push de			; Stores it again
+		ldir			; Copies BC chars
+		pop de
+		dec de
+		dec de			; Points to String LEN start
+		ex de, hl		; Returns it in HL
+		jr __FREE_ON_EXIT
+
+__EMPTY:			; Return NULL (empty) string
+		pop hl
+		ld hl, 0		; Return NULL
+
+
+__FREE_ON_EXIT:
+		ex af, af'		; Recover original A register
+		ex (sp), hl		; Original HL pointer
+
+		or a
+		call nz, __MEM_FREE
+
+		pop hl			; Recover result
+		ret
+
+		ENDP
+
+#line 5253 "IslaTesoro.zxbas"
+#line 1 "sub32.asm"
+
+	; SUB32
+	; Perform TOP of the stack - DEHL
+	; Pops operand out of the stack (CALLEE)
+	; and returns result in DEHL. Carry an Z are set correctly
+
+__SUB32:
+		exx
+		pop bc		; saves return address in BC'
+		exx
+
+		or a        ; clears carry flag
+		ld b, h     ; Operands come reversed => BC <- HL,  HL = HL - BC
+		ld c, l
+		pop hl
+		sbc hl, bc
+		ex de, hl
+
+		ld b, h	    ; High part (DE) now in HL. Repeat operation
+		ld c, l
+		pop hl
+		sbc hl, bc
+		ex de, hl   ; DEHL now has de 32 bit result
+
+		exx
+		push bc		; puts return address back
+		exx
+		ret
+#line 5254 "IslaTesoro.zxbas"
+#line 1 "subf.asm"
+
+
+
+	; -------------------------------------------------------------
+	; Floating point library using the FP ROM Calculator (ZX 48K)
+
+	; All of them uses A EDCB registers as 1st paramter.
+	; For binary operators, the 2n operator must be pushed into the
+	; stack, in the order A DE BC.
+	;
+	; Uses CALLEE convention
+	; -------------------------------------------------------------
+
+
+__SUBF:	; Subtraction
+		call __FPSTACK_PUSH2	; ENTERS B, A
+
+		; ------------- ROM SUB
+		rst 28h
+		defb 01h	; EXCHANGE
+		defb 03h	; SUB
+		defb 38h;   ; END CALC
+
+		jp __FPSTACK_POP
+
+#line 5255 "IslaTesoro.zxbas"
+
+ZXBASIC_USER_DATA:
+	_input_LastK EQU 23560
+_Accion:
+	DEFB 00, 00
+_MoverPiratas:
+	DEFB 00
+_Primera:
+	DEFB 00h
+_res:
+	DEFB 00, 00
+_graficos:
+	DEFW __LABEL302
+_graficos.__DATA__.__PTR__:
+	DEFW _graficos.__DATA__
+_graficos.__DATA__:
+	DEFB 20h
+	DEFB 36h
+	DEFB 3Eh
+	DEFB 1Ch
+	DEFB 1Eh
+	DEFB 27h
+	DEFB 40h
+	DEFB 00h
+	DEFB 01h
+	DEFB 19h
+	DEFB 0D9h
+	DEFB 0FFh
+	DEFB 0D9h
+	DEFB 19h
+	DEFB 25h
+	DEFB 25h
+	DEFB 7Eh
+	DEFB 0FFh
+	DEFB 0A5h
+	DEFB 0DBh
+	DEFB 0DBh
+	DEFB 0A5h
+	DEFB 0FFh
+	DEFB 7Eh
+	DEFB 18h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 7Eh
+	DEFB 7Eh
+	DEFB 7Eh
+	DEFB 3Ch
+	DEFB 00h
+	DEFB 0Ch
+	DEFB 1Ch
+	DEFB 3Eh
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FEh
+	DEFB 7Ch
+	DEFB 38h
+	DEFB 3Ch
+	DEFB 7Fh
+	DEFB 0FEh
+	DEFB 72h
+	DEFB 65h
+	DEFB 41h
+	DEFB 22h
+	DEFB 1Ch
+	DEFB 03h
+	DEFB 09h
+	DEFB 70h
+	DEFB 1Ch
+	DEFB 38h
+	DEFB 68h
+	DEFB 0F0h
+	DEFB 0C0h
+	DEFB 0C0h
+	DEFB 90h
+	DEFB 0Eh
+	DEFB 38h
+	DEFB 1Ch
+	DEFB 16h
+	DEFB 0Fh
+	DEFB 03h
+	DEFB 0C3h
+	DEFB 9Ch
+	DEFB 0Eh
+	DEFB 38h
+	DEFB 1Ch
+	DEFB 36h
+	DEFB 0Fh
+	DEFB 0C3h
+	DEFB 0CBh
+	DEFB 0CDh
+	DEFB 4Ch
+	DEFB 7Ah
+	DEFB 9Dh
+	DEFB 36h
+	DEFB 0CFh
+	DEFB 0D3h
+	DEFB 0D6h
+	DEFB 0BBh
+	DEFB 0A5h
+	DEFB 0C3h
+	DEFB 22h
+	DEFB 42h
+	DEFB 28h
+	DEFB 08h
+	DEFB 04h
+	DEFB 10h
+	DEFB 44h
+	DEFB 12h
+	DEFB 81h
+	DEFB 0A7h
+	DEFB 0E5h
+	DEFB 9Fh
+	DEFB 30h
+	DEFB 78h
+	DEFB 30h
+	DEFB 78h
+	DEFB 78h
+	DEFB 78h
+	DEFB 30h
+	DEFB 00h
+	DEFB 0Ch
+	DEFB 1Eh
+	DEFB 0Ch
+	DEFB 1Eh
+	DEFB 1Eh
+	DEFB 1Eh
+	DEFB 0Ch
+	DEFB 00h
+	DEFB 0C3h
+	DEFB 0E7h
+	DEFB 66h
+	DEFB 7Ch
+	DEFB 18h
+	DEFB 3Ch
+	DEFB 66h
+	DEFB 83h
+	DEFB 40h
+	DEFB 52h
+	DEFB 92h
+	DEFB 09h
+	DEFB 20h
+	DEFB 22h
+	DEFB 8Ch
+	DEFB 44h
+	DEFB 10h
+	DEFB 30h
+	DEFB 0C8h
+	DEFB 02h
+	DEFB 25h
+	DEFB 50h
+	DEFB 02h
+	DEFB 0Dh
+	DEFB 00h
+	DEFB 08h
+	DEFB 18h
+	DEFB 28h
+	DEFB 24h
+	DEFB 43h
+	DEFB 00h
+	DEFB 00h
+	DEFB 3Ch
+	DEFB 42h
+	DEFB 99h
+	DEFB 0BDh
+	DEFB 99h
+	DEFB 99h
+	DEFB 81h
+	DEFB 0FFh
+	DEFB 3Ch
+	DEFB 42h
+	DEFB 0BDh
+	DEFB 0DBh
+	DEFB 0DBh
+	DEFB 0BDh
+	DEFB 42h
+	DEFB 3Ch
+__LABEL302:
+	DEFW 0001h
+	DEFW 0008h
+	DEFB 01h
+_Isla:
+	DEFW __LABEL303
+_Isla.__DATA__.__PTR__:
+	DEFW _Isla.__DATA__
+_Isla.__DATA__:
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+__LABEL303:
+	DEFW 0001h
+	DEFW 0002h
+	DEFB 01h
+_Camino:
+	DEFW __LABEL304
+_Camino.__DATA__.__PTR__:
+	DEFW _Camino.__DATA__
+_Camino.__DATA__:
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+__LABEL304:
+	DEFW 0000h
+	DEFB 01h
+_Tesoro:
+	DEFW __LABEL305
+_Tesoro.__DATA__.__PTR__:
+	DEFW _Tesoro.__DATA__
+_Tesoro.__DATA__:
+	DEFB 00h
+	DEFB 00h
+__LABEL305:
+	DEFW 0000h
+	DEFB 01h
+_ArenasMovedizas:
+	DEFW __LABEL306
+_ArenasMovedizas.__DATA__.__PTR__:
+	DEFW _ArenasMovedizas.__DATA__
+_ArenasMovedizas.__DATA__:
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+__LABEL306:
+	DEFW 0001h
+	DEFW 0002h
+	DEFB 01h
+_Jugador:
+	DEFW __LABEL307
+_Jugador.__DATA__.__PTR__:
+	DEFW _Jugador.__DATA__
+_Jugador.__DATA__:
+	DEFB 00h
+	DEFB 00h
+__LABEL307:
+	DEFW 0000h
+	DEFB 01h
+_Piratas:
+	DEFW __LABEL308
+_Piratas.__DATA__.__PTR__:
+	DEFW _Piratas.__DATA__
+_Piratas.__DATA__:
+	DEFB 00h
+	DEFB 00h
+__LABEL308:
+	DEFW 0000h
+	DEFB 01h
+ZXBASIC_MEM_HEAP:
+	; Defines DATA END
+ZXBASIC_USER_DATA_END EQU ZXBASIC_MEM_HEAP + ZXBASIC_HEAP_SIZE
+	; Defines USER DATA Length in bytes
+ZXBASIC_USER_DATA_LEN EQU ZXBASIC_USER_DATA_END - ZXBASIC_USER_DATA
+	END

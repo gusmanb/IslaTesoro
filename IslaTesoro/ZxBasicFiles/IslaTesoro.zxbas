@@ -1,0 +1,1151 @@
+﻿#include <input.bas>
+
+#define UDG_VAR 23675
+
+DIM graficos(19, 7) AS UBYTE => _
+{ _
+    { _ 'Loro
+        00100000b,_
+        00110110b,_
+        00111110b,_
+        00011100b,_
+        00011110b,_
+        00100111b,_
+        01000000b,_
+        00000000b_
+    }, _
+    { _ 'Nativo
+        00000001b,_
+        00011001b,_
+        11011001b,_
+        11111111b,_
+        11011001b,_
+        00011001b,_
+        00100101b,_
+        00100101b_
+    }, _
+    { _ 'Vela
+        01111110b,_
+        11111111b,_
+        10100101b,_
+        11011011b,_
+        11011011b,_
+        10100101b,_
+        11111111b,_
+        01111110b_
+    }, _
+    { _ 'Casco
+        00011000b,_
+        11111111b,_
+        11111111b,_
+        01111110b,_
+        01111110b,_
+        01111110b,_
+        00111100b,_
+        00000000b_
+    }, _
+    { _ 'Arena movediza
+        00001100b,_
+        00011100b,_
+        00111110b,_
+        01111111b,_
+        11111111b,_
+        11111110b,_
+        01111100b,_
+        00111000b_
+    }, _
+    { _ 'Hombre
+        00111100b,_
+        01111111b,_
+        11111110b,_
+        01110010b,_
+        01100101b,_
+        01000001b,_
+        00100010b,_
+        00011100b_
+    }, _
+    { _ 'Borde diagonal izquierda
+        00000011b,_
+        00001001b,_
+        01110000b,_
+        00011100b,_
+        00111000b,_
+        01101000b,_
+        11110000b,_
+        11000000b_
+    }, _
+    { _ 'Borde diagonal derecha
+        11000000b,_
+        10010000b,_
+        00001110b,_
+        00111000b,_
+        00011100b,_
+        00010110b,_
+        00001111b,_
+        00000011b_
+    }, _
+    { _ 'Borde recto A
+        11000011b,_
+        10011100b,_
+        00001110b,_
+        00111000b,_
+        00011100b,_
+        00110110b,_
+        00001111b,_
+        11000011b_
+    }, _
+    { _ 'Borde recto B
+        11001011b,_
+        11001101b,_
+        01001100b,_
+        01111010b,_
+        10011101b,_
+        00110110b,_
+        11001111b,_
+        11010011b_
+    }, _
+    { _ 'Borde superior
+        11010110b,_
+        10111011b,_
+        10100101b,_
+        11000011b,_
+        00100010b,_
+        01000010b,_
+        00101000b,_
+        00001000b_
+    }, _
+    { _ 'Borde inferior
+        00000100b,_
+        00010000b,_
+        01000100b,_
+        00010010b,_
+        10000001b,_
+        10100111b,_
+        11100101b,_
+        10011111b_
+    }, _
+    { _ 'Paso izquierdo
+        00110000b,_
+        01111000b,_
+        00110000b,_
+        01111000b,_
+        01111000b,_
+        01111000b,_
+        00110000b,_
+        00000000b_
+    }, _
+    { _ 'Paso derecho
+        00001100b,_
+        00011110b,_
+        00001100b,_
+        00011110b,_
+        00011110b,_
+        00011110b,_
+        00001100b,_
+        00000000b_
+    }, _
+    { _ 'Equis
+        11000011b,_
+        11100111b,_
+        01100110b,_
+        01111100b,_
+        00011000b,_
+        00111100b,_
+        01100110b,_
+        10000011b_
+    } , _
+    { _ 'Hierba
+        01000000b,_
+        01010010b,_
+        10010010b,_
+        00001001b,_
+        00100000b,_
+        00100010b,_
+        10001100b,_
+        01000100b_
+    } , _
+    { _ 'Olas 1
+        00010000b,_
+        00110000b,_
+        11001000b,_
+        00000010b,_
+        00100101b,_
+        01010000b,_
+        00000010b,_
+        00001101b_
+    } , _
+    { _ 'Olas 2
+        00000000b,_
+        00001000b,_
+        00011000b,_
+        00101000b,_
+        00100100b,_
+        01000011b,_
+        00000000b,_
+        00000000b_
+    } , _
+    { _ 'Lapida
+        00111100b,_
+        01000010b,_
+        10011001b,_
+        10111101b,_
+        10011001b,_
+        10011001b,_
+        10000001b,_
+        11111111b_
+    } , _
+    { _ 'Moneda
+        00111100b,_
+        01000010b,_
+        10111101b,_
+        11011011b,_
+        11011011b,_
+        10111101b,_
+        01000010b,_
+        00111100b_
+    } _
+}
+
+DECLARE function ComprobarPiratas() as uByte
+DECLARE function ComprobarCamino() as uByte
+
+
+
+DIM Isla (20, 1) AS UBYTE
+DIM Camino(1 to 19) AS UBYTE
+DIM Tesoro(1) AS UBYTE
+DIM ArenasMovedizas(9,1) AS UBYTE
+DIM Jugador(1) as UBYTE
+DIM Accion as STRING
+DIM MoverPiratas as UBYTE
+DIM Piratas(1) as UBYTE => { 0, 0 }
+Dim Primera as UBYTE = 0
+
+
+Sonido(5)
+Sonido(6)
+Sonido(5)
+
+IniciarGraficos()
+
+Instrucciones()
+
+inicio:
+
+RANDOMIZE
+
+IniciarGraficos()
+GenerarPartida()
+
+if Primera = 0 then
+
+    Sonido(8)
+    Primera = 1
+
+end if
+
+MostrarMapa(0)
+
+RANDOMIZE
+
+Sonido(1)
+
+entrada:
+
+Accion = inkey$
+
+if Accion = "q" then 
+    DesplazarJugador(0, -1)
+    if ComprobarCamino() = 0 then goto finPartida
+    while inkey$ <> ""
+    end while
+end if
+
+if Accion = "a" then 
+    DesplazarJugador(0, 1)
+    if ComprobarCamino() = 0 then goto finPartida
+    while inkey$ <> ""
+    end while
+end if
+
+if Accion = "o" then 
+    DesplazarJugador(-1, 1)
+    if ComprobarCamino() = 0 then goto finPartida
+    while inkey$ <> ""
+    end while
+end if
+
+if Accion = "p" then 
+    DesplazarJugador(1, 1)
+    if ComprobarCamino() = 0 then goto finPartida
+    while inkey$ <> ""
+    end while
+end if
+
+if Accion = "m" then 
+    MostrarMapa(0)
+    DesplazarPiratas(100)
+    DesplazarPiratas(100)
+    while inkey$ <> ""
+    end while
+end if
+
+DesplazarPiratas(1)
+ActualizarOlas()
+
+if ComprobarPiratas() = 0 then goto finPartida
+
+goto entrada
+
+finPartida:
+
+ink 0
+paper 5
+cls
+
+PRINT AT 12,7;"OTRA PARTIDA (S/N)"
+
+esperaRespuesta:
+
+Dim res as string = INKEY$
+
+if res = "s" then goto inicio
+if res = "n" then goto fin
+
+goto esperaRespuesta
+
+fin:
+
+cls
+
+PRINT AT 12,14;"BYE!"
+
+sub Instrucciones()
+
+ink 7
+paper 0
+border 0
+cls
+
+print at 0,0; "BIENVENIDO A LA ISLA DEL TESORO"
+
+print at 2,0;"En esta aventura encarnas a"
+print        "Ricky el Pernicioso (" ; ink 0; paper 7 ; "\F"; ink 7 ; paper 0; ") famoso"
+print        "camorrista, amante de las peleas";
+print        "y buscador de chanchullos a"
+print        "tiempo parcial."
+print
+print        "En el ultimo fregado que te"
+print        "metiste conseguistes el mapa de"
+print        "un tesoro (" ; ink 6; paper 0; bright 1; "\T"; ink 7 ; paper 0; bright 0;  ") enterrado en una"
+print        "isla desierta del archipielago"
+print        "Aquinostoy."
+print
+
+print       "Por desgracia el maton al que le";
+print       "quitaste el mapa forma parte de"
+print       "una banda de piratas "
+print       "- los Tuertunos -"
+print       "los cuales haran todo lo"
+print       "posible para detenerte."
+print
+print "-Pulsa una tecla-"
+
+Esperar()
+
+cls
+
+print at 0,0;"         "; ink 1; paper 7; "\C"
+print at 1,0;"Su barco("; ink 2; "\D"; ink 7 ; ") esta de camino a"
+print        "la isla, tu mision es encontrar"
+print        "el tesoro antes de que lleguen"
+print        "y te puedan capturar."
+print
+print        "Pero ojo! la isla no esta tan"
+print        "desierta como pensaban los"
+print        "piratas, la tribu Malaspulgas"
+print        "(" ; ink 3; "\B" ; ink 7 ; ") vive en ella y debes"
+print        "evitarla a toda costa."
+print
+print        "Por si todo esto fuera poco"
+print        "la isla esta llena de arenas"
+print        "movedizas (" ; ink 1; "\E" ; ink 7; ") las cuales"
+print        "deberas evitar si no quieres"
+print        "tener un horrible fin."
+print
+print at 21, 0; "-Pulsa una tecla-"
+
+Esperar()
+
+cls
+
+Print        "Para controlar a Ricky usa las"
+Print        "teclas Q,A,O,P y M. Para mayor"
+print        "desgracia Ricky es un borracho"
+print        "empedernido y no es capaz de"
+print        "andar en linea recta, por lo que";
+print        "cuando te desplaces lateralmentetambien lo haras hacia abajo."
+print
+print        "La tecla M abre el mapa del"
+print        "tesoro indicandote el camino"
+print        "pero cuidado, mientras pierdas"
+print        "tiempo consultandolo los"
+print        "piratas se acercaran a la isla."
+print
+print
+print
+print        "Mucha suerte en tu aventura!"
+print at 21, 0; "-Pulsa una tecla-"
+
+Esperar()
+
+end sub
+
+sub ActualizarOlas()
+
+    Dim cnt as uByte
+    Dim x as uByte
+    Dim y as uByte
+    Dim char as string
+    Dim ran as float
+    for cnt = 1 to 10
+
+        y = INT(RND * 20)
+        x = INT(RND * 32)
+
+        if (x < Isla(y, 0) or x > Isla(y, 0) + Isla(y, 1)) and _
+            (x <> Piratas(0) or (y <> Piratas(1) and y <> Piratas(1) - 1)) _
+         then
+
+            ran = RND * 100
+
+            if ran < 0.5 then 
+                char = "\Q"
+            else if ran < 2 then 
+                char = "\R"
+            else 
+                char = " "
+            end if
+
+            print at y,x; ink 1; paper 5; char
+
+        end if
+
+     next cnt
+
+end sub
+
+function ComprobarPiratas() as uByte
+
+    if Piratas(1) = 19 then
+
+        Sonido(12)
+        print at 20, 1; ink 1; paper 7; "\C"
+        print at 21, 1; paper 5; ink 2; "\D"; ink 0; " LOS PIRATAS HAN LLEGADO!"
+        Esperar()
+        Sonido(13)
+        print at 21, 1; paper 5; ink 0;             "  HAS SIDO CAPTURADO...   "
+        Esperar()
+        return 0
+
+    end if
+
+    return 1
+
+end function
+
+function ComprobarCamino() as uByte
+
+    if Jugador(0) = Tesoro(0) and Jugador(1) = Tesoro(1) then
+
+        Sonido(8)
+        Sonido(7)
+        Sonido(8)
+        Sonido(7)
+        Sonido(8)
+        Sonido(7)
+        print at 21, 1; ink 6; paper 0; bright 1; "\T"; ink 0; bright 0; paper 5; " HAS CONSEGUIDO EL TESORO! "
+        Esperar()
+        return 0
+
+    else if Jugador(0) = Camino(Jugador(1)) then
+        Sonido(3)
+    else
+        Sonido(2)
+        Dim buc as uByte
+        for buc = 0 to 9
+
+            if ArenasMovedizas(buc, 0) = Jugador(0) and ArenasMovedizas(buc, 1) = Jugador(1) then
+
+                print at Jugador(1),Jugador(0); ink 1; paper 4; "\E"
+                Sonido(8)
+                print at 21, 1; ink 1; paper 5; "\E"; ink 0;     " ARENAS MOVEDIZAS!            "
+                
+                Esperar()
+
+                if rnd > 0.75 then
+                    print at 21, 1; ink 2; paper 5; "\B"; ink 0; " TE AYUDA UN NATIVO!          "
+                    print at Jugador(1),Jugador(0); ink 3; paper 4; "\B"
+                    Sonido(11)
+                    Jugador(0) = Camino(Jugador(1))
+                    DesplazarJugador(0,0)
+                    Esperar() 
+                    print at 21, 1; ink 0; paper 5; "                             "
+                    return 1
+
+                else
+                    Sonido(13)
+                    print at 21, 1; ink 0; paper 7; "\S"; ink 0; paper 5; " HAS MUERTO AHOGADO...        "
+                    print at Jugador(1),Jugador(0); ink 0; paper 7; "\S"
+                    Esperar() 
+                    return 0
+                end if
+
+            end if
+
+        next buc
+
+        if RND > 0.5 then
+
+            Sonido(4)
+            Sonido(4)
+            Sonido(4)
+            print at Jugador(1),Jugador(0); ink 3; paper 4; "\B"
+            print at 21, 1; ink 3; paper 5; "\B"; ink 0; " NATIVOS HOSTILES ATACAN! "
+            Esperar() 
+
+            if rnd > 0.25 then
+                print at 21, 1; paper 5; ink 0;         "  POR SUERTE ESCAPAS...     "
+                Sonido(8)
+                Jugador(1) = 1
+                Jugador(0) = Camino(Jugador(1))
+                DesplazarJugador(0,0)
+                Esperar() 
+                print at 21, 1; ink 0; paper 5; "                             "
+                return 1
+
+            else
+                Sonido(13)
+                print at 21, 1; ink 0; paper 7; "\S"; ink 0; paper 5; " MUERES POR UNA LANZA... "
+                print at Jugador(1),Jugador(0); ink 0; paper 7; "\S"
+                Esperar() 
+                return 0
+            end if
+
+        end if
+
+    end if
+
+    return 1
+
+end function
+
+sub Esperar()
+
+    while inkey$ = ""
+    end while
+
+    while inkey$ <> ""
+    end while
+
+end sub
+
+sub DesplazarPiratas(Cantidad as uByte)
+
+    MoverPiratas = MoverPiratas + Cantidad
+    if MoverPiratas < 75 then return
+
+    MoverPiratas = 0
+
+    print at Piratas(1), Piratas(0); paper 5; ink 0; " "
+
+    if Piratas(1) > 0 then 
+
+        if Isla(Piratas(1) - 1, 0) = Piratas(0) then
+
+            if (Piratas(1) - 1) mod 2 = 0 then 
+                print at Piratas(1) - 1, Piratas(0); ink 6; paper 4; "\I" 
+            else
+                print at Piratas(1) - 1, Piratas(0); ink 6; paper 4; "\J" 
+            end if
+
+        else
+
+            print at Piratas(1) - 1, Piratas(0); paper 5; ink 0; " "
+
+        end if
+
+    end if
+
+    Piratas(0) = Piratas(0) + 1
+    Piratas(1) = Piratas(1) + 1
+
+    if Piratas(1) > 19 then Piratas(1) = 19
+    if Piratas(1) < 1 then Piratas(1) = 0
+
+    if Piratas(0) >= Isla(Piratas(1), 0) then Piratas(0) = Isla(Piratas(1), 0) - 1
+   
+    print at Piratas(1), Piratas(0); ink 2; paper 5; "\D"
+    print at Piratas(1) - 1, Piratas(0); paper 7; ink 1; "\C"
+
+    Sonido(0)
+
+end sub
+
+sub MostrarMapa(Borrar as uByte)
+
+    pause 0
+
+    if Borrar > 0 then cls else Sonido(5)
+
+    ImprimirIsla()
+    ImprimirCamino()
+
+    pause 50 + RND * 20
+
+    ImprimirIsla()
+    DesplazarJugador(0,0)
+
+end sub
+
+sub DesplazarJugador(DespX as byte, DespY as byte)
+    
+    print at Jugador(1), Jugador(0); paper 4; ink 0; "\P"
+
+    Jugador(0) = Jugador(0) + DespX
+    Jugador(1) = Jugador(1) + DespY
+
+    if Jugador(1) > 19 then Jugador(1) = 19
+    if Jugador(1) < 1 then Jugador(1) = 0
+
+    if Jugador(0) <= Isla(Jugador(1), 0) then Jugador(0) = Isla(Jugador(1), 0) + 1
+    if Jugador(0) >= Isla(Jugador(1), 0) + Isla(Jugador(1), 1) then Jugador(0) = Isla(Jugador(1), 0) + Isla(Jugador(1), 1) - 1
+
+    print at Jugador(1), Jugador(0); paper 7; ink 0; "\F"
+
+end sub
+
+sub ImprimirArenasMovedizas()
+
+    Dim y as UBYTE
+
+    for y = 0 to 9
+
+        print at ArenasMovedizas(y, 1),ArenasMovedizas(y, 0); ink 1; paper 4; "\E"
+
+    next y
+
+end sub
+
+sub ImprimirCamino()
+
+    Dim y as UBYTE
+
+    for y = 1 to 19
+
+        if y < Tesoro(1) and Camino(y) <> 0 then 
+
+            if y mod 2  = 0 then
+                print at y, Camino(y); ink 0; paper 4; "\M"
+            else
+                print at y, Camino(y); ink 0; paper 4; "\N"
+            end if
+            
+        end if
+
+    next y
+
+    print at Tesoro(1), Tesoro(0); ink 2; paper 4; "\O"
+
+    print at 21, 1; ink 2; paper 5; "\O"; ink 0; " INDICA EL LUGAR DEL TESORO"
+
+end sub
+
+sub ImprimirIsla()
+
+    paper 5
+    border 5
+    ink 0
+
+    Dim x AS UBYTE
+    Dim xPrev AS UBYTE
+    Dim xNext AS UBYTE
+    Dim upOrDown as UBYTE
+    Dim char as STRING
+    Dim y as byte
+
+    Dim xStart as ubyte
+    Dim xEnd as ubyte
+
+    paper 4
+    ink 6
+
+    for x = Isla(0, 0) to Isla(0, 1) + Isla(0, 0)
+        print at 0, x; "\L"
+    next x
+
+    for x = Isla(20, 0) to Isla(20, 1) + Isla(20, 0)
+        print at 20, x; "\K"
+    next x
+
+    for y = 1 to 19
+
+        x = Isla(y, 0)
+        xPrev = Isla(y - 1, 0)
+        xNext = Isla(y + 1, 0)
+
+        xStart = x + 1
+
+        if (x > xPrev and x > xNext) or (x < xPrev and x < xNext) then
+            if y mod 2 = 0 then char = "\I" else char = "\J"
+            print at y, x; char
+        else if x > xPrev then
+            print at y, x; "\H"
+        else  if x < xPrev then
+            print at y, x;"\G"
+        else
+            if y mod 2 = 0 then char = "\I" else char = "\J"
+            print at y, x; char
+        end if
+
+        x = Isla(y, 0) + Isla(y, 1)
+        xPrev = Isla(y - 1, 0) + Isla(y - 1, 1)
+        xNext = Isla(y + 1, 0) + Isla(y + 1, 1)
+
+        xEnd = x - 1
+
+        if (x > xPrev and x > xNext) or (x < xPrev and x < xNext) then
+            if y mod 2 = 0 then char = "\J" else char = "\I"
+            print at y, x; char
+        else if x > xPrev then
+            print at y, x;  "\H"
+        else  if x < xPrev then
+            print at y, x; "\G"
+        else
+            if y mod 2 = 0 then char = "\J" else char = "\I"
+            print at y, x;  char
+        end if
+        
+        for x = xStart to xEnd
+            print at y, x; paper 4; ink 0; "\P"
+        next x
+    next y
+
+     print at 21, 1; paper 5; "                             "
+
+     if Piratas(1) <> 0 then
+        print at Piratas(1), Piratas(0); ink 2; paper 5; "\D"
+        print at Piratas(1) - 1, Piratas(0); paper 7; ink 1; "\C"
+    end if
+
+    pause 1
+
+end sub
+
+sub GenerarPartida()
+
+    dim y as BYTE
+
+'generar limites isla
+
+    DIM lft AS BYTE = INT(RND * 3) + 10
+    DIM wdt AS BYTE = INT(RND * 3) + 10
+
+    for y = 0 to 20
+
+        if lft < 5 then lft = 5
+        if wdt > 30 then wdt = 30
+
+        Isla(y, 0) = lft
+        Isla(y, 1) = wdt
+
+        if y = 1 then
+            lft = lft - 1
+            wdt = wdt + 2
+        else if y = 19 then
+            lft = lft + 1
+            wdt = wdt - 2
+        else
+            lft = lft - (SGN(10 - y) * INT (RND * 2))
+            wdt = wdt + (SGN(10 - y) * INT (RND * 2))
+        end if
+
+    next y
+
+'generar camino
+
+    Camino(1) = Isla(1, 0) + INT(RND * 4) + 1
+
+    DIm finCamino as ubyte = 19 - INT(RND * 3)
+
+    for y = 2 to finCamino
+        
+        Camino(y) = Camino(y - 1) + INT(RND * 3) - 1
+
+        if Camino(y) >= Isla(y,0) + Isla(y,1) - 1 then Camino(y) = Isla(y,0) + Isla(y,1) - 2
+        if Camino(y) <= Isla(y,0) + 1 then Camino(y) = Isla(y,0) + 2
+
+    next y
+
+'guardar tesoro
+
+    Tesoro(0) = Camino(finCamino)
+    Tesoro(1) = finCamino
+
+'generar arenas movedizas
+    
+    for y = 0 to 9        
+
+nuevoPunto
+
+        wdt = INT(RND * 17) + 2
+        if Camino(wdt) = 0 then goto nuevoPunto
+        lft = Camino(wdt) + SGN(RND - 0.5)
+        if lft <= Isla(wdt, 0) or lft >= Isla(wdt, 0) + Isla(wdt, 1) then go to nuevoPunto
+
+        ArenasMovedizas(y, 0) = lft
+        ArenasMovedizas(y, 1) = wdt
+
+    next y
+
+    Jugador(0) = Camino(1)
+    Jugador(1) = 1
+
+    Piratas(0) = 0
+    Piratas(1) = 0
+    
+    MoverPiratas = 0
+
+end sub
+
+sub IniciarGraficos()
+
+    poke UINTEGER UDG_VAR, @graficos(0,0)
+    paper 5
+    border 5
+    ink 0
+    cls
+
+end sub
+
+sub fastcall Sonido(NumSonido as uByte)
+
+asm
+
+	ld hl,sfxData	;address of sound effects data
+
+	di
+	push ix
+	push iy
+
+	ld b,0
+	ld c,a
+	add hl,bc
+	add hl,bc
+	ld e,(hl)
+	inc hl
+	ld d,(hl)
+	push de
+	pop ix			;put it into ix
+
+	ld a,(23624)	;get border color from BASIC vars to keep it unchanged
+	rra
+	rra
+	rra
+	and 7
+	ld (sfxRoutineToneBorder  +1),a
+	ld (sfxRoutineNoiseBorder +1),a
+	ld (sfxRoutineSampleBorder+1),a
+
+
+readData:
+	ld a,(ix+0)		;read block type
+	ld c,(ix+1)		;read duration 1
+	ld b,(ix+2)
+	ld e,(ix+3)		;read duration 2
+	ld d,(ix+4)
+	push de
+	pop iy
+
+	dec a
+	jr z,sfxRoutineTone
+	dec a
+	jr z,sfxRoutineNoise
+	dec a
+	jr z,sfxRoutineSample
+	pop iy
+	pop ix
+	ei
+	ret
+
+	
+
+;play sample
+
+sfxRoutineSample:
+	ex de,hl
+sfxRS0:
+	ld e,8
+	ld d,(hl)
+	inc hl
+sfxRS1:
+	ld a,(ix+5)
+sfxRS2:
+	dec a
+	jr nz,sfxRS2
+	rl d
+	sbc a,a
+	and 16
+sfxRoutineSampleBorder:
+	or 0
+	out (254),a
+	dec e
+	jr nz,sfxRS1
+	dec bc
+	ld a,b
+	or c
+	jr nz,sfxRS0
+
+	ld c,6
+	
+nextData:
+	add ix,bc		;skip to the next block
+	jr readData
+
+
+
+;generate tone with many parameters
+
+sfxRoutineTone:
+	ld e,(ix+5)		;freq
+	ld d,(ix+6)
+	ld a,(ix+9)		;duty
+	ld (sfxRoutineToneDuty+1),a
+	ld hl,0
+
+sfxRT0:
+	push bc
+	push iy
+	pop bc
+sfxRT1:
+	add hl,de
+	ld a,h
+sfxRoutineToneDuty:
+	cp 0
+	sbc a,a
+	and 16
+sfxRoutineToneBorder:
+	or 0
+	out (254),a
+
+	dec bc
+	ld a,b
+	or c
+	jr nz,sfxRT1
+
+	ld a,(sfxRoutineToneDuty+1)	 ;duty change
+	add a,(ix+10)
+	ld (sfxRoutineToneDuty+1),a
+
+	ld c,(ix+7)		;slide
+	ld b,(ix+8)
+	ex de,hl
+	add hl,bc
+	ex de,hl
+
+	pop bc
+	dec bc
+	ld a,b
+	or c
+	jr nz,sfxRT0
+
+	ld c,11
+	jr nextData
+
+
+
+;generate noise with two parameters
+
+sfxRoutineNoise:
+	ld e,(ix+5)		;pitch
+
+	ld d,1
+	ld h,d
+	ld l,d
+sfxRN0:
+	push bc
+	push iy
+	pop bc
+sfxRN1:
+	ld a,(hl)
+	and 16
+sfxRoutineNoiseBorder:
+	or 0
+	out (254),a
+	dec d
+	jr nz,sfxRN2
+	ld d,e
+	inc hl
+	ld a,h
+	and 31
+	ld h,a
+sfxRN2:
+	dec bc
+	ld a,b
+	or c
+	jr nz,sfxRN1
+
+	ld a,e
+	add a,(ix+6)	;slide
+	ld e,a
+
+	pop bc
+	dec bc
+	ld a,b
+	or c
+	jr nz,sfxRN0
+
+	ld c,7
+	jr nextData
+
+
+sfxData:
+
+SoundEffectsData:
+	defw SoundEffect0Data
+	defw SoundEffect1Data
+	defw SoundEffect2Data
+	defw SoundEffect3Data
+	defw SoundEffect4Data
+	defw SoundEffect5Data
+	defw SoundEffect6Data
+	defw SoundEffect7Data
+	defw SoundEffect8Data
+	defw SoundEffect9Data
+	defw SoundEffect10Data
+	defw SoundEffect11Data
+	defw SoundEffect12Data
+	defw SoundEffect13Data
+
+SoundEffect0Data:
+	defb 1 ;tone
+	defw 20,50,2000,65486,128
+	defb 0
+SoundEffect1Data:
+	defb 1 ;tone
+	defw 10,100,2000,100,128
+	defb 0
+SoundEffect2Data:
+	defb 2 ;noise
+	defw 100,50,356
+	defb 0
+SoundEffect3Data:
+	defb 2 ;noise
+	defw 1,1000,10
+	defb 2 ;noise
+	defw 1,1000,1
+	defb 0
+SoundEffect4Data:
+	defb 2 ;noise
+	defw 1,1000,10
+	defb 1 ;tone
+	defw 20,100,400,65526,128
+	defb 2 ;noise
+	defw 1,2000,1
+	defb 0
+SoundEffect5Data:
+	defb 1 ;tone
+	defw 1,1000,1000,0,128
+	defb 1 ;pause
+	defw 1,1000,0,0,0
+	defb 1 ;tone
+	defw 1,2000,2000,0,128
+	defb 1 ;tone
+	defw 1,2000,2000,0,16
+	defb 0
+SoundEffect6Data:
+	defb 1 ;tone
+	defw 32,1000,2000,16384,320
+	defb 0
+SoundEffect7Data:
+	defb 1 ;tone
+	defw 20,100,200,10,1025
+	defb 1 ;pause
+	defw 30,100,0,0,0
+	defb 1 ;tone
+	defw 50,100,200,10,1025
+	defb 0
+SoundEffect8Data:
+	defb 1 ;tone
+	defw 50,200,500,65516,128
+	defb 0
+SoundEffect9Data:
+	defb 1 ;tone
+	defw 10,1000,200,2,272
+	defb 1 ;pause
+	defw 1,4000,0,0,0
+	defb 1 ;tone
+	defw 10,1000,200,65534,272
+	defb 0
+SoundEffect10Data:
+	defb 1 ;tone
+	defw 20,500,200,5,272
+	defb 1 ;pause
+	defw 1,1000,0,0,0
+	defb 1 ;tone
+	defw 30,500,200,8,272
+	defb 0
+SoundEffect11Data:
+	defb 3 ;sample
+	defw 262
+	defw Sample0Data+0
+	defb 45
+	defb 0
+SoundEffect12Data:
+	defb 3 ;sample
+	defw 160
+	defw Sample1Data+0
+	defb 45
+	defb 0
+SoundEffect13Data:
+	defb 3 ;sample
+	defw 262
+	defw Sample0Data+0
+	defb 100
+	defb 0
+
+Sample0Data:
+	defb 127,255,255,163,255,255,129,255,255,213,31,255,168,31,255,240
+	defb 63,255,232,15,255,171,253,71,254,128,127,224,127,128,255,208
+	defb 127,245,127,129,255,240,255,234,255,15,254,175,254,191,250,255
+	defb 245,127,250,255,111,255,249,255,175,250,253,250,151,253,127,135
+	defb 255,168,175,215,252,63,253,87,254,191,171,255,250,215,237,250
+	defb 255,255,87,254,175,255,255,245,127,235,250,255,191,171,127,95
+	defb 255,191,250,190,247,255,255,255,244,191,255,255,95,255,173,253
+	defb 127,255,255,235,171,251,255,255,255,87,223,254,254,255,245,117
+	defb 191,191,239,255,87,91,251,255,255,245,117,181,191,255,255,95
+	defb 95,235,255,191,250,191,255,223,121,249,213,242,250,223,215,206
+	defb 174,191,214,254,63,117,94,254,215,250,251,215,251,123,127,249
+	defb 255,175,183,246,223,233,127,175,167,243,223,227,239,215,219,233
+	defb 239,248,113,245,244,250,121,248,120,125,124,126,124,62,62,31
+	defb 151,207,143,143,207,7,252,158,124,60,126,60,127,248,120,240
+	defb 241,241,225,243,243,225,243,231,243,231,199,249,178,253,211,240
+	defb 227,227,239,14,30,60,124,120,241,255,227,227,199,143,143,31
+	defb 63,255,159,62,124,254
+
+Sample1Data:
+	defb 203,203,247,227,248,120,223,60,127,143,56,247,15,113,227,159
+	defb 225,238,60,115,248,127,207,252,255,15,225,243,223,195,252,63
+	defb 107,248,127,135,244,63,7,248,63,195,240,31,135,252,63,0
+	defb 252,63,225,241,135,195,255,31,30,126,63,249,241,243,227,247
+	defb 143,191,254,31,239,255,255,247,248,127,249,249,255,5,255,191
+	defb 191,199,223,143,239,240,7,254,3,252,3,255,192,254,1,255
+	defb 128,255,128,255,193,255,128,255,131,255,1,255,63,240,15,248
+	defb 127,224,63,225,255,128,127,227,255,0,255,227,255,0,255,225
+	defb 255,224,63,252,31,252,1,255,228,255,192,31,255,231,255,128
+	defb 127,255,240,127,224,31,255,255,255,255,192,63,255,255,255,255
+
+
+end asm
+
+end sub

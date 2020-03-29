@@ -1,0 +1,15 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F16D4249-6279-474E-8826-742E7FF7445C}") = "IslaTesoro", "IslaTesoro\IslaTesoro.z80cdproj", "{980861BE-72FF-4F1B-B01D-181BEE736689}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16018117-6F19-414F-ABAF-EB04A978433E}
+	EndGlobalSection
+EndGlobal
