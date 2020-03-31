@@ -15,9 +15,17 @@
     <Z80Asm Include="ZxBasicFiles\IslaTesoro.zxbas.z80asm">
       <DependentUpon>IslaTesoro.zxbas</DependentUpon>
     </Z80Asm>
+    <Z80Asm Include="ZxBasicFiles\MuerteLanzas.zxbas.z80asm">
+      <DependentUpon>MuerteLanzas.zxbas</DependentUpon>
+    </Z80Asm>
     <ZxBasic Include="ZxBasicFiles\IslaTesoro.zxbas" />
     <Z80Test Include="Z80UnitTests\UnitTest.z80test" />
     <Tzx Include="TapeFiles\Welcome.tzx" />
+    <ZxBasic Include="ZxBasicFiles\ScreenDecompressor.zxbas" />
+    <ZxBasic Include="ZxBasicFiles\Captura.zxbas" />
+    <ZxBasic Include="ZxBasicFiles\MuerteArena.zxbas" />
+    <ZxBasic Include="ZxBasicFiles\MuerteLanzas.zxbas" />
+    <ZxBasic Include="ZxBasicFiles\Tesoro.zxbas" />
   </ItemGroup>
   <ItemGroup>
     <Tap Include="TapeFiles\isla.tap" />
