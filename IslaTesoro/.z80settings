@@ -1,5 +1,5 @@
 {
   "DefaultTapeFile": "TapeFiles\\TreasureIsland.tap",
   "DefaultAnnotationFile": "Annotations.disann",
-  "DefaultCodeFile": "Z80CodeFiles\\Code.z80asm"
+  "DefaultCodeFile": "ZxBasicFiles\\IslaTesoro.zxbas"
 }

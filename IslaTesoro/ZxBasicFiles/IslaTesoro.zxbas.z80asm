@@ -1,7 +1,7 @@
 	.zxbasic
-	org 32768
+	org 24000
 	; Defines HEAP SIZE
-ZXBASIC_HEAP_SIZE EQU 4096
+ZXBASIC_HEAP_SIZE EQU 2048
 __START_PROGRAM:
 	di
 	push ix
@@ -164,13 +164,23 @@ __LABEL26:
 	xor a
 	push af
 	call _MostrarMapa
+	xor a
+	ld (_cuenta), a
+	jp __LABEL34
+__LABEL37:
 	ld a, 100
 	push af
 	call _DesplazarPiratas
-	ld a, 100
-	push af
-	call _DesplazarPiratas
+__LABEL38:
+	ld hl, _cuenta
+	inc (hl)
 __LABEL34:
+	ld a, (_AvancesPirataMapa)
+	ld hl, (_cuenta - 1)
+	cp h
+	jp nc, __LABEL37
+__LABEL36:
+__LABEL39:
 	call INKEY
 	push hl
 	ld de, __LABEL9
@@ -178,8 +188,8 @@ __LABEL34:
 	ld a, 1
 	call __STRNE
 	or a
-	jp nz, __LABEL34
-__LABEL35:
+	jp nz, __LABEL39
+__LABEL40:
 __LABEL33:
 	ld a, 1
 	push af
@@ -188,7 +198,7 @@ __LABEL33:
 	call _ComprobarPiratas
 	or a
 	jp z, __LABEL__finPartida
-__LABEL37:
+__LABEL42:
 	jp __LABEL__entrada
 __LABEL__finPartida:
 	xor a
@@ -204,7 +214,7 @@ __LABEL__finPartida:
 	push af
 	ld a, 7
 	call PRINT_AT
-	ld hl, __LABEL38
+	ld hl, __LABEL43
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -213,20 +223,20 @@ __LABEL__esperaRespuesta:
 	ex de, hl
 	ld hl, _res
 	call __STORE_STR2
-	ld de, __LABEL39
+	ld de, __LABEL44
 	ld hl, (_res)
 	xor a
 	call __STREQ
 	or a
 	jp nz, __LABEL__inicio
-__LABEL41:
-	ld de, __LABEL42
+__LABEL46:
+	ld de, __LABEL47
 	ld hl, (_res)
 	xor a
 	call __STREQ
 	or a
 	jp nz, __LABEL__fin
-__LABEL44:
+__LABEL49:
 	jp __LABEL__esperaRespuesta
 __LABEL__fin:
 	call CLS
@@ -234,7 +244,7 @@ __LABEL__fin:
 	push af
 	ld a, 14
 	call PRINT_AT
-	ld hl, __LABEL45
+	ld hl, __LABEL50
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -288,26 +298,26 @@ _input:
 	pop af
 	or h
 	ld (23611), a
-__LABEL46:
+__LABEL51:
 	call _PRIVATEInputShowCursor
 	xor a
 	ld (_input_LastK), a
-__LABEL49:
-__LABEL51:
+__LABEL54:
+__LABEL56:
 	ld a, (_input_LastK)
 	or a
-	jp z, __LABEL49
-__LABEL50:
+	jp z, __LABEL54
+__LABEL55:
 	call _PRIVATEInputHideCursor
 	ld a, (_input_LastK)
 	sub 12
-	jp nz, __LABEL52
+	jp nz, __LABEL57
 	ld l, (ix-2)
 	ld h, (ix-1)
 	call __STRLEN
 	ld a, h
 	or l
-	jp z, __LABEL55
+	jp z, __LABEL60
 	ld l, (ix-2)
 	ld h, (ix-1)
 	call __STRLEN
@@ -316,12 +326,12 @@ __LABEL50:
 	pop hl
 	or a
 	sbc hl, de
-	jp nz, __LABEL56
+	jp nz, __LABEL61
 	ld de, __LABEL9
 	ld bc, -2
 	call __PSTORE_STR
-	jp __LABEL57
-__LABEL56:
+	jp __LABEL62
+__LABEL61:
 	ld l, (ix-2)
 	ld h, (ix-1)
 	push hl
@@ -339,13 +349,13 @@ __LABEL56:
 	ld e, l
 	ld bc, -2
 	call __PSTORE_STR2
-__LABEL57:
-	ld hl, __LABEL58
+__LABEL62:
+	ld hl, __LABEL63
 	xor a
 	call __PRINTSTR
-__LABEL55:
-	jp __LABEL53
-__LABEL52:
+__LABEL60:
+	jp __LABEL58
+__LABEL57:
 	ld a, (_input_LastK)
 	sub 32
 	ccf
@@ -365,11 +375,11 @@ __LABEL52:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL332
+	jr z, __LABEL441
 	ld a, h
-__LABEL332:
+__LABEL441:
 	or a
-	jp z, __LABEL60
+	jp z, __LABEL65
 	ld l, (ix-2)
 	ld h, (ix-1)
 	push hl
@@ -394,17 +404,17 @@ __LABEL332:
 	call CHR
 	ld a, 1
 	call __PRINTSTR
-__LABEL60:
+__LABEL65:
+__LABEL58:
 __LABEL53:
-__LABEL48:
 	ld a, (_input_LastK)
 	sub 13
-	jp nz, __LABEL46
-__LABEL47:
+	jp nz, __LABEL51
+__LABEL52:
 	ld (ix-4), 1
 	ld (ix-3), 0
-	jp __LABEL61
-__LABEL64:
+	jp __LABEL66
+__LABEL69:
 	xor a
 	call OVER_TMP
 	ld a, 8
@@ -412,7 +422,7 @@ __LABEL64:
 	ld hl, 1
 	call CHR
 	push hl
-	ld de, __LABEL66
+	ld de, __LABEL71
 	pop hl
 	push hl
 	call __ADDSTR
@@ -439,13 +449,13 @@ __LABEL64:
 	ld a, 1
 	call __PRINTSTR
 	call COPY_ATTR
-__LABEL65:
+__LABEL70:
 	ld l, (ix-4)
 	ld h, (ix-3)
 	inc hl
 	ld (ix-4), l
 	ld (ix-3), h
-__LABEL61:
+__LABEL66:
 	ld l, (ix-4)
 	ld h, (ix-3)
 	push hl
@@ -455,8 +465,8 @@ __LABEL61:
 	pop de
 	or a
 	sbc hl, de
-	jp nc, __LABEL64
-__LABEL63:
+	jp nc, __LABEL69
+__LABEL68:
 	ld l, (ix-2)
 	ld h, (ix-1)
 	call __LOADSTR
@@ -484,8 +494,8 @@ _PRIVATEInputShowCursor:
 	call OVER_TMP
 	ld a, 1
 	call FLASH_TMP
-	ld de, __LABEL58
-	ld hl, __LABEL66
+	ld de, __LABEL63
+	ld hl, __LABEL71
 	call __ADDSTR
 	ld a, 1
 	call __PRINTSTR
@@ -501,8 +511,8 @@ _PRIVATEInputHideCursor:
 	call OVER_TMP
 	xor a
 	call FLASH_TMP
-	ld de, __LABEL58
-	ld hl, __LABEL66
+	ld de, __LABEL63
+	ld hl, __LABEL71
 	call __ADDSTR
 	ld a, 1
 	call __PRINTSTR
@@ -527,14 +537,14 @@ _DescomprimirImagen:
 	ld bc, -4
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL333
+	ld hl, __LABEL442
 	ld bc, 2
 	ldir
 	ld l, (ix+4)
 	ld h, (ix+5)
 	ld (ix-10), l
 	ld (ix-9), h
-__LABEL67:
+__LABEL72:
 	ld l, (ix-4)
 	ld h, (ix-3)
 	push hl
@@ -542,7 +552,7 @@ __LABEL67:
 	pop hl
 	or a
 	sbc hl, de
-	jp nc, __LABEL68
+	jp nc, __LABEL73
 	ld l, (ix+4)
 	ld h, (ix+5)
 	ld a, (hl)
@@ -555,14 +565,14 @@ __LABEL67:
 	pop hl
 	or a
 	sbc hl, de
-	jp nc, __LABEL69
+	jp nc, __LABEL74
 	ld l, (ix+4)
 	ld h, (ix+5)
 	inc hl
 	ld a, (hl)
 	ld (ix-2), a
 	sub (ix-1)
-	jp nz, __LABEL71
+	jp nz, __LABEL76
 	ld l, (ix+4)
 	ld h, (ix+5)
 	inc hl
@@ -582,7 +592,7 @@ __LABEL67:
 	ld h, (ix-5)
 	ld (ix-8), l
 	ld (ix-7), h
-__LABEL73:
+__LABEL78:
 	ld l, (ix-6)
 	ld h, (ix-5)
 	push hl
@@ -590,7 +600,7 @@ __LABEL73:
 	pop de
 	or a
 	sbc hl, de
-	jp nc, __LABEL74
+	jp nc, __LABEL79
 	ld l, (ix-4)
 	ld h, (ix-3)
 	push hl
@@ -607,55 +617,55 @@ __LABEL73:
 	inc hl
 	ld (ix-4), l
 	ld (ix-3), h
-	jp __LABEL73
+	jp __LABEL78
+__LABEL79:
+	ld l, (ix+4)
+	ld h, (ix+5)
+	inc hl
+	inc hl
+	inc hl
+	ld (ix+4), l
+	ld (ix+5), h
+	jp __LABEL77
+__LABEL76:
+	ld l, (ix-4)
+	ld h, (ix-3)
+	push hl
+	ld a, (ix-1)
+	pop hl
+	ld (hl), a
+	ld l, (ix-4)
+	ld h, (ix-3)
+	inc hl
+	ld (ix-4), l
+	ld (ix-3), h
+	ld l, (ix+4)
+	ld h, (ix+5)
+	inc hl
+	ld (ix+4), l
+	ld (ix+5), h
+__LABEL77:
+	jp __LABEL75
 __LABEL74:
+	ld l, (ix-4)
+	ld h, (ix-3)
+	push hl
+	ld a, (ix-1)
+	pop hl
+	ld (hl), a
+	ld l, (ix-4)
+	ld h, (ix-3)
+	inc hl
+	ld (ix-4), l
+	ld (ix-3), h
 	ld l, (ix+4)
 	ld h, (ix+5)
 	inc hl
-	inc hl
-	inc hl
 	ld (ix+4), l
 	ld (ix+5), h
+__LABEL75:
 	jp __LABEL72
-__LABEL71:
-	ld l, (ix-4)
-	ld h, (ix-3)
-	push hl
-	ld a, (ix-1)
-	pop hl
-	ld (hl), a
-	ld l, (ix-4)
-	ld h, (ix-3)
-	inc hl
-	ld (ix-4), l
-	ld (ix-3), h
-	ld l, (ix+4)
-	ld h, (ix+5)
-	inc hl
-	ld (ix+4), l
-	ld (ix+5), h
-__LABEL72:
-	jp __LABEL70
-__LABEL69:
-	ld l, (ix-4)
-	ld h, (ix-3)
-	push hl
-	ld a, (ix-1)
-	pop hl
-	ld (hl), a
-	ld l, (ix-4)
-	ld h, (ix-3)
-	inc hl
-	ld (ix-4), l
-	ld (ix-3), h
-	ld l, (ix+4)
-	ld h, (ix+5)
-	inc hl
-	ld (ix+4), l
-	ld (ix+5), h
-__LABEL70:
-	jp __LABEL67
-__LABEL68:
+__LABEL73:
 _DescomprimirImagen__leave:
 	ld sp, ix
 	pop ix
@@ -681,7 +691,7 @@ _Instrucciones:
 	push af
 	xor a
 	call PRINT_AT
-	ld hl, __LABEL75
+	ld hl, __LABEL80
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -689,31 +699,6 @@ _Instrucciones:
 	push af
 	xor a
 	call PRINT_AT
-	ld hl, __LABEL76
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL77
-	xor a
-	call __PRINTSTR
-	xor a
-	call INK_TMP
-	ld a, 7
-	call PAPER_TMP
-	ld hl, __LABEL78
-	xor a
-	call __PRINTSTR
-	ld a, 7
-	call INK_TMP
-	xor a
-	call PAPER_TMP
-	ld hl, __LABEL79
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL_ATTR
-	ld hl, __LABEL80
-	xor a
-	call __PRINTSTR
 	ld hl, __LABEL81
 	xor a
 	call __PRINTSTR
@@ -721,38 +706,33 @@ _Instrucciones:
 	ld hl, __LABEL82
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL
-	call PRINT_EOL
-	ld hl, __LABEL83
 	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL84
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL85
-	xor a
-	call __PRINTSTR
-	ld a, 6
 	call INK_TMP
-	xor a
+	ld a, 7
 	call PAPER_TMP
-	ld a, 1
-	call BRIGHT_TMP
-	ld hl, __LABEL86
+	ld hl, __LABEL83
 	xor a
 	call __PRINTSTR
 	ld a, 7
 	call INK_TMP
 	xor a
 	call PAPER_TMP
-	xor a
-	call BRIGHT_TMP
-	ld hl, __LABEL87
+	ld hl, __LABEL84
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
+	ld hl, __LABEL85
+	xor a
+	call __PRINTSTR
+	ld hl, __LABEL86
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL87
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call PRINT_EOL
 	ld hl, __LABEL88
 	xor a
 	call __PRINTSTR
@@ -761,18 +741,28 @@ _Instrucciones:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	call PRINT_EOL
 	ld hl, __LABEL90
 	xor a
 	call __PRINTSTR
+	ld a, 6
+	call INK_TMP
+	xor a
+	call PAPER_TMP
+	ld a, 1
+	call BRIGHT_TMP
 	ld hl, __LABEL91
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL
+	ld a, 7
+	call INK_TMP
+	xor a
+	call PAPER_TMP
+	xor a
+	call BRIGHT_TMP
 	ld hl, __LABEL92
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL
+	call PRINT_EOL_ATTR
 	ld hl, __LABEL93
 	xor a
 	call __PRINTSTR
@@ -781,12 +771,32 @@ _Instrucciones:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
+	call PRINT_EOL
 	ld hl, __LABEL95
+	xor a
+	call __PRINTSTR
+	ld hl, __LABEL96
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL97
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL98
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL99
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, __LABEL100
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
 	call PRINT_EOL
-	ld hl, __LABEL96
+	ld hl, __LABEL101
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -796,14 +806,14 @@ _Instrucciones:
 	push af
 	xor a
 	call PRINT_AT
-	ld hl, __LABEL97
+	ld hl, __LABEL102
 	xor a
 	call __PRINTSTR
 	ld a, 1
 	call INK_TMP
 	ld a, 7
 	call PAPER_TMP
-	ld hl, __LABEL98
+	ld hl, __LABEL103
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -811,41 +821,20 @@ _Instrucciones:
 	push af
 	xor a
 	call PRINT_AT
-	ld hl, __LABEL99
+	ld hl, __LABEL104
 	xor a
 	call __PRINTSTR
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL100
+	ld hl, __LABEL105
 	xor a
 	call __PRINTSTR
 	ld a, 7
 	call INK_TMP
-	ld hl, __LABEL101
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL_ATTR
-	ld hl, __LABEL102
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL103
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL104
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	call PRINT_EOL
-	ld hl, __LABEL105
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
 	ld hl, __LABEL106
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL
+	call PRINT_EOL_ATTR
 	ld hl, __LABEL107
 	xor a
 	call __PRINTSTR
@@ -853,21 +842,19 @@ _Instrucciones:
 	ld hl, __LABEL108
 	xor a
 	call __PRINTSTR
-	ld a, 3
-	call INK_TMP
+	call PRINT_EOL
 	ld hl, __LABEL109
 	xor a
 	call __PRINTSTR
-	ld a, 7
-	call INK_TMP
+	call PRINT_EOL
+	call PRINT_EOL
 	ld hl, __LABEL110
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL_ATTR
+	call PRINT_EOL
 	ld hl, __LABEL111
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL
 	call PRINT_EOL
 	ld hl, __LABEL112
 	xor a
@@ -877,20 +864,29 @@ _Instrucciones:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
+	call PRINT_EOL
+	ld a, 21
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL101
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	call _Esperar
+	call CLS
 	ld hl, __LABEL114
 	xor a
 	call __PRINTSTR
-	ld a, 1
-	call INK_TMP
+	call PRINT_EOL
 	ld hl, __LABEL115
 	xor a
 	call __PRINTSTR
-	ld a, 7
-	call INK_TMP
+	call PRINT_EOL
 	ld hl, __LABEL116
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL_ATTR
+	call PRINT_EOL
 	ld hl, __LABEL117
 	xor a
 	call __PRINTSTR
@@ -898,21 +894,10 @@ _Instrucciones:
 	ld hl, __LABEL118
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL
-	call PRINT_EOL
-	ld a, 21
-	push af
-	xor a
-	call PRINT_AT
-	ld hl, __LABEL96
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	call _Esperar
-	call CLS
 	ld hl, __LABEL119
 	xor a
 	call __PRINTSTR
+	call PRINT_EOL
 	call PRINT_EOL
 	ld hl, __LABEL120
 	xor a
@@ -929,35 +914,15 @@ _Instrucciones:
 	ld hl, __LABEL123
 	xor a
 	call __PRINTSTR
+	call PRINT_EOL
 	ld hl, __LABEL124
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
 	call PRINT_EOL
+	call PRINT_EOL
+	call PRINT_EOL
 	ld hl, __LABEL125
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL126
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL127
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL128
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL129
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	call PRINT_EOL
-	call PRINT_EOL
-	call PRINT_EOL
-	ld hl, __LABEL130
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -965,7 +930,7 @@ _Instrucciones:
 	push af
 	xor a
 	call PRINT_AT
-	ld hl, __LABEL96
+	ld hl, __LABEL101
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -980,11 +945,21 @@ _SeleccionarDificultad:
 	add ix, sp
 	ld hl, 0
 	push hl
+__LABEL126:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STRNE
+	or a
+	jp nz, __LABEL126
+__LABEL127:
 	ld a, 12
 	push af
 	ld a, 7
 	call PRINT_AT
-	ld hl, __LABEL131
+	ld hl, __LABEL128
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -997,26 +972,40 @@ __LABEL__esperaNivel:
 	ld l, (ix-2)
 	ld h, (ix-1)
 	push hl
-	ld de, __LABEL132
+	ld de, __LABEL9
 	pop hl
 	xor a
-	call __STRGE
+	call __STRNE
 	push af
 	ld l, (ix-2)
 	ld h, (ix-1)
 	push hl
-	ld de, __LABEL133
+	ld de, __LABEL129
+	pop hl
+	xor a
+	call __STRGE
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL443
+	ld a, h
+__LABEL443:
+	push af
+	ld l, (ix-2)
+	ld h, (ix-1)
+	push hl
+	ld de, __LABEL130
 	pop hl
 	xor a
 	call __STRLE
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL334
+	jr z, __LABEL444
 	ld a, h
-__LABEL334:
+__LABEL444:
 	or a
-	jp z, __LABEL134
+	jp z, __LABEL131
 	ld l, (ix-2)
 	ld h, (ix-1)
 	xor a
@@ -1045,6 +1034,13 @@ __LABEL334:
 	push bc
 	push de
 	push af
+	ld a, 082h
+	ld de, 00000h
+	ld bc, 00000h
+	call __DIVF
+	push bc
+	push de
+	push af
 	ld a, 081h
 	ld de, 00000h
 	ld bc, 00000h
@@ -1052,10 +1048,91 @@ __LABEL334:
 	call __FTOU32REG
 	ld a, l
 	ld (_PasosJugadorRetroceso), a
-	jp __LABEL135
-__LABEL134:
+	ld l, (ix-2)
+	ld h, (ix-1)
+	xor a
+	call VAL
+	push bc
+	push de
+	push af
+	ld a, 082h
+	ld de, 00040h
+	ld bc, 00000h
+	call __DIVF
+	push bc
+	push de
+	push af
+	ld a, 081h
+	ld de, 00000h
+	ld bc, 00000h
+	call __ADDF
+	call __FTOU32REG
+	ld a, l
+	ld (_AvancesPirataMapa), a
+	ld l, (ix-2)
+	ld h, (ix-1)
+	xor a
+	call VAL
+	push bc
+	push de
+	push af
+	ld a, 086h
+	ld de, 00048h
+	ld bc, 00000h
+	call __MULF
+	ld hl, 00000h
+	push hl
+	ld hl, 0007Ah
+	push hl
+	ld h, 089h
+	push hl
+	call __SUBF
+	call __FTOU32REG
+	ld (_VelocidadTemplo), hl
+	ld l, (ix-2)
+	ld h, (ix-1)
+	xor a
+	call VAL
+	push bc
+	push de
+	push af
+	ld a, 088h
+	ld de, 0007Ah
+	ld bc, 00000h
+	call __MULF
+	ld hl, 00000h
+	push hl
+	ld hl, 0401Ch
+	push hl
+	ld h, 08Dh
+	push hl
+	call __SUBF
+	call __FTOU32REG
+	ld (_HastaTeclaArena), hl
+	ld l, (ix-2)
+	ld h, (ix-1)
+	xor a
+	call VAL
+	push bc
+	push de
+	push af
+	ld a, 086h
+	ld de, 00020h
+	ld bc, 00000h
+	call __MULF
+	ld hl, 00000h
+	push hl
+	ld hl, 0803Bh
+	push hl
+	ld h, 08Ah
+	push hl
+	call __SUBF
+	call __FTOU32REG
+	ld (_ParaTeclaArena), hl
+	jp __LABEL132
+__LABEL131:
 	jp __LABEL__esperaNivel
-__LABEL135:
+__LABEL132:
 	call CLS
 _SeleccionarDificultad__leave:
 	ex af, af'
@@ -1082,8 +1159,8 @@ _ActualizarOlas:
 	inc de
 	ldir
 	ld (ix-1), 1
-	jp __LABEL136
-__LABEL139:
+	jp __LABEL133
+__LABEL136:
 	call RND
 	push bc
 	push de
@@ -1165,19 +1242,19 @@ __LABEL139:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL335
+	jr z, __LABEL445
 	ld a, h
-__LABEL335:
+__LABEL445:
 	pop de
 	or d
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL336
+	jr z, __LABEL446
 	ld a, h
-__LABEL336:
+__LABEL446:
 	or a
-	jp z, __LABEL142
+	jp z, __LABEL139
 	call RND
 	push bc
 	push de
@@ -1201,12 +1278,12 @@ __LABEL336:
 	ld bc, 00000h
 	call __LTF
 	or a
-	jp z, __LABEL143
-	ld de, __LABEL145
+	jp z, __LABEL140
+	ld de, __LABEL142
 	ld bc, -5
 	call __PSTORE_STR
-	jp __LABEL144
-__LABEL143:
+	jp __LABEL141
+__LABEL140:
 	push ix
 	pop hl
 	ld de, -10
@@ -1220,17 +1297,17 @@ __LABEL143:
 	ld bc, 00000h
 	call __LTF
 	or a
-	jp z, __LABEL146
-	ld de, __LABEL148
+	jp z, __LABEL143
+	ld de, __LABEL145
 	ld bc, -5
 	call __PSTORE_STR
-	jp __LABEL147
-__LABEL146:
-	ld de, __LABEL66
+	jp __LABEL144
+__LABEL143:
+	ld de, __LABEL71
 	ld bc, -5
 	call __PSTORE_STR
-__LABEL147:
 __LABEL144:
+__LABEL141:
 	ld a, (ix-3)
 	push af
 	ld a, (ix-2)
@@ -1244,17 +1321,17 @@ __LABEL144:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL142:
-__LABEL140:
+__LABEL139:
+__LABEL137:
 	inc (ix-1)
-__LABEL136:
+__LABEL133:
 	ld a, (ix-1)
 	push af
 	ld a, 10
 	pop hl
 	cp h
-	jp nc, __LABEL139
-__LABEL138:
+	jp nc, __LABEL136
+__LABEL135:
 _ActualizarOlas__leave:
 	ex af, af'
 	exx
@@ -1272,7 +1349,7 @@ _ComprobarPiratas:
 	add ix, sp
 	ld a, (_Piratas.__DATA__ + 1)
 	sub 19
-	jp nz, __LABEL150
+	jp nz, __LABEL147
 	ld a, 12
 	call _Sonido
 	ld a, 20
@@ -1283,7 +1360,7 @@ _ComprobarPiratas:
 	call INK_TMP
 	ld a, 7
 	call PAPER_TMP
-	ld hl, __LABEL98
+	ld hl, __LABEL103
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1295,12 +1372,12 @@ _ComprobarPiratas:
 	call PAPER_TMP
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL100
+	ld hl, __LABEL105
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL151
+	ld hl, __LABEL148
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1322,7 +1399,7 @@ _ComprobarPiratas:
 	call _Esperar
 	xor a
 	jp _ComprobarPiratas__leave
-__LABEL150:
+__LABEL147:
 	ld a, 1
 _ComprobarPiratas__leave:
 	ld sp, ix
@@ -1349,11 +1426,11 @@ _ComprobarCamino:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL337
+	jr z, __LABEL447
 	ld a, h
-__LABEL337:
+__LABEL447:
 	or a
-	jp z, __LABEL152
+	jp z, __LABEL149
 	xor a
 	call BORDER
 	xor a
@@ -1381,7 +1458,7 @@ __LABEL337:
 	call _Esperar
 	xor a
 	jp _ComprobarCamino__leave
-__LABEL152:
+__LABEL149:
 	ld a, (_Jugador.__DATA__ + 0)
 	push af
 	ld a, (_Jugador.__DATA__ + 1)
@@ -1393,16 +1470,16 @@ __LABEL152:
 	call __ARRAY
 	pop af
 	sub (hl)
-	jp nz, __LABEL154
+	jp nz, __LABEL151
 	ld a, 3
 	call _Sonido
-	jp __LABEL155
-__LABEL154:
+	jp __LABEL152
+__LABEL151:
 	ld a, 2
 	call _Sonido
 	ld (ix-1), 0
-	jp __LABEL156
-__LABEL159:
+	jp __LABEL153
+__LABEL156:
 	ld hl, 0
 	push hl
 	ld a, (ix-1)
@@ -1433,11 +1510,11 @@ __LABEL159:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL338
+	jr z, __LABEL448
 	ld a, h
-__LABEL338:
+__LABEL448:
 	or a
-	jp z, __LABEL162
+	jp z, __LABEL159
 	ld a, (_Jugador.__DATA__ + 1)
 	push af
 	ld a, (_Jugador.__DATA__ + 0)
@@ -1446,7 +1523,7 @@ __LABEL338:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL115
+	ld hl, __LABEL160
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1460,26 +1537,25 @@ __LABEL338:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL115
+	ld hl, __LABEL160
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL163
+	ld hl, __LABEL161
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
 	call _Esperar
-	call RND
-	push bc
-	push de
+	call _EscaparArena
 	push af
-	ld a, 080h
-	ld de, 00040h
-	ld bc, 00000h
-	call __GTF
-	or a
-	jp z, __LABEL164
+	xor a
+	pop hl
+	cp h
+	jp nc, __LABEL162
+	call _ImprimirIsla
+	call _ImprimirPiratas
+	call _ActualizarOlas
 	ld a, 21
 	push af
 	ld a, 1
@@ -1488,12 +1564,12 @@ __LABEL338:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL109
+	ld hl, __LABEL164
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL166
+	ld hl, __LABEL165
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1505,7 +1581,7 @@ __LABEL338:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL109
+	ld hl, __LABEL164
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1539,13 +1615,13 @@ __LABEL338:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL167
+	ld hl, __LABEL166
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
 	ld a, 1
 	jp _ComprobarCamino__leave
-__LABEL164:
+__LABEL162:
 	xor a
 	call BORDER
 	xor a
@@ -1563,28 +1639,28 @@ __LABEL164:
 	call _Esperar
 	xor a
 	jp _ComprobarCamino__leave
-__LABEL165:
-__LABEL162:
-__LABEL160:
+__LABEL163:
+__LABEL159:
+__LABEL157:
 	inc (ix-1)
-__LABEL156:
+__LABEL153:
 	ld a, (ix-1)
 	push af
 	ld a, 9
 	pop hl
 	cp h
-	jp nc, __LABEL159
-__LABEL158:
+	jp nc, __LABEL156
+__LABEL155:
 	call RND
 	push bc
 	push de
 	push af
 	ld a, 080h
-	ld de, 00000h
+	ld de, 00040h
 	ld bc, 00000h
 	call __GTF
 	or a
-	jp z, __LABEL169
+	jp z, __LABEL168
 	ld a, 4
 	call _Sonido
 	ld a, 4
@@ -1599,12 +1675,12 @@ __LABEL158:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL109
+	ld hl, __LABEL164
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL170
+	ld hl, __LABEL169
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1614,7 +1690,7 @@ __LABEL158:
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL171
+	jp nc, __LABEL170
 	call _ImprimirIsla
 	call _ImprimirPiratas
 	call _ActualizarOlas
@@ -1626,7 +1702,7 @@ __LABEL158:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL109
+	ld hl, __LABEL164
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1638,7 +1714,7 @@ __LABEL158:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL173
+	ld hl, __LABEL172
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1668,13 +1744,13 @@ __LABEL158:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL174
+	ld hl, __LABEL173
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
 	ld a, 1
 	jp _ComprobarCamino__leave
-__LABEL171:
+__LABEL170:
 	ld a, 2
 	call BORDER
 	ld a, 2
@@ -1692,10 +1768,127 @@ __LABEL171:
 	call _Esperar
 	xor a
 	jp _ComprobarCamino__leave
-__LABEL172:
-__LABEL169:
-__LABEL155:
-__LABEL153:
+__LABEL171:
+__LABEL168:
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 080h
+	ld de, 00040h
+	ld bc, 00000h
+	call __GTF
+	or a
+	jp z, __LABEL175
+	ld a, 10
+	call _Sonido
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld a, 1
+	call PAPER_TMP
+	ld hl, __LABEL176
+	xor a
+	call __PRINTSTR
+	xor a
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL177
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	call _Esperar
+	call _SalirTemplo
+	push af
+	xor a
+	pop hl
+	cp h
+	jp nc, __LABEL178
+	call _ImprimirIsla
+	call _ImprimirPiratas
+	call _ActualizarOlas
+	ld a, (_Jugador.__DATA__ + 1)
+	push af
+	ld a, (_Jugador.__DATA__ + 0)
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL176
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 21
+	push af
+	ld a, 5
+	call PRINT_AT
+	ld a, 5
+	call PAPER_TMP
+	xor a
+	call INK_TMP
+	ld hl, __LABEL172
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 8
+	call _Sonido
+	ld a, 1
+	ld (_Jugador.__DATA__ + 1), a
+	ld l, a
+	ld h, 0
+	dec hl
+	push hl
+	ld hl, _Camino
+	call __ARRAY
+	ld a, (hl)
+	ld (_Jugador.__DATA__ + 0), a
+	xor a
+	push af
+	xor a
+	push af
+	call _DesplazarJugador
+	call _Esperar
+	ld a, 21
+	push af
+	ld a, 1
+	call PRINT_AT
+	xor a
+	call INK_TMP
+	ld a, 5
+	call PAPER_TMP
+	ld hl, __LABEL173
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 1
+	jp _ComprobarCamino__leave
+__LABEL178:
+	ld a, 2
+	call BORDER
+	ld a, 2
+	call PAPER
+	call COPY_ATTR
+	ld a, 2
+	call INK
+	call COPY_ATTR
+	call CLS
+	ld hl, _imgPiedra.__DATA__
+	push hl
+	call _DescomprimirImagen
+	ld a, 13
+	call _Sonido
+	call _Esperar
+	xor a
+	jp _ComprobarCamino__leave
+__LABEL179:
+__LABEL175:
+__LABEL152:
+__LABEL150:
 	ld a, 1
 _ComprobarCamino__leave:
 	ld sp, ix
@@ -1705,7 +1898,7 @@ _Esperar:
 	push ix
 	ld ix, 0
 	add ix, sp
-__LABEL175:
+__LABEL180:
 	call INKEY
 	push hl
 	ld de, __LABEL9
@@ -1713,9 +1906,9 @@ __LABEL175:
 	ld a, 1
 	call __STREQ
 	or a
-	jp nz, __LABEL175
-__LABEL176:
-__LABEL177:
+	jp nz, __LABEL180
+__LABEL181:
+__LABEL182:
 	call INKEY
 	push hl
 	ld de, __LABEL9
@@ -1723,8 +1916,8 @@ __LABEL177:
 	ld a, 1
 	call __STRNE
 	or a
-	jp nz, __LABEL177
-__LABEL178:
+	jp nz, __LABEL182
+__LABEL183:
 _Esperar__leave:
 	ld sp, ix
 	pop ix
@@ -1740,7 +1933,7 @@ _DesplazarPiratas:
 	ld a, (_MoverPiratas)
 	cp h
 	jp c, _DesplazarPiratas__leave
-__LABEL180:
+__LABEL185:
 	xor a
 	ld (_MoverPiratas), a
 	ld a, (_Piratas.__DATA__ + 1)
@@ -1751,7 +1944,7 @@ __LABEL180:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL66
+	ld hl, __LABEL71
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1760,7 +1953,7 @@ __LABEL180:
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL182
+	jp nc, __LABEL187
 	ld hl, 0
 	push hl
 	ld a, (_Piratas.__DATA__ + 1)
@@ -1773,11 +1966,11 @@ __LABEL180:
 	ld a, (hl)
 	ld hl, (_Piratas.__DATA__ + 0 - 1)
 	sub h
-	jp nz, __LABEL183
+	jp nz, __LABEL188
 	ld a, (_Piratas.__DATA__ + 1)
 	dec a
 	and 1
-	jp nz, __LABEL185
+	jp nz, __LABEL190
 	ld a, (_Piratas.__DATA__ + 1)
 	dec a
 	push af
@@ -1787,12 +1980,12 @@ __LABEL180:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL187
+	ld hl, __LABEL192
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL186
-__LABEL185:
+	jp __LABEL191
+__LABEL190:
 	ld a, (_Piratas.__DATA__ + 1)
 	dec a
 	push af
@@ -1802,13 +1995,13 @@ __LABEL185:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL188
+	ld hl, __LABEL193
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL186:
-	jp __LABEL184
-__LABEL183:
+__LABEL191:
+	jp __LABEL189
+__LABEL188:
 	ld a, (_Piratas.__DATA__ + 1)
 	dec a
 	push af
@@ -1818,12 +2011,12 @@ __LABEL183:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL66
+	ld hl, __LABEL71
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL184:
-__LABEL182:
+__LABEL189:
+__LABEL187:
 	ld hl, _Piratas.__DATA__ + 0
 	inc (hl)
 	ld hl, _Piratas.__DATA__ + 1
@@ -1833,19 +2026,19 @@ __LABEL182:
 	ld a, 19
 	pop hl
 	cp h
-	jp nc, __LABEL190
+	jp nc, __LABEL195
 	ld a, 19
 	ld (_Piratas.__DATA__ + 1), a
-__LABEL190:
+__LABEL195:
 	ld a, (_Piratas.__DATA__ + 1)
 	push af
 	ld h, 1
 	pop af
 	cp h
-	jp nc, __LABEL192
+	jp nc, __LABEL197
 	xor a
 	ld (_Piratas.__DATA__ + 1), a
-__LABEL192:
+__LABEL197:
 	ld a, (_Piratas.__DATA__ + 0)
 	push af
 	ld hl, 0
@@ -1859,7 +2052,7 @@ __LABEL192:
 	pop af
 	sub (hl)
 	ccf
-	jp nc, __LABEL194
+	jp nc, __LABEL199
 	ld hl, 0
 	push hl
 	ld a, (_Piratas.__DATA__ + 1)
@@ -1871,7 +2064,7 @@ __LABEL192:
 	ld a, (hl)
 	dec a
 	ld (_Piratas.__DATA__ + 0), a
-__LABEL194:
+__LABEL199:
 	call _ImprimirPiratas
 	xor a
 	call _Sonido
@@ -1890,7 +2083,7 @@ _ImprimirPiratas:
 	ld a, (_Piratas.__DATA__ + 0)
 	or a
 	jp z, _ImprimirPiratas__leave
-__LABEL196:
+__LABEL201:
 	ld a, (_Piratas.__DATA__ + 1)
 	push af
 	ld a, (_Piratas.__DATA__ + 0)
@@ -1899,7 +2092,7 @@ __LABEL196:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL100
+	ld hl, __LABEL105
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1912,7 +2105,7 @@ __LABEL196:
 	call PAPER_TMP
 	ld a, 1
 	call INK_TMP
-	ld hl, __LABEL98
+	ld hl, __LABEL103
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1931,13 +2124,13 @@ _MostrarMapa:
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL197
+	jp nc, __LABEL202
 	call CLS
-	jp __LABEL198
-__LABEL197:
+	jp __LABEL203
+__LABEL202:
 	ld a, 5
 	call _Sonido
-__LABEL198:
+__LABEL203:
 	call _ImprimirIsla
 	call _ImprimirCamino
 	call RND
@@ -1983,7 +2176,7 @@ _DesplazarJugador:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL199
+	ld hl, __LABEL204
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -1997,19 +2190,19 @@ _DesplazarJugador:
 	ld a, 19
 	pop hl
 	cp h
-	jp nc, __LABEL201
+	jp nc, __LABEL206
 	ld a, 19
 	ld (_Jugador.__DATA__ + 1), a
-__LABEL201:
+__LABEL206:
 	ld a, (_Jugador.__DATA__ + 1)
 	push af
 	ld h, 1
 	pop af
 	cp h
-	jp nc, __LABEL203
+	jp nc, __LABEL208
 	ld a, 1
 	ld (_Jugador.__DATA__ + 1), a
-__LABEL203:
+__LABEL208:
 	ld a, (_Jugador.__DATA__ + 0)
 	push af
 	ld hl, 0
@@ -2024,7 +2217,7 @@ __LABEL203:
 	pop hl
 	sub h
 	ccf
-	jp nc, __LABEL205
+	jp nc, __LABEL210
 	ld hl, 0
 	push hl
 	ld a, (_Jugador.__DATA__ + 1)
@@ -2036,7 +2229,7 @@ __LABEL203:
 	ld a, (hl)
 	inc a
 	ld (_Jugador.__DATA__ + 0), a
-__LABEL205:
+__LABEL210:
 	ld a, (_Jugador.__DATA__ + 0)
 	push af
 	ld hl, 0
@@ -2063,7 +2256,7 @@ __LABEL205:
 	pop af
 	sub h
 	ccf
-	jp nc, __LABEL207
+	jp nc, __LABEL212
 	ld hl, 0
 	push hl
 	ld a, (_Jugador.__DATA__ + 1)
@@ -2086,7 +2279,7 @@ __LABEL205:
 	add a, (hl)
 	dec a
 	ld (_Jugador.__DATA__ + 0), a
-__LABEL207:
+__LABEL212:
 	ld a, (_Jugador.__DATA__ + 1)
 	push af
 	ld a, (_Jugador.__DATA__ + 0)
@@ -2095,7 +2288,7 @@ __LABEL207:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL78
+	ld hl, __LABEL83
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2116,8 +2309,8 @@ _ImprimirArenasMovedizas:
 	push hl
 	inc sp
 	ld (ix-1), 0
-	jp __LABEL208
-__LABEL211:
+	jp __LABEL213
+__LABEL216:
 	ld hl, 1
 	push hl
 	ld a, (ix-1)
@@ -2142,20 +2335,20 @@ __LABEL211:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL115
+	ld hl, __LABEL160
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL212:
+__LABEL217:
 	inc (ix-1)
-__LABEL208:
+__LABEL213:
 	ld a, (ix-1)
 	push af
 	ld a, 9
 	pop hl
 	cp h
-	jp nc, __LABEL211
-__LABEL210:
+	jp nc, __LABEL216
+__LABEL215:
 _ImprimirArenasMovedizas__leave:
 	ld sp, ix
 	pop ix
@@ -2168,8 +2361,8 @@ _ImprimirCamino:
 	push hl
 	inc sp
 	ld (ix-1), 1
-	jp __LABEL213
-__LABEL216:
+	jp __LABEL218
+__LABEL221:
 	ld a, (ix-1)
 	ld hl, (_Tesoro.__DATA__ + 1 - 1)
 	cp h
@@ -2185,14 +2378,14 @@ __LABEL216:
 	pop af
 	ld h, (hl)
 	or a
-	jr z, __LABEL339
+	jr z, __LABEL449
 	ld a, h
-__LABEL339:
+__LABEL449:
 	or a
-	jp z, __LABEL219
+	jp z, __LABEL224
 	ld a, (ix-1)
 	and 1
-	jp nz, __LABEL220
+	jp nz, __LABEL225
 	ld a, (ix-1)
 	push af
 	ld a, (ix-1)
@@ -2208,12 +2401,12 @@ __LABEL339:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL222
+	ld hl, __LABEL227
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL221
-__LABEL220:
+	jp __LABEL226
+__LABEL225:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-1)
@@ -2229,22 +2422,22 @@ __LABEL220:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL223
+	ld hl, __LABEL228
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL221:
-__LABEL219:
-__LABEL217:
+__LABEL226:
+__LABEL224:
+__LABEL222:
 	inc (ix-1)
-__LABEL213:
+__LABEL218:
 	ld a, (ix-1)
 	push af
 	ld a, 19
 	pop hl
 	cp h
-	jp nc, __LABEL216
-__LABEL215:
+	jp nc, __LABEL221
+__LABEL220:
 	ld a, (_Tesoro.__DATA__ + 1)
 	push af
 	ld a, (_Tesoro.__DATA__ + 0)
@@ -2253,7 +2446,7 @@ __LABEL215:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL224
+	ld hl, __LABEL229
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2265,12 +2458,12 @@ __LABEL215:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL224
+	ld hl, __LABEL229
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL225
+	ld hl, __LABEL230
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2307,19 +2500,19 @@ _ImprimirIsla:
 	call COPY_ATTR
 	ld a, (_Isla.__DATA__ + 0)
 	ld (ix-1), a
-	jp __LABEL226
-__LABEL229:
+	jp __LABEL231
+__LABEL234:
 	xor a
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL231
+	ld hl, __LABEL236
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL230:
+__LABEL235:
 	inc (ix-1)
-__LABEL226:
+__LABEL231:
 	ld a, (ix-1)
 	push af
 	ld a, (_Isla.__DATA__ + 1)
@@ -2327,23 +2520,23 @@ __LABEL226:
 	add a, h
 	pop hl
 	cp h
-	jp nc, __LABEL229
-__LABEL228:
+	jp nc, __LABEL234
+__LABEL233:
 	ld a, (_Isla.__DATA__ + 40)
 	ld (ix-1), a
-	jp __LABEL232
-__LABEL235:
+	jp __LABEL237
+__LABEL240:
 	ld a, 20
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL237
+	ld hl, __LABEL242
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL236:
+__LABEL241:
 	inc (ix-1)
-__LABEL232:
+__LABEL237:
 	ld a, (ix-1)
 	push af
 	ld a, (_Isla.__DATA__ + 41)
@@ -2351,11 +2544,11 @@ __LABEL232:
 	add a, h
 	pop hl
 	cp h
-	jp nc, __LABEL235
-__LABEL234:
+	jp nc, __LABEL240
+__LABEL239:
 	ld (ix-5), 1
-	jp __LABEL238
-__LABEL241:
+	jp __LABEL243
+__LABEL246:
 	ld hl, 0
 	push hl
 	ld a, (ix-5)
@@ -2413,9 +2606,9 @@ __LABEL241:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL340
+	jr z, __LABEL450
 	ld a, h
-__LABEL340:
+__LABEL450:
 	push af
 	ld a, (ix-1)
 	cp (ix-2)
@@ -2427,24 +2620,24 @@ __LABEL340:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL341
+	jr z, __LABEL451
 	ld a, h
-__LABEL341:
+__LABEL451:
 	pop de
 	or d
-	jp z, __LABEL243
+	jp z, __LABEL248
 	ld a, (ix-5)
 	and 1
-	jp nz, __LABEL245
-	ld de, __LABEL187
+	jp nz, __LABEL250
+	ld de, __LABEL192
 	ld bc, -9
 	call __PSTORE_STR
-	jp __LABEL246
-__LABEL245:
-	ld de, __LABEL188
+	jp __LABEL251
+__LABEL250:
+	ld de, __LABEL193
 	ld bc, -9
 	call __PSTORE_STR
-__LABEL246:
+__LABEL251:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -2454,49 +2647,49 @@ __LABEL246:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL244
-__LABEL243:
+	jp __LABEL249
+__LABEL248:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-2)
 	pop hl
 	cp h
-	jp nc, __LABEL247
+	jp nc, __LABEL252
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL249
+	ld hl, __LABEL254
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL248
-__LABEL247:
+	jp __LABEL253
+__LABEL252:
 	ld a, (ix-1)
 	cp (ix-2)
-	jp nc, __LABEL250
+	jp nc, __LABEL255
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL252
+	ld hl, __LABEL257
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL251
-__LABEL250:
+	jp __LABEL256
+__LABEL255:
 	ld a, (ix-5)
 	and 1
-	jp nz, __LABEL253
-	ld de, __LABEL187
+	jp nz, __LABEL258
+	ld de, __LABEL192
 	ld bc, -9
 	call __PSTORE_STR
-	jp __LABEL254
-__LABEL253:
-	ld de, __LABEL188
+	jp __LABEL259
+__LABEL258:
+	ld de, __LABEL193
 	ld bc, -9
 	call __PSTORE_STR
-__LABEL254:
+__LABEL259:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -2506,9 +2699,9 @@ __LABEL254:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL251:
-__LABEL248:
-__LABEL244:
+__LABEL256:
+__LABEL253:
+__LABEL249:
 	ld hl, 0
 	push hl
 	ld a, (ix-5)
@@ -2607,9 +2800,9 @@ __LABEL244:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL342
+	jr z, __LABEL452
 	ld a, h
-__LABEL342:
+__LABEL452:
 	push af
 	ld a, (ix-1)
 	cp (ix-2)
@@ -2621,24 +2814,24 @@ __LABEL342:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL343
+	jr z, __LABEL453
 	ld a, h
-__LABEL343:
+__LABEL453:
 	pop de
 	or d
-	jp z, __LABEL255
+	jp z, __LABEL260
 	ld a, (ix-5)
 	and 1
-	jp nz, __LABEL257
-	ld de, __LABEL188
+	jp nz, __LABEL262
+	ld de, __LABEL193
 	ld bc, -9
 	call __PSTORE_STR
-	jp __LABEL258
-__LABEL257:
-	ld de, __LABEL187
+	jp __LABEL263
+__LABEL262:
+	ld de, __LABEL192
 	ld bc, -9
 	call __PSTORE_STR
-__LABEL258:
+__LABEL263:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -2648,49 +2841,49 @@ __LABEL258:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL256
-__LABEL255:
+	jp __LABEL261
+__LABEL260:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-2)
 	pop hl
 	cp h
-	jp nc, __LABEL259
+	jp nc, __LABEL264
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL249
+	ld hl, __LABEL254
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL260
-__LABEL259:
+	jp __LABEL265
+__LABEL264:
 	ld a, (ix-1)
 	cp (ix-2)
-	jp nc, __LABEL261
+	jp nc, __LABEL266
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL252
+	ld hl, __LABEL257
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL262
-__LABEL261:
+	jp __LABEL267
+__LABEL266:
 	ld a, (ix-5)
 	and 1
-	jp nz, __LABEL263
-	ld de, __LABEL188
+	jp nz, __LABEL268
+	ld de, __LABEL193
 	ld bc, -9
 	call __PSTORE_STR
-	jp __LABEL264
-__LABEL263:
-	ld de, __LABEL187
+	jp __LABEL269
+__LABEL268:
+	ld de, __LABEL192
 	ld bc, -9
 	call __PSTORE_STR
-__LABEL264:
+__LABEL269:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -2700,13 +2893,13 @@ __LABEL264:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL262:
-__LABEL260:
-__LABEL256:
+__LABEL267:
+__LABEL265:
+__LABEL261:
 	ld a, (ix-6)
 	ld (ix-1), a
-	jp __LABEL265
-__LABEL268:
+	jp __LABEL270
+__LABEL273:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -2715,44 +2908,44 @@ __LABEL268:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL199
+	ld hl, __LABEL204
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL269:
+__LABEL274:
 	inc (ix-1)
-__LABEL265:
+__LABEL270:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-7)
 	pop hl
 	cp h
-	jp nc, __LABEL268
-__LABEL267:
-__LABEL242:
+	jp nc, __LABEL273
+__LABEL272:
+__LABEL247:
 	inc (ix-5)
-__LABEL238:
+__LABEL243:
 	ld a, (ix-5)
 	push af
 	ld a, 19
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL241
-__LABEL240:
+	jp z, __LABEL246
+__LABEL245:
 	ld a, 21
 	push af
 	ld a, 1
 	call PRINT_AT
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL167
+	ld hl, __LABEL166
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
 	ld a, (_Piratas.__DATA__ + 1)
 	or a
-	jp z, __LABEL271
+	jp z, __LABEL276
 	ld a, (_Piratas.__DATA__ + 1)
 	push af
 	ld a, (_Piratas.__DATA__ + 0)
@@ -2761,7 +2954,7 @@ __LABEL240:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL100
+	ld hl, __LABEL105
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2774,11 +2967,11 @@ __LABEL240:
 	call PAPER_TMP
 	ld a, 1
 	call INK_TMP
-	ld hl, __LABEL98
+	ld hl, __LABEL103
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL271:
+__LABEL276:
 	ld hl, 1
 	call __PAUSE
 _ImprimirIsla__leave:
@@ -2842,26 +3035,26 @@ _GenerarPartida:
 	ld a, l
 	ld (ix-3), a
 	ld (ix-1), 0
-	jp __LABEL272
-__LABEL275:
+	jp __LABEL277
+__LABEL280:
 	ld a, (ix-2)
 	push af
-	ld h, 5
+	ld h, 4
 	pop af
 	call __LTI8
 	or a
-	jp z, __LABEL278
-	ld (ix-2), 5
-__LABEL278:
+	jp z, __LABEL283
+	ld (ix-2), 4
+__LABEL283:
 	ld a, (ix-3)
 	push af
-	ld a, 30
+	ld a, 28
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL280
-	ld (ix-3), 30
-__LABEL280:
+	jp z, __LABEL285
+	ld (ix-3), 28
+__LABEL285:
 	ld a, (ix-2)
 	push af
 	ld hl, 0
@@ -2892,22 +3085,22 @@ __LABEL280:
 	ld (hl), a
 	ld a, (ix-1)
 	dec a
-	jp nz, __LABEL281
+	jp nz, __LABEL286
 	dec (ix-2)
 	ld a, (ix-3)
 	add a, 2
 	ld (ix-3), a
-	jp __LABEL282
-__LABEL281:
+	jp __LABEL287
+__LABEL286:
 	ld a, (ix-1)
 	sub 19
-	jp nz, __LABEL283
+	jp nz, __LABEL288
 	inc (ix-2)
 	ld a, (ix-3)
 	sub 2
 	ld (ix-3), a
-	jp __LABEL284
-__LABEL283:
+	jp __LABEL289
+__LABEL288:
 	ld a, (ix-2)
 	ld l, a
 	add a, a
@@ -2979,19 +3172,19 @@ __LABEL283:
 	ex de, hl
 	ld a, l
 	ld (ix-3), a
-__LABEL284:
-__LABEL282:
-__LABEL276:
+__LABEL289:
+__LABEL287:
+__LABEL281:
 	inc (ix-1)
-__LABEL272:
+__LABEL277:
 	ld a, (ix-1)
 	push af
 	ld a, 20
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL275
-__LABEL274:
+	jp z, __LABEL280
+__LABEL279:
 	ld a, (_Isla.__DATA__ + 2)
 	ld l, a
 	ld h, 0
@@ -3042,8 +3235,8 @@ __LABEL274:
 	ld a, l
 	ld (ix-4), a
 	ld (ix-1), 2
-	jp __LABEL285
-__LABEL288:
+	jp __LABEL290
+__LABEL293:
 	ld a, (ix-1)
 	dec a
 	ld l, a
@@ -3133,7 +3326,7 @@ __LABEL288:
 	pop af
 	sub h
 	ccf
-	jp nc, __LABEL291
+	jp nc, __LABEL296
 	ld hl, 0
 	push hl
 	ld a, (ix-1)
@@ -3171,7 +3364,7 @@ __LABEL288:
 	call __ARRAY
 	pop af
 	ld (hl), a
-__LABEL291:
+__LABEL296:
 	ld a, (ix-1)
 	ld l, a
 	add a, a
@@ -3198,7 +3391,7 @@ __LABEL291:
 	pop hl
 	sub h
 	ccf
-	jp nc, __LABEL293
+	jp nc, __LABEL298
 	ld hl, 0
 	push hl
 	ld a, (ix-1)
@@ -3223,18 +3416,18 @@ __LABEL291:
 	call __ARRAY
 	pop af
 	ld (hl), a
-__LABEL293:
-__LABEL289:
+__LABEL298:
+__LABEL294:
 	inc (ix-1)
-__LABEL285:
+__LABEL290:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-4)
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL288
-__LABEL287:
+	jp z, __LABEL293
+__LABEL292:
 	ld a, (ix-4)
 	ld l, a
 	ld h, 0
@@ -3247,8 +3440,8 @@ __LABEL287:
 	ld a, (ix-4)
 	ld (_Tesoro.__DATA__ + 1), a
 	ld (ix-1), 0
-	jp __LABEL294
-__LABEL297:
+	jp __LABEL299
+__LABEL302:
 __LABEL__nuevoPunto:
 	call RND
 	push bc
@@ -3282,7 +3475,7 @@ __LABEL__nuevoPunto:
 	ld a, (hl)
 	or a
 	jp z, __LABEL__nuevoPunto
-__LABEL300:
+__LABEL305:
 	ld a, (ix-3)
 	ld l, a
 	add a, a
@@ -3353,7 +3546,7 @@ __LABEL300:
 	pop de
 	or d
 	jp nz, __LABEL__nuevoPunto
-__LABEL302:
+__LABEL307:
 	ld a, (ix-2)
 	push af
 	ld hl, 0
@@ -3382,17 +3575,17 @@ __LABEL302:
 	call __ARRAY
 	pop af
 	ld (hl), a
-__LABEL298:
+__LABEL303:
 	inc (ix-1)
-__LABEL294:
+__LABEL299:
 	ld a, (ix-1)
 	push af
 	ld a, 9
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL297
-__LABEL296:
+	jp z, __LABEL302
+__LABEL301:
 	ld a, (_Camino.__DATA__ + 0)
 	ld (_Jugador.__DATA__ + 0), a
 	ld a, 1
@@ -3411,7 +3604,7 @@ _IniciarGraficosIsla:
 	push ix
 	ld ix, 0
 	add ix, sp
-	ld hl, _graficos.__DATA__
+	ld hl, _graficosGenerales.__DATA__
 	ld (23675), hl
 	ld a, 5
 	call PAPER
@@ -3423,6 +3616,1308 @@ _IniciarGraficosIsla:
 	call COPY_ATTR
 	call CLS
 _IniciarGraficosIsla__leave:
+	ld sp, ix
+	pop ix
+	ret
+_IniciarGraficosArena:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld a, 7
+	call PAPER
+	call COPY_ATTR
+	xor a
+	call INK
+	call COPY_ATTR
+	xor a
+	call BORDER
+	call CLS
+	ld hl, _graficosArena.__DATA__
+	ld (23675), hl
+	ld a, 17
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL308
+	xor a
+	call __PRINTSTR
+	ld a, 16
+	push af
+	ld a, 8
+	call PRINT_AT
+	ld hl, __LABEL309
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 17
+	push af
+	ld a, 8
+	call PRINT_AT
+	ld hl, __LABEL310
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 18
+	push af
+	xor a
+	call PRINT_AT
+	xor a
+	call PAPER_TMP
+	ld hl, __LABEL311
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	ld a, 19
+	push af
+	xor a
+	call PRINT_AT
+	xor a
+	call PAPER_TMP
+	ld hl, __LABEL311
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	ld a, 20
+	push af
+	xor a
+	call PRINT_AT
+	xor a
+	call PAPER_TMP
+	ld hl, __LABEL311
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	ld a, 21
+	push af
+	xor a
+	call PRINT_AT
+	xor a
+	call PAPER_TMP
+	ld hl, __LABEL311
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	ld a, 22
+	push af
+	xor a
+	call PRINT_AT
+	xor a
+	call PAPER_TMP
+	ld hl, __LABEL311
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	ld a, 50
+	push af
+	ld a, 10
+	push af
+	call _DibujarArbol
+	ld a, 51
+	push af
+	ld a, 18
+	push af
+	call _DibujarArbol
+	ld a, 50
+	push af
+	ld a, 26
+	push af
+	call _DibujarArbol
+	ld a, 51
+	push af
+	ld a, 230
+	push af
+	call _DibujarArbol
+	ld a, 50
+	push af
+	ld a, 238
+	push af
+	call _DibujarArbol
+	ld a, 51
+	push af
+	ld a, 246
+	push af
+	call _DibujarArbol
+	xor a
+	call INK
+	call COPY_ATTR
+	xor a
+	push af
+	xor a
+	push af
+	xor a
+	push af
+	xor a
+	push af
+	call _AtributoUltimaLinea
+	ld a, 2
+	push af
+	xor a
+	call PRINT_AT
+	ld hl, __LABEL312
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+_IniciarGraficosArena__leave:
+	ld sp, ix
+	pop ix
+	ret
+_DibujarArbol:
+	push ix
+	ld ix, 0
+	add ix, sp
+	xor a
+	call INK
+	call COPY_ATTR
+	ld a, (ix+5)
+	inc a
+	push af
+	ld a, (ix+7)
+	call PLOT
+	ld hl, 0
+	push hl
+	ld hl, 8
+	call DRAW
+	ld a, (ix+5)
+	dec a
+	push af
+	ld a, (ix+7)
+	call PLOT
+	ld hl, 0
+	push hl
+	ld hl, 8
+	call DRAW
+	ld a, (ix+5)
+	push af
+	ld a, (ix+7)
+	call PLOT
+	ld hl, 0
+	push hl
+	ld hl, 8
+	call DRAW
+	ld a, 4
+	call INK
+	call COPY_ATTR
+	ld hl, 65529
+	push hl
+	ld hl, 0
+	call DRAW
+	ld hl, 7
+	push hl
+	ld hl, 32
+	call DRAW
+	ld hl, 7
+	push hl
+	ld hl, 65504
+	call DRAW
+	ld hl, 65529
+	push hl
+	ld hl, 0
+	call DRAW
+	ld a, (ix+5)
+	push af
+	ld a, (ix+7)
+	add a, 8
+	call PLOT
+	ld hl, 65531
+	push hl
+	ld hl, 0
+	call DRAW
+	ld hl, 5
+	push hl
+	ld hl, 26
+	call DRAW
+	ld hl, 5
+	push hl
+	ld hl, 65510
+	call DRAW
+	ld hl, 65531
+	push hl
+	ld hl, 0
+	call DRAW
+	ld a, (ix+5)
+	push af
+	ld a, (ix+7)
+	add a, 8
+	call PLOT
+	ld hl, 65533
+	push hl
+	ld hl, 0
+	call DRAW
+	ld hl, 3
+	push hl
+	ld hl, 20
+	call DRAW
+	ld hl, 3
+	push hl
+	ld hl, 65516
+	call DRAW
+	ld hl, 65533
+	push hl
+	ld hl, 0
+	call DRAW
+	ld a, (ix+5)
+	push af
+	ld a, (ix+7)
+	add a, 8
+	call PLOT
+	ld hl, 0
+	push hl
+	ld hl, 32
+	call DRAW
+	xor a
+	call INK
+_DibujarArbol__leave:
+	ld sp, ix
+	pop ix
+	exx
+	pop hl
+	pop bc
+	ex (sp), hl
+	exx
+	ret
+	call COPY_ATTR
+_EscaparArena:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, -12
+	add hl, sp
+	ld sp, hl
+	ld (hl), 0
+	ld bc, 11
+	ld d, h
+	ld e, l
+	inc de
+	ldir
+	push ix
+	pop hl
+	ld bc, -3
+	add hl, bc
+	ex de, hl
+	ld hl, __LABEL454
+	ld bc, 1
+	ldir
+	call _IniciarGraficosArena
+	ld hl, (_HastaTeclaArena)
+	add hl, hl
+	ld (ix-6), l
+	ld (ix-5), h
+__LABEL313:
+	ld a, (ix-1)
+	sub 1
+	sbc a, a
+	push af
+	ld a, (ix-3)
+	push af
+	ld h, 26
+	pop af
+	cp h
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL455
+	ld a, h
+__LABEL455:
+	or a
+	jp z, __LABEL314
+	ld l, (ix-6)
+	ld h, (ix-5)
+	push hl
+	ld hl, 0
+	pop de
+	or a
+	sbc hl, de
+	jp nc, __LABEL315
+	ld l, (ix-6)
+	ld h, (ix-5)
+	dec hl
+	ld (ix-6), l
+	ld (ix-5), h
+	ld l, (ix-6)
+	ld h, (ix-5)
+	push hl
+	ld de, 0
+	pop hl
+	or a
+	sbc hl, de
+	jp nz, __LABEL318
+	ld hl, (_ParaTeclaArena)
+	ld (ix-8), l
+	ld (ix-7), h
+	call RND
+	push bc
+	push de
+	push af
+	ld a, 088h
+	ld de, 00016h
+	ld bc, 00000h
+	call __MULF
+	call __FTOU32REG
+	ld a, l
+	ld (ix-4), a
+	push af
+	ld h, 50
+	pop af
+	cp h
+	jp nc, __LABEL319
+	ld de, __LABEL17
+	ld bc, -10
+	call __PSTORE_STR
+	ld a, 12
+	push af
+	ld a, 15
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld hl, __LABEL227
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL320
+__LABEL319:
+	ld a, (ix-4)
+	push af
+	ld h, 100
+	pop af
+	cp h
+	jp nc, __LABEL321
+	ld de, __LABEL24
+	ld bc, -10
+	call __PSTORE_STR
+	ld a, 12
+	push af
+	ld a, 15
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld hl, __LABEL228
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL322
+__LABEL321:
+	ld de, __LABEL10
+	ld bc, -10
+	call __PSTORE_STR
+	ld a, 12
+	push af
+	ld a, 15
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld hl, __LABEL229
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL322:
+__LABEL320:
+	ld a, 1
+	call _Sonido
+__LABEL318:
+	jp __LABEL316
+__LABEL315:
+	ld l, (ix-8)
+	ld h, (ix-7)
+	dec hl
+	ld (ix-8), l
+	ld (ix-7), h
+	ld l, (ix-8)
+	ld h, (ix-7)
+	push hl
+	ld de, 0
+	pop hl
+	or a
+	sbc hl, de
+	jp nz, __LABEL323
+	ld (ix-1), 1
+	jp __LABEL324
+__LABEL323:
+	call INKEY
+	ld d, h
+	ld e, l
+	ld bc, -12
+	call __PSTORE_STR2
+	ld l, (ix-12)
+	ld h, (ix-11)
+	push hl
+	ld l, (ix-10)
+	ld h, (ix-9)
+	ex de, hl
+	pop hl
+	xor a
+	call __STREQ
+	or a
+	jp z, __LABEL325
+__LABEL327:
+	call INKEY
+	push hl
+	ld de, __LABEL9
+	pop hl
+	ld a, 1
+	call __STRNE
+	or a
+	jp nz, __LABEL327
+__LABEL328:
+	ld a, 12
+	push af
+	ld a, 15
+	call PRINT_AT
+	ld hl, __LABEL329
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 17
+	push af
+	ld a, 6
+	call PRINT_AT
+	ld hl, __LABEL330
+	xor a
+	call __PRINTSTR
+	inc (ix-3)
+	ld a, (ix-3)
+	and 1
+	jp nz, __LABEL331
+	ld a, 16
+	push af
+	ld a, (ix-3)
+	dec a
+	call PRINT_AT
+	ld hl, __LABEL333
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 17
+	push af
+	ld a, (ix-3)
+	call PRINT_AT
+	ld hl, __LABEL310
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	jp __LABEL332
+__LABEL331:
+	ld a, 16
+	push af
+	ld a, (ix-3)
+	dec a
+	call PRINT_AT
+	ld hl, __LABEL334
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 17
+	push af
+	ld a, (ix-3)
+	call PRINT_AT
+	ld hl, __LABEL335
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+__LABEL332:
+	ld hl, (_HastaTeclaArena)
+	ld (ix-6), l
+	ld (ix-5), h
+	ld (ix-8), 0
+	ld (ix-7), 0
+	ld a, 7
+	call _Sonido
+	jp __LABEL326
+__LABEL325:
+	ld l, (ix-12)
+	ld h, (ix-11)
+	push hl
+	ld de, __LABEL9
+	pop hl
+	xor a
+	call __STRNE
+	or a
+	jp z, __LABEL337
+	ld (ix-1), 1
+__LABEL337:
+__LABEL326:
+__LABEL324:
+__LABEL316:
+	jp __LABEL313
+__LABEL314:
+	call _IniciarGraficosIsla
+	ld a, (ix-1)
+	dec a
+	jp nz, __LABEL338
+	xor a
+	jp _EscaparArena__leave
+__LABEL338:
+	ld a, 1
+	jp _EscaparArena__leave
+__LABEL339:
+_EscaparArena__leave:
+	ex af, af'
+	exx
+	ld l, (ix-10)
+	ld h, (ix-9)
+	call __MEM_FREE
+	ld l, (ix-12)
+	ld h, (ix-11)
+	call __MEM_FREE
+	ex af, af'
+	exx
+	ld sp, ix
+	pop ix
+	ret
+_IniciarGraficosTemplo:
+	push ix
+	ld ix, 0
+	add ix, sp
+	xor a
+	call PAPER
+	call COPY_ATTR
+	xor a
+	call BORDER
+	ld a, 7
+	call INK
+	call COPY_ATTR
+	call CLS
+	ld a, 8
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld hl, __LABEL340
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld hl, _graficosTemplo.__DATA__
+	ld (23675), hl
+	ld a, 15
+	push af
+	ld a, 16
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld a, 6
+	call PAPER_TMP
+	ld a, 1
+	call FLASH_TMP
+	ld hl, __LABEL227
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 16
+	push af
+	ld a, 16
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld hl, __LABEL236
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 17
+	push af
+	ld a, 24
+	call PRINT_AT
+	ld hl, __LABEL309
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 18
+	push af
+	ld a, 24
+	call PRINT_AT
+	ld hl, __LABEL310
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 18
+	push af
+	ld a, 7
+	call PRINT_AT
+	ld a, 3
+	call INK_TMP
+	ld hl, __LABEL228
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 19
+	push af
+	xor a
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld hl, __LABEL341
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	ld hl, _graficosPiedra.__DATA__
+	ld (23675), hl
+	ld a, 17
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL309
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 18
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL310
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld hl, _graficosTemplo.__DATA__
+	ld (23675), hl
+_IniciarGraficosTemplo__leave:
+	ld sp, ix
+	pop ix
+	ret
+_SalirTemplo:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, -17
+	add hl, sp
+	ld sp, hl
+	ld (hl), 0
+	ld bc, 16
+	ld d, h
+	ld e, l
+	inc de
+	ldir
+	push ix
+	pop hl
+	ld bc, -2
+	add hl, bc
+	ex de, hl
+	ld hl, __LABEL456
+	ld bc, 1
+	ldir
+	push ix
+	pop hl
+	ld bc, -3
+	add hl, bc
+	ex de, hl
+	ld hl, __LABEL457
+	ld bc, 1
+	ldir
+	push ix
+	pop hl
+	ld bc, -4
+	add hl, bc
+	ex de, hl
+	ld hl, __LABEL458
+	ld bc, 1
+	ldir
+	push ix
+	pop hl
+	ld bc, -9
+	add hl, bc
+	ex de, hl
+	ld hl, __LABEL459
+	ld bc, 1
+	ldir
+	call _IniciarGraficosTemplo
+	ld de, __LABEL341
+	ld bc, -11
+	call __PSTORE_STR
+	ld de, __LABEL342
+	ld bc, -13
+	call __PSTORE_STR
+	ld de, __LABEL343
+	ld bc, -15
+	call __PSTORE_STR
+__LABEL344:
+	ld a, (ix-2)
+	push af
+	ld a, 3
+	pop hl
+	cp h
+	sbc a, a
+	push af
+	ld a, (ix-1)
+	push af
+	ld h, 8
+	pop af
+	cp h
+	sbc a, a
+	push af
+	ld a, (ix-9)
+	sub 18
+	pop de
+	or d
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL460
+	ld a, h
+__LABEL460:
+	or a
+	jp z, __LABEL345
+	ld l, (ix-17)
+	ld h, (ix-16)
+	inc hl
+	ld (ix-17), l
+	ld (ix-16), h
+	ld a, (ix-8)
+	sub 1
+	sbc a, a
+	push af
+	ld l, (ix-17)
+	ld h, (ix-16)
+	push hl
+	ld hl, (_VelocidadTemplo)
+	pop de
+	or a
+	sbc hl, de
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL461
+	ld a, h
+__LABEL461:
+	push af
+	ld a, (ix-8)
+	push af
+	xor a
+	pop hl
+	cp h
+	sbc a, a
+	push af
+	ld l, (ix-17)
+	ld h, (ix-16)
+	push hl
+	ld hl, (_VelocidadTemplo)
+	ld de, 300
+	add hl, de
+	pop de
+	or a
+	sbc hl, de
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL462
+	ld a, h
+__LABEL462:
+	pop de
+	or d
+	jp z, __LABEL347
+	ld (ix-17), 0
+	ld (ix-16), 0
+	ld a, (ix-8)
+	sub 1
+	sbc a, a
+	push af
+	ld a, (ix-9)
+	sub 18
+	sub 1
+	sbc a, a
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL463
+	ld a, h
+__LABEL463:
+	push af
+	call INKEY
+	push hl
+	ld de, __LABEL31
+	pop hl
+	ld a, 1
+	call __STREQ
+	ld h, a
+	pop af
+	or a
+	jr z, __LABEL464
+	ld a, h
+__LABEL464:
+	or a
+	jp z, __LABEL348
+	ld (ix-9), 16
+	ld a, 17
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL329
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 18
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL329
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	jp __LABEL349
+__LABEL348:
+	ld a, (ix-9)
+	push af
+	ld h, 18
+	pop af
+	cp h
+	jp nc, __LABEL351
+	ld a, (ix-9)
+	dec a
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL329
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	inc (ix-9)
+__LABEL351:
+__LABEL349:
+	inc (ix-5)
+	ld a, (ix-5)
+	push af
+	ld a, 3
+	pop hl
+	cp h
+	jp nc, __LABEL353
+	ld (ix-5), 0
+__LABEL353:
+	inc (ix-6)
+	ld a, (ix-6)
+	push af
+	ld a, 2
+	pop hl
+	cp h
+	jp nc, __LABEL355
+	ld (ix-6), 0
+__LABEL355:
+	inc (ix-7)
+	ld a, (ix-7)
+	push af
+	ld a, 1
+	pop hl
+	cp h
+	jp nc, __LABEL357
+	ld (ix-7), 0
+__LABEL357:
+	dec (ix-3)
+	ld a, (ix-3)
+	or a
+	jp nz, __LABEL359
+	ld (ix-3), 42
+__LABEL359:
+	dec (ix-4)
+	ld a, (ix-4)
+	push af
+	ld h, 4
+	pop af
+	cp h
+	jp nc, __LABEL361
+	ld (ix-4), 37
+__LABEL361:
+	ld a, (ix-4)
+	sub (ix-2)
+	sub 1
+	sbc a, a
+	push af
+	ld a, (ix-4)
+	push af
+	ld a, (ix-2)
+	inc a
+	ld h, a
+	pop af
+	sub h
+	sub 1
+	sbc a, a
+	pop de
+	or d
+	jp z, __LABEL363
+	ld a, (ix-9)
+	sub 18
+	jp nz, __LABEL364
+	ld (ix-8), 6
+	ld (ix-4), 39
+	ld a, 2
+	call _Sonido
+	jp __LABEL365
+__LABEL364:
+	ld a, (ix-4)
+	sub (ix-2)
+	jp nz, __LABEL367
+	inc (ix-1)
+__LABEL367:
+__LABEL365:
+__LABEL363:
+	ld a, (ix-6)
+	or a
+	jp nz, __LABEL368
+	ld a, 19
+	push af
+	xor a
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld l, (ix-11)
+	ld h, (ix-10)
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	jp __LABEL369
+__LABEL368:
+	ld a, (ix-6)
+	dec a
+	jp nz, __LABEL370
+	ld a, 19
+	push af
+	xor a
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld l, (ix-13)
+	ld h, (ix-12)
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	jp __LABEL371
+__LABEL370:
+	ld a, 19
+	push af
+	xor a
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld l, (ix-15)
+	ld h, (ix-14)
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+__LABEL371:
+__LABEL369:
+	ld a, (ix-4)
+	push af
+	ld h, 32
+	pop af
+	cp h
+	jp nc, __LABEL372
+	ld a, 18
+	push af
+	ld a, (ix-4)
+	call PRINT_AT
+	ld a, 3
+	call INK_TMP
+	ld hl, __LABEL374
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL373
+__LABEL372:
+	ld a, 18
+	push af
+	ld a, 4
+	call PRINT_AT
+	ld hl, __LABEL71
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+__LABEL373:
+	ld a, (ix-3)
+	push af
+	ld h, 32
+	pop af
+	cp h
+	jp nc, __LABEL375
+	ld a, 15
+	push af
+	ld a, (ix-3)
+	inc a
+	call PRINT_AT
+	ld hl, __LABEL71
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 15
+	push af
+	ld a, (ix-3)
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld a, 6
+	call PAPER_TMP
+	ld a, 1
+	call FLASH_TMP
+	ld hl, __LABEL227
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 16
+	push af
+	ld a, (ix-3)
+	call PRINT_AT
+	ld a, 2
+	call INK_TMP
+	ld hl, __LABEL377
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL376
+__LABEL375:
+	ld a, 15
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld hl, __LABEL71
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, 16
+	push af
+	ld a, 1
+	call PRINT_AT
+	ld hl, __LABEL71
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+__LABEL376:
+	ld a, (ix-8)
+	push af
+	xor a
+	pop hl
+	cp h
+	jp nc, __LABEL378
+	dec (ix-2)
+	dec (ix-8)
+	ld a, (ix-8)
+	or a
+	jp nz, __LABEL380
+	ld (ix-7), 0
+	ld a, (ix-9)
+	dec a
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL309
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, (ix-9)
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL382
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	jp __LABEL381
+__LABEL380:
+	ld a, 17
+	push af
+	ld a, (ix-2)
+	inc a
+	call PRINT_AT
+	ld hl, __LABEL329
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, (ix-9)
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL383
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+__LABEL381:
+	jp __LABEL379
+__LABEL378:
+	ld a, (ix-7)
+	or a
+	jp nz, __LABEL384
+	ld a, (ix-9)
+	dec a
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL309
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, (ix-9)
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL310
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	jp __LABEL385
+__LABEL384:
+	ld a, (ix-9)
+	dec a
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL386
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+	ld a, (ix-9)
+	push af
+	ld a, (ix-2)
+	call PRINT_AT
+	ld hl, __LABEL335
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL
+__LABEL385:
+	ld a, (ix-9)
+	sub 18
+	jp nz, __LABEL387
+	ld a, 3
+	call _Sonido
+	jp __LABEL388
+__LABEL387:
+	ld a, 1
+	call _Sonido
+__LABEL388:
+__LABEL379:
+	ld hl, 0
+	push hl
+	ld hl, _graficosPiedra
+	call __ARRAY
+	ld (23675), hl
+	ld a, (ix-5)
+	or a
+	jp nz, __LABEL389
+	ld a, 17
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL309
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 18
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL310
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL390
+__LABEL389:
+	ld a, (ix-5)
+	dec a
+	jp nz, __LABEL391
+	ld a, 17
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL386
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 18
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL335
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL392
+__LABEL391:
+	ld a, (ix-5)
+	sub 2
+	jp nz, __LABEL393
+	ld a, 17
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL395
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 18
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL396
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL394
+__LABEL393:
+	ld a, 17
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL397
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 18
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL398
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+__LABEL394:
+__LABEL392:
+__LABEL390:
+	ld hl, 0
+	push hl
+	ld hl, _graficosTemplo
+	call __ARRAY
+	ld (23675), hl
+__LABEL347:
+	jp __LABEL344
+__LABEL345:
+	call _IniciarGraficosIsla
+	ld a, (ix-1)
+	sub 8
+	ccf
+	jp nc, __LABEL399
+	ld a, 1
+	jp _SalirTemplo__leave
+__LABEL399:
+	xor a
+	jp _SalirTemplo__leave
+__LABEL400:
+_SalirTemplo__leave:
+	ex af, af'
+	exx
+	ld l, (ix-11)
+	ld h, (ix-10)
+	call __MEM_FREE
+	ld l, (ix-13)
+	ld h, (ix-12)
+	call __MEM_FREE
+	ld l, (ix-15)
+	ld h, (ix-14)
+	call __MEM_FREE
+	ex af, af'
+	exx
 	ld sp, ix
 	pop ix
 	ret
@@ -3445,17 +4940,28 @@ _IniciarGraficosCarrera:
 	push af
 	ld a, 9
 	call PRINT_AT
-	ld hl, __LABEL303
+	ld hl, __LABEL401
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL
-	ld a, 19
+	ld a, 18
 	push af
 	xor a
 	call PRINT_AT
 	ld a, 4
 	call INK_TMP
-	ld hl, __LABEL304
+	ld a, 7
+	call PAPER_TMP
+	ld hl, __LABEL402
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	ld a, 19
+	push af
+	xor a
+	call PRINT_AT
+	ld a, 4
+	call PAPER_TMP
+	ld hl, __LABEL311
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
@@ -3465,7 +4971,7 @@ _IniciarGraficosCarrera:
 	call PRINT_AT
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL305
+	ld hl, __LABEL311
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
@@ -3475,7 +4981,7 @@ _IniciarGraficosCarrera:
 	call PRINT_AT
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL305
+	ld hl, __LABEL311
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
@@ -3485,23 +4991,109 @@ _IniciarGraficosCarrera:
 	call PRINT_AT
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL305
+	ld hl, __LABEL311
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	ld a, 23
+	xor a
 	push af
 	xor a
-	call PRINT_AT
+	push af
 	ld a, 4
-	call PAPER_TMP
-	ld hl, __LABEL305
-	xor a
-	call __PRINTSTR
-	call COPY_ATTR
+	push af
+	ld a, 4
+	push af
+	call _AtributoUltimaLinea
+	ld a, 148
+	push af
+	ld a, 48
+	push af
+	call _DibujarNube
+	ld a, 160
+	push af
+	ld a, 189
+	push af
+	call _DibujarNube
 _IniciarGraficosCarrera__leave:
 	ld sp, ix
 	pop ix
+	ret
+_DibujarNube:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, 0
+	push hl
+	inc sp
+	ld (ix-1), 12
+	jp __LABEL403
+__LABEL406:
+	ld a, 7
+	call PAPER_TMP
+	ld a, 5
+	call INK_TMP
+	ld a, (ix+5)
+	push af
+	ld a, (ix+7)
+	push af
+	ld a, (ix-1)
+	call CIRCLE
+__LABEL407:
+	call COPY_ATTR
+	dec (ix-1)
+__LABEL403:
+	ld a, (ix-1)
+	push af
+	ld h, 1
+	pop af
+	cp h
+	jp nc, __LABEL406
+__LABEL405:
+	ld (ix-1), 8
+	jp __LABEL408
+__LABEL411:
+	ld a, 7
+	call PAPER_TMP
+	ld a, 5
+	call INK_TMP
+	ld a, (ix+5)
+	sub 12
+	push af
+	ld a, (ix+7)
+	push af
+	ld a, (ix-1)
+	call CIRCLE
+	call COPY_ATTR
+	ld a, 7
+	call PAPER_TMP
+	ld a, 5
+	call INK_TMP
+	ld a, (ix+5)
+	add a, 12
+	push af
+	ld a, (ix+7)
+	push af
+	ld a, (ix-1)
+	call CIRCLE
+__LABEL412:
+	call COPY_ATTR
+	dec (ix-1)
+__LABEL408:
+	ld a, (ix-1)
+	push af
+	ld h, 1
+	pop af
+	cp h
+	jp nc, __LABEL411
+__LABEL410:
+_DibujarNube__leave:
+	ld sp, ix
+	pop ix
+	exx
+	pop hl
+	pop bc
+	ex (sp), hl
+	exx
 	ret
 _HuirNativos:
 	push ix
@@ -3521,7 +5113,7 @@ _HuirNativos:
 	ld bc, -1
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL344
+	ld hl, __LABEL465
 	ld bc, 1
 	ldir
 	push ix
@@ -3529,32 +5121,32 @@ _HuirNativos:
 	ld bc, -2
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL345
+	ld hl, __LABEL466
 	ld bc, 1
 	ldir
 	call _IniciarGraficosCarrera
-	ld de, __LABEL306
+	ld de, __LABEL413
 	ld bc, -6
 	call __PSTORE_STR
-	ld de, __LABEL307
+	ld de, __LABEL414
 	ld bc, -8
 	call __PSTORE_STR
-	ld de, __LABEL308
+	ld de, __LABEL415
 	ld bc, -10
 	call __PSTORE_STR
-	ld de, __LABEL309
+	ld de, __LABEL416
 	ld bc, -12
 	call __PSTORE_STR
-	ld de, __LABEL310
+	ld de, __LABEL309
 	ld bc, -14
 	call __PSTORE_STR
-	ld de, __LABEL311
+	ld de, __LABEL310
 	ld bc, -16
 	call __PSTORE_STR
-	ld de, __LABEL312
+	ld de, __LABEL386
 	ld bc, -18
 	call __PSTORE_STR
-	ld de, __LABEL313
+	ld de, __LABEL335
 	ld bc, -20
 	call __PSTORE_STR
 	ld a, 16
@@ -3596,7 +5188,7 @@ _HuirNativos:
 	ld de, __LABEL17
 	ld bc, -26
 	call __PSTORE_STR
-__LABEL314:
+__LABEL417:
 	ld a, (ix-1)
 	push af
 	ld h, 21
@@ -3613,11 +5205,11 @@ __LABEL314:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL346
+	jr z, __LABEL467
 	ld a, h
-__LABEL346:
+__LABEL467:
 	or a
-	jp z, __LABEL315
+	jp z, __LABEL418
 	ld l, (ix-22)
 	ld h, (ix-21)
 	inc hl
@@ -3632,7 +5224,7 @@ __LABEL346:
 	ld a, 1
 	call __STREQ
 	or a
-	jp z, __LABEL317
+	jp z, __LABEL420
 	ld l, (ix-24)
 	ld h, (ix-23)
 	inc hl
@@ -3646,32 +5238,32 @@ __LABEL346:
 	xor a
 	call __STREQ
 	or a
-	jp z, __LABEL318
+	jp z, __LABEL421
 	ld de, __LABEL24
 	ld bc, -26
 	call __PSTORE_STR
-	jp __LABEL319
-__LABEL318:
+	jp __LABEL422
+__LABEL421:
 	ld de, __LABEL17
 	ld bc, -26
 	call __PSTORE_STR
-__LABEL319:
-__LABEL317:
+__LABEL422:
+__LABEL420:
 	ld l, (ix-22)
 	ld h, (ix-21)
 	push hl
-	ld de, 1000
+	ld de, 500
 	pop hl
 	or a
 	sbc hl, de
 	ccf
-	jp nc, __LABEL321
+	jp nc, __LABEL424
 	ld (ix-22), 0
 	ld (ix-21), 0
 	inc (ix-1)
 	ld a, (ix-3)
 	or a
-	jp nz, __LABEL322
+	jp nz, __LABEL425
 	ld (ix-3), 1
 	ld a, 16
 	push af
@@ -3691,8 +5283,8 @@ __LABEL317:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	jp __LABEL323
-__LABEL322:
+	jp __LABEL426
+__LABEL425:
 	ld (ix-3), 0
 	ld a, 16
 	push af
@@ -3712,8 +5304,8 @@ __LABEL322:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-__LABEL323:
-__LABEL321:
+__LABEL426:
+__LABEL424:
 	ld l, (ix-24)
 	ld h, (ix-23)
 	push hl
@@ -3725,13 +5317,13 @@ __LABEL321:
 	or a
 	sbc hl, de
 	ccf
-	jp nc, __LABEL325
+	jp nc, __LABEL428
 	ld (ix-24), 0
 	ld (ix-23), 0
 	dec (ix-1)
 	ld a, (ix-3)
 	or a
-	jp nz, __LABEL326
+	jp nz, __LABEL429
 	ld a, 16
 	push af
 	ld a, (ix-1)
@@ -3750,8 +5342,8 @@ __LABEL321:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	jp __LABEL327
-__LABEL326:
+	jp __LABEL430
+__LABEL429:
 	ld a, 16
 	push af
 	ld a, (ix-1)
@@ -3770,10 +5362,10 @@ __LABEL326:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-__LABEL327:
+__LABEL430:
 	ld a, (ix-4)
 	or a
-	jp nz, __LABEL328
+	jp nz, __LABEL431
 	ld (ix-4), 1
 	ld a, 16
 	push af
@@ -3793,8 +5385,18 @@ __LABEL327:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	jp __LABEL329
-__LABEL328:
+	ld a, 18
+	push af
+	xor a
+	call PRINT_AT
+	ld a, 4
+	call INK_TMP
+	ld hl, __LABEL433
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+	jp __LABEL432
+__LABEL431:
 	ld (ix-4), 0
 	ld a, 16
 	push af
@@ -3814,10 +5416,20 @@ __LABEL328:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-__LABEL329:
-__LABEL325:
-	jp __LABEL314
-__LABEL315:
+	ld a, 18
+	push af
+	xor a
+	call PRINT_AT
+	ld a, 4
+	call INK_TMP
+	ld hl, __LABEL402
+	xor a
+	call __PRINTSTR
+	call COPY_ATTR
+__LABEL432:
+__LABEL428:
+	jp __LABEL417
+__LABEL418:
 	call _IniciarGraficosIsla
 	ld a, (ix-1)
 	push af
@@ -3825,13 +5437,13 @@ __LABEL315:
 	pop hl
 	sub h
 	ccf
-	jp nc, __LABEL330
+	jp nc, __LABEL434
 	ld a, 1
 	jp _HuirNativos__leave
-__LABEL330:
+__LABEL434:
 	xor a
 	jp _HuirNativos__leave
-__LABEL331:
+__LABEL435:
 _HuirNativos__leave:
 	ex af, af'
 	exx
@@ -3867,8 +5479,83 @@ _HuirNativos__leave:
 	ld sp, ix
 	pop ix
 	ret
+_AtributoUltimaLinea:
+	push ix
+	ld ix, 0
+	add ix, sp
+	ld hl, 0
+	push hl
+	push hl
+	inc sp
+	push ix
+	pop hl
+	ld bc, -3
+	add hl, bc
+	ex de, hl
+	ld hl, __LABEL468
+	ld bc, 2
+	ldir
+	ld a, (ix+5)
+	add a, a
+	add a, a
+	add a, a
+	or (ix+7)
+	push af
+	ld a, (ix+9)
+	ld b, 6
+__LABEL469:
+	add a, a
+	djnz __LABEL469
+	pop de
+	or d
+	push af
+	ld a, (ix+11)
+	ld b, 7
+__LABEL470:
+	add a, a
+	djnz __LABEL470
+	pop de
+	or d
+	ld (ix-1), a
+	ld (ix-3), 223
+	ld (ix-2), 90
+	jp __LABEL436
+__LABEL439:
+	ld l, (ix-3)
+	ld h, (ix-2)
+	push hl
+	ld a, (ix-1)
+	pop hl
+	ld (hl), a
+__LABEL440:
+	ld l, (ix-3)
+	ld h, (ix-2)
+	inc hl
+	ld (ix-3), l
+	ld (ix-2), h
+__LABEL436:
+	ld l, (ix-3)
+	ld h, (ix-2)
+	push hl
+	ld hl, 23295
+	pop de
+	or a
+	sbc hl, de
+	jp nc, __LABEL439
+__LABEL438:
+_AtributoUltimaLinea__leave:
+	ld sp, ix
+	pop ix
+	exx
+	pop hl
+	pop bc
+	pop bc
+	pop bc
+	ex (sp), hl
+	exx
+	ret
 _Sonido:
-#line 1025
+#line 1488
 		ld hl,sfxData
 		di
 		push ix
@@ -4142,7 +5829,7 @@ Sample1Data:
 		defb 127,224,63,225,255,128,127,227,255,0,255,227,255,0,255,225
 		defb 255,224,63,252,31,252,1,255,228,255,192,31,255,231,255,128
 		defb 127,255,240,127,224,31,255,255,255,255,192,63,255,255,255,255
-#line 1298
+#line 1761
 _Sonido__leave:
 	ret
 __LABEL2:
@@ -4162,7 +5849,7 @@ __LABEL24:
 __LABEL31:
 	DEFW 0001h
 	DEFB 6Dh
-__LABEL38:
+__LABEL43:
 	DEFW 0013h
 	DEFB 4Fh
 	DEFB 54h
@@ -4183,25 +5870,25 @@ __LABEL38:
 	DEFB 2Fh
 	DEFB 4Eh
 	DEFB 29h
-__LABEL39:
+__LABEL44:
 	DEFW 0001h
 	DEFB 73h
-__LABEL42:
+__LABEL47:
 	DEFW 0001h
 	DEFB 6Eh
-__LABEL45:
+__LABEL50:
 	DEFW 0004h
 	DEFB 42h
 	DEFB 59h
 	DEFB 45h
 	DEFB 21h
-__LABEL58:
+__LABEL63:
 	DEFW 0001h
 	DEFB 08h
-__LABEL66:
+__LABEL71:
 	DEFW 0001h
 	DEFB 20h
-__LABEL75:
+__LABEL80:
 	DEFW 001Fh
 	DEFB 42h
 	DEFB 49h
@@ -4234,7 +5921,7 @@ __LABEL75:
 	DEFB 4Fh
 	DEFB 52h
 	DEFB 4Fh
-__LABEL76:
+__LABEL81:
 	DEFW 001Bh
 	DEFB 45h
 	DEFB 6Eh
@@ -4263,7 +5950,7 @@ __LABEL76:
 	DEFB 73h
 	DEFB 20h
 	DEFB 61h
-__LABEL77:
+__LABEL82:
 	DEFW 0015h
 	DEFB 52h
 	DEFB 69h
@@ -4286,10 +5973,10 @@ __LABEL77:
 	DEFB 6Fh
 	DEFB 20h
 	DEFB 28h
-__LABEL78:
+__LABEL83:
 	DEFW 0001h
 	DEFB 95h
-__LABEL79:
+__LABEL84:
 	DEFW 0008h
 	DEFB 29h
 	DEFB 20h
@@ -4299,7 +5986,7 @@ __LABEL79:
 	DEFB 6Fh
 	DEFB 73h
 	DEFB 6Fh
-__LABEL80:
+__LABEL85:
 	DEFW 0020h
 	DEFB 63h
 	DEFB 61h
@@ -4333,7 +6020,7 @@ __LABEL80:
 	DEFB 65h
 	DEFB 61h
 	DEFB 73h
-__LABEL81:
+__LABEL86:
 	DEFW 001Bh
 	DEFB 79h
 	DEFB 20h
@@ -4362,7 +6049,7 @@ __LABEL81:
 	DEFB 73h
 	DEFB 20h
 	DEFB 61h
-__LABEL82:
+__LABEL87:
 	DEFW 000Fh
 	DEFB 74h
 	DEFB 69h
@@ -4379,7 +6066,7 @@ __LABEL82:
 	DEFB 61h
 	DEFB 6Ch
 	DEFB 2Eh
-__LABEL83:
+__LABEL88:
 	DEFW 001Bh
 	DEFB 45h
 	DEFB 6Eh
@@ -4408,7 +6095,7 @@ __LABEL83:
 	DEFB 20h
 	DEFB 74h
 	DEFB 65h
-__LABEL84:
+__LABEL89:
 	DEFW 001Fh
 	DEFB 6Dh
 	DEFB 65h
@@ -4441,7 +6128,7 @@ __LABEL84:
 	DEFB 20h
 	DEFB 64h
 	DEFB 65h
-__LABEL85:
+__LABEL90:
 	DEFW 000Bh
 	DEFB 75h
 	DEFB 6Eh
@@ -4454,10 +6141,10 @@ __LABEL85:
 	DEFB 6Fh
 	DEFB 20h
 	DEFB 28h
-__LABEL86:
+__LABEL91:
 	DEFW 0001h
 	DEFB 0A3h
-__LABEL87:
+__LABEL92:
 	DEFW 0012h
 	DEFB 29h
 	DEFB 20h
@@ -4477,7 +6164,7 @@ __LABEL87:
 	DEFB 75h
 	DEFB 6Eh
 	DEFB 61h
-__LABEL88:
+__LABEL93:
 	DEFW 001Eh
 	DEFB 69h
 	DEFB 73h
@@ -4509,7 +6196,7 @@ __LABEL88:
 	DEFB 61h
 	DEFB 67h
 	DEFB 6Fh
-__LABEL89:
+__LABEL94:
 	DEFW 000Bh
 	DEFB 41h
 	DEFB 71h
@@ -4522,7 +6209,7 @@ __LABEL89:
 	DEFB 6Fh
 	DEFB 79h
 	DEFB 2Eh
-__LABEL90:
+__LABEL95:
 	DEFW 0020h
 	DEFB 50h
 	DEFB 6Fh
@@ -4556,7 +6243,7 @@ __LABEL90:
 	DEFB 20h
 	DEFB 6Ch
 	DEFB 65h
-__LABEL91:
+__LABEL96:
 	DEFW 001Fh
 	DEFB 71h
 	DEFB 75h
@@ -4589,7 +6276,7 @@ __LABEL91:
 	DEFB 20h
 	DEFB 64h
 	DEFB 65h
-__LABEL92:
+__LABEL97:
 	DEFW 0015h
 	DEFB 75h
 	DEFB 6Eh
@@ -4612,7 +6299,7 @@ __LABEL92:
 	DEFB 61h
 	DEFB 73h
 	DEFB 20h
-__LABEL93:
+__LABEL98:
 	DEFW 0011h
 	DEFB 2Dh
 	DEFB 20h
@@ -4631,7 +6318,7 @@ __LABEL93:
 	DEFB 73h
 	DEFB 20h
 	DEFB 2Dh
-__LABEL94:
+__LABEL99:
 	DEFW 0018h
 	DEFB 6Ch
 	DEFB 6Fh
@@ -4657,7 +6344,7 @@ __LABEL94:
 	DEFB 20h
 	DEFB 6Ch
 	DEFB 6Fh
-__LABEL95:
+__LABEL100:
 	DEFW 0017h
 	DEFB 70h
 	DEFB 6Fh
@@ -4682,7 +6369,7 @@ __LABEL95:
 	DEFB 74h
 	DEFB 65h
 	DEFB 2Eh
-__LABEL96:
+__LABEL101:
 	DEFW 0011h
 	DEFB 2Dh
 	DEFB 50h
@@ -4701,7 +6388,7 @@ __LABEL96:
 	DEFB 6Ch
 	DEFB 61h
 	DEFB 2Dh
-__LABEL97:
+__LABEL102:
 	DEFW 0009h
 	DEFB 20h
 	DEFB 20h
@@ -4712,10 +6399,10 @@ __LABEL97:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL98:
+__LABEL103:
 	DEFW 0001h
 	DEFB 92h
-__LABEL99:
+__LABEL104:
 	DEFW 0009h
 	DEFB 53h
 	DEFB 75h
@@ -4726,10 +6413,10 @@ __LABEL99:
 	DEFB 63h
 	DEFB 6Fh
 	DEFB 28h
-__LABEL100:
+__LABEL105:
 	DEFW 0001h
 	DEFB 93h
-__LABEL101:
+__LABEL106:
 	DEFW 0012h
 	DEFB 29h
 	DEFB 20h
@@ -4749,7 +6436,7 @@ __LABEL101:
 	DEFB 6Fh
 	DEFB 20h
 	DEFB 61h
-__LABEL102:
+__LABEL107:
 	DEFW 001Fh
 	DEFB 6Ch
 	DEFB 61h
@@ -4782,7 +6469,7 @@ __LABEL102:
 	DEFB 72h
 	DEFB 61h
 	DEFB 72h
-__LABEL103:
+__LABEL108:
 	DEFW 001Eh
 	DEFB 65h
 	DEFB 6Ch
@@ -4814,7 +6501,7 @@ __LABEL103:
 	DEFB 75h
 	DEFB 65h
 	DEFB 6Eh
-__LABEL104:
+__LABEL109:
 	DEFW 0015h
 	DEFB 79h
 	DEFB 20h
@@ -4837,7 +6524,7 @@ __LABEL104:
 	DEFB 61h
 	DEFB 72h
 	DEFB 2Eh
-__LABEL105:
+__LABEL110:
 	DEFW 001Dh
 	DEFB 50h
 	DEFB 65h
@@ -4868,7 +6555,7 @@ __LABEL105:
 	DEFB 74h
 	DEFB 61h
 	DEFB 6Eh
-__LABEL106:
+__LABEL111:
 	DEFW 001Ah
 	DEFB 64h
 	DEFB 65h
@@ -4896,8 +6583,8 @@ __LABEL106:
 	DEFB 6Ch
 	DEFB 6Fh
 	DEFB 73h
-__LABEL107:
-	DEFW 001Dh
+__LABEL112:
+	DEFW 0017h
 	DEFB 70h
 	DEFB 69h
 	DEFB 72h
@@ -4905,226 +6592,35 @@ __LABEL107:
 	DEFB 74h
 	DEFB 61h
 	DEFB 73h
-	DEFB 2Ch
-	DEFB 20h
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 20h
-	DEFB 74h
-	DEFB 72h
-	DEFB 69h
-	DEFB 62h
-	DEFB 75h
-	DEFB 20h
-	DEFB 4Dh
-	DEFB 61h
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 73h
-	DEFB 70h
-	DEFB 75h
-	DEFB 6Ch
-	DEFB 67h
-	DEFB 61h
-	DEFB 73h
-__LABEL108:
-	DEFW 0001h
-	DEFB 28h
-__LABEL109:
-	DEFW 0001h
-	DEFB 91h
-__LABEL110:
-	DEFW 0016h
-	DEFB 29h
-	DEFB 20h
-	DEFB 76h
-	DEFB 69h
-	DEFB 76h
-	DEFB 65h
-	DEFB 20h
-	DEFB 65h
-	DEFB 6Eh
-	DEFB 20h
-	DEFB 65h
-	DEFB 6Ch
-	DEFB 6Ch
-	DEFB 61h
 	DEFB 20h
 	DEFB 79h
 	DEFB 20h
-	DEFB 64h
-	DEFB 65h
-	DEFB 62h
-	DEFB 65h
 	DEFB 73h
-__LABEL111:
-	DEFW 0016h
 	DEFB 65h
+	DEFB 72h
+	DEFB 61h
+	DEFB 20h
+	DEFB 75h
+	DEFB 6Eh
+	DEFB 20h
 	DEFB 76h
 	DEFB 69h
-	DEFB 74h
 	DEFB 61h
-	DEFB 72h
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 20h
-	DEFB 61h
-	DEFB 20h
-	DEFB 74h
-	DEFB 6Fh
-	DEFB 64h
-	DEFB 61h
-	DEFB 20h
-	DEFB 63h
-	DEFB 6Fh
-	DEFB 73h
-	DEFB 74h
-	DEFB 61h
-	DEFB 2Eh
-__LABEL112:
-	DEFW 001Bh
-	DEFB 50h
-	DEFB 6Fh
-	DEFB 72h
-	DEFB 20h
-	DEFB 73h
-	DEFB 69h
-	DEFB 20h
-	DEFB 74h
-	DEFB 6Fh
-	DEFB 64h
-	DEFB 6Fh
-	DEFB 20h
+	DEFB 6Ah
 	DEFB 65h
-	DEFB 73h
-	DEFB 74h
-	DEFB 6Fh
-	DEFB 20h
-	DEFB 66h
-	DEFB 75h
-	DEFB 65h
-	DEFB 72h
-	DEFB 61h
-	DEFB 20h
-	DEFB 70h
-	DEFB 6Fh
-	DEFB 63h
-	DEFB 6Fh
 __LABEL113:
-	DEFW 001Ch
+	DEFW 000Ah
+	DEFB 70h
+	DEFB 65h
 	DEFB 6Ch
-	DEFB 61h
-	DEFB 20h
 	DEFB 69h
-	DEFB 73h
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 20h
-	DEFB 65h
-	DEFB 73h
-	DEFB 74h
-	DEFB 61h
-	DEFB 20h
-	DEFB 6Ch
-	DEFB 6Ch
-	DEFB 65h
-	DEFB 6Eh
-	DEFB 61h
-	DEFB 20h
-	DEFB 64h
-	DEFB 65h
-	DEFB 20h
-	DEFB 61h
+	DEFB 67h
 	DEFB 72h
-	DEFB 65h
-	DEFB 6Eh
-	DEFB 61h
-	DEFB 73h
-__LABEL114:
-	DEFW 000Bh
-	DEFB 6Dh
 	DEFB 6Fh
-	DEFB 76h
-	DEFB 65h
-	DEFB 64h
-	DEFB 69h
-	DEFB 7Ah
-	DEFB 61h
 	DEFB 73h
-	DEFB 20h
-	DEFB 28h
-__LABEL115:
-	DEFW 0001h
-	DEFB 94h
-__LABEL116:
-	DEFW 000Ch
-	DEFB 29h
-	DEFB 20h
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 73h
-	DEFB 20h
-	DEFB 63h
-	DEFB 75h
-	DEFB 61h
-	DEFB 6Ch
-	DEFB 65h
-	DEFB 73h
-__LABEL117:
-	DEFW 001Ch
-	DEFB 64h
-	DEFB 65h
-	DEFB 62h
-	DEFB 65h
-	DEFB 72h
-	DEFB 61h
-	DEFB 73h
-	DEFB 20h
-	DEFB 65h
-	DEFB 76h
-	DEFB 69h
-	DEFB 74h
-	DEFB 61h
-	DEFB 72h
-	DEFB 20h
-	DEFB 73h
-	DEFB 69h
-	DEFB 20h
-	DEFB 6Eh
 	DEFB 6Fh
-	DEFB 20h
-	DEFB 71h
-	DEFB 75h
-	DEFB 69h
-	DEFB 65h
-	DEFB 72h
-	DEFB 65h
-	DEFB 73h
-__LABEL118:
-	DEFW 0016h
-	DEFB 74h
-	DEFB 65h
-	DEFB 6Eh
-	DEFB 65h
-	DEFB 72h
-	DEFB 20h
-	DEFB 75h
-	DEFB 6Eh
-	DEFB 20h
-	DEFB 68h
-	DEFB 6Fh
-	DEFB 72h
-	DEFB 72h
-	DEFB 69h
-	DEFB 62h
-	DEFB 6Ch
-	DEFB 65h
-	DEFB 20h
-	DEFB 66h
-	DEFB 69h
-	DEFB 6Eh
 	DEFB 2Eh
-__LABEL119:
+__LABEL114:
 	DEFW 001Eh
 	DEFB 50h
 	DEFB 61h
@@ -5156,7 +6652,7 @@ __LABEL119:
 	DEFB 6Ch
 	DEFB 61h
 	DEFB 73h
-__LABEL120:
+__LABEL115:
 	DEFW 001Eh
 	DEFB 74h
 	DEFB 65h
@@ -5188,7 +6684,7 @@ __LABEL120:
 	DEFB 79h
 	DEFB 6Fh
 	DEFB 72h
-__LABEL121:
+__LABEL116:
 	DEFW 001Eh
 	DEFB 64h
 	DEFB 65h
@@ -5220,7 +6716,7 @@ __LABEL121:
 	DEFB 63h
 	DEFB 68h
 	DEFB 6Fh
-__LABEL122:
+__LABEL117:
 	DEFW 001Ch
 	DEFB 65h
 	DEFB 6Dh
@@ -5250,7 +6746,7 @@ __LABEL122:
 	DEFB 20h
 	DEFB 64h
 	DEFB 65h
-__LABEL123:
+__LABEL118:
 	DEFW 0020h
 	DEFB 61h
 	DEFB 6Eh
@@ -5284,7 +6780,7 @@ __LABEL123:
 	DEFB 71h
 	DEFB 75h
 	DEFB 65h
-__LABEL124:
+__LABEL119:
 	DEFW 003Dh
 	DEFB 63h
 	DEFB 75h
@@ -5347,7 +6843,7 @@ __LABEL124:
 	DEFB 6Ah
 	DEFB 6Fh
 	DEFB 2Eh
-__LABEL125:
+__LABEL120:
 	DEFW 001Bh
 	DEFB 4Ch
 	DEFB 61h
@@ -5376,7 +6872,7 @@ __LABEL125:
 	DEFB 64h
 	DEFB 65h
 	DEFB 6Ch
-__LABEL126:
+__LABEL121:
 	DEFW 001Ch
 	DEFB 74h
 	DEFB 65h
@@ -5406,7 +6902,7 @@ __LABEL126:
 	DEFB 69h
 	DEFB 6Eh
 	DEFB 6Fh
-__LABEL127:
+__LABEL122:
 	DEFW 001Eh
 	DEFB 70h
 	DEFB 65h
@@ -5438,7 +6934,7 @@ __LABEL127:
 	DEFB 64h
 	DEFB 61h
 	DEFB 73h
-__LABEL128:
+__LABEL123:
 	DEFW 0018h
 	DEFB 74h
 	DEFB 69h
@@ -5464,7 +6960,7 @@ __LABEL128:
 	DEFB 6Ch
 	DEFB 6Fh
 	DEFB 73h
-__LABEL129:
+__LABEL124:
 	DEFW 001Fh
 	DEFB 70h
 	DEFB 69h
@@ -5497,7 +6993,7 @@ __LABEL129:
 	DEFB 6Ch
 	DEFB 61h
 	DEFB 2Eh
-__LABEL130:
+__LABEL125:
 	DEFW 001Ch
 	DEFB 4Dh
 	DEFB 75h
@@ -5527,7 +7023,7 @@ __LABEL130:
 	DEFB 72h
 	DEFB 61h
 	DEFB 21h
-__LABEL131:
+__LABEL128:
 	DEFW 0011h
 	DEFB 44h
 	DEFB 49h
@@ -5546,19 +7042,19 @@ __LABEL131:
 	DEFB 2Dh
 	DEFB 39h
 	DEFB 29h
-__LABEL132:
+__LABEL129:
 	DEFW 0001h
 	DEFB 30h
-__LABEL133:
+__LABEL130:
 	DEFW 0001h
 	DEFB 39h
-__LABEL145:
+__LABEL142:
 	DEFW 0001h
 	DEFB 0A0h
-__LABEL148:
+__LABEL145:
 	DEFW 0001h
 	DEFB 0A1h
-__LABEL151:
+__LABEL148:
 	DEFW 0019h
 	DEFB 20h
 	DEFB 4Ch
@@ -5585,7 +7081,10 @@ __LABEL151:
 	DEFB 44h
 	DEFB 4Fh
 	DEFB 21h
-__LABEL163:
+__LABEL160:
+	DEFW 0001h
+	DEFB 94h
+__LABEL161:
 	DEFW 001Eh
 	DEFB 20h
 	DEFB 41h
@@ -5617,27 +7116,34 @@ __LABEL163:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL166:
-	DEFW 001Eh
+__LABEL164:
+	DEFW 0001h
+	DEFB 91h
+__LABEL165:
+	DEFW 001Fh
 	DEFB 20h
-	DEFB 54h
 	DEFB 45h
-	DEFB 20h
+	DEFB 53h
+	DEFB 43h
 	DEFB 41h
-	DEFB 59h
-	DEFB 55h
-	DEFB 44h
+	DEFB 50h
 	DEFB 41h
+	DEFB 53h
+	DEFB 2Ch
 	DEFB 20h
-	DEFB 55h
-	DEFB 4Eh
-	DEFB 20h
-	DEFB 4Eh
-	DEFB 41h
-	DEFB 54h
-	DEFB 49h
-	DEFB 56h
+	DEFB 50h
 	DEFB 4Fh
+	DEFB 52h
+	DEFB 20h
+	DEFB 4Ch
+	DEFB 4Fh
+	DEFB 53h
+	DEFB 20h
+	DEFB 50h
+	DEFB 45h
+	DEFB 4Ch
+	DEFB 4Fh
+	DEFB 53h
 	DEFB 21h
 	DEFB 20h
 	DEFB 20h
@@ -5646,10 +7152,7 @@ __LABEL166:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-__LABEL167:
+__LABEL166:
 	DEFW 001Dh
 	DEFB 20h
 	DEFB 20h
@@ -5680,7 +7183,7 @@ __LABEL167:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL170:
+__LABEL169:
 	DEFW 001Ah
 	DEFB 20h
 	DEFB 4Eh
@@ -5708,7 +7211,7 @@ __LABEL170:
 	DEFB 4Eh
 	DEFB 21h
 	DEFB 20h
-__LABEL173:
+__LABEL172:
 	DEFW 0016h
 	DEFB 20h
 	DEFB 53h
@@ -5732,7 +7235,7 @@ __LABEL173:
 	DEFB 52h
 	DEFB 21h
 	DEFB 20h
-__LABEL174:
+__LABEL173:
 	DEFW 001Fh
 	DEFB 20h
 	DEFB 20h
@@ -5765,25 +7268,60 @@ __LABEL174:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL187:
+__LABEL176:
+	DEFW 0001h
+	DEFB 90h
+__LABEL177:
+	DEFW 001Eh
+	DEFB 20h
+	DEFB 43h
+	DEFB 41h
+	DEFB 45h
+	DEFB 53h
+	DEFB 20h
+	DEFB 45h
+	DEFB 4Eh
+	DEFB 20h
+	DEFB 55h
+	DEFB 4Eh
+	DEFB 20h
+	DEFB 54h
+	DEFB 45h
+	DEFB 4Dh
+	DEFB 50h
+	DEFB 4Ch
+	DEFB 4Fh
+	DEFB 20h
+	DEFB 41h
+	DEFB 42h
+	DEFB 41h
+	DEFB 4Eh
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 4Eh
+	DEFB 41h
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 21h
+__LABEL192:
 	DEFW 0001h
 	DEFB 98h
-__LABEL188:
+__LABEL193:
 	DEFW 0001h
 	DEFB 99h
-__LABEL199:
+__LABEL204:
 	DEFW 0001h
 	DEFB 9Fh
-__LABEL222:
+__LABEL227:
 	DEFW 0001h
 	DEFB 9Ch
-__LABEL223:
+__LABEL228:
 	DEFW 0001h
 	DEFB 9Dh
-__LABEL224:
+__LABEL229:
 	DEFW 0001h
 	DEFB 9Eh
-__LABEL225:
+__LABEL230:
 	DEFW 001Bh
 	DEFB 20h
 	DEFB 49h
@@ -5812,19 +7350,345 @@ __LABEL225:
 	DEFB 4Fh
 	DEFB 52h
 	DEFB 4Fh
-__LABEL231:
+__LABEL236:
 	DEFW 0001h
 	DEFB 9Bh
-__LABEL237:
+__LABEL242:
 	DEFW 0001h
 	DEFB 9Ah
-__LABEL249:
+__LABEL254:
 	DEFW 0001h
 	DEFB 97h
-__LABEL252:
+__LABEL257:
 	DEFW 0001h
 	DEFB 96h
-__LABEL303:
+__LABEL308:
+	DEFW 0020h
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+__LABEL309:
+	DEFW 0002h
+	DEFB 90h
+	DEFB 91h
+__LABEL310:
+	DEFW 0002h
+	DEFB 92h
+	DEFB 93h
+__LABEL311:
+	DEFW 0020h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+	DEFB 20h
+__LABEL312:
+	DEFW 0020h
+	DEFB 45h
+	DEFB 53h
+	DEFB 43h
+	DEFB 41h
+	DEFB 50h
+	DEFB 41h
+	DEFB 20h
+	DEFB 50h
+	DEFB 55h
+	DEFB 4Ch
+	DEFB 53h
+	DEFB 41h
+	DEFB 4Eh
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 20h
+	DEFB 43h
+	DEFB 4Fh
+	DEFB 4Dh
+	DEFB 4Fh
+	DEFB 20h
+	DEFB 53h
+	DEFB 45h
+	DEFB 20h
+	DEFB 49h
+	DEFB 4Eh
+	DEFB 44h
+	DEFB 49h
+	DEFB 51h
+	DEFB 55h
+	DEFB 45h
+	DEFB 21h
+__LABEL329:
+	DEFW 0002h
+	DEFB 20h
+	DEFB 20h
+__LABEL330:
+	DEFW 0016h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 9Bh
+__LABEL333:
+	DEFW 0003h
+	DEFB 20h
+	DEFB 90h
+	DEFB 91h
+__LABEL334:
+	DEFW 0003h
+	DEFB 20h
+	DEFB 94h
+	DEFB 95h
+__LABEL335:
+	DEFW 0002h
+	DEFB 96h
+	DEFB 97h
+__LABEL340:
+	DEFW 001Eh
+	DEFB 53h
+	DEFB 41h
+	DEFB 4Ch
+	DEFB 54h
+	DEFB 41h
+	DEFB 20h
+	DEFB 4Ch
+	DEFB 4Fh
+	DEFB 53h
+	DEFB 20h
+	DEFB 4Fh
+	DEFB 42h
+	DEFB 53h
+	DEFB 54h
+	DEFB 41h
+	DEFB 43h
+	DEFB 55h
+	DEFB 4Ch
+	DEFB 4Fh
+	DEFB 53h
+	DEFB 20h
+	DEFB 55h
+	DEFB 53h
+	DEFB 41h
+	DEFB 4Eh
+	DEFB 44h
+	DEFB 4Fh
+	DEFB 20h
+	DEFB 4Dh
+	DEFB 21h
+__LABEL341:
+	DEFW 0020h
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+__LABEL342:
+	DEFW 0020h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+__LABEL343:
+	DEFW 0020h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ah
+	DEFB 98h
+__LABEL374:
+	DEFW 0002h
+	DEFB 9Dh
+	DEFB 20h
+__LABEL377:
+	DEFW 0002h
+	DEFB 9Bh
+	DEFB 20h
+__LABEL382:
+	DEFW 0004h
+	DEFB 92h
+	DEFB 93h
+	DEFB 20h
+	DEFB 20h
+__LABEL383:
+	DEFW 0004h
+	DEFB 20h
+	DEFB 9Eh
+	DEFB 9Fh
+	DEFB 20h
+__LABEL386:
+	DEFW 0002h
+	DEFB 94h
+	DEFB 95h
+__LABEL395:
+	DEFW 0002h
+	DEFB 98h
+	DEFB 99h
+__LABEL396:
+	DEFW 0002h
+	DEFB 9Ah
+	DEFB 9Bh
+__LABEL397:
+	DEFW 0002h
+	DEFB 9Ch
+	DEFB 9Dh
+__LABEL398:
+	DEFW 0002h
+	DEFB 9Eh
+	DEFB 9Fh
+__LABEL401:
 	DEFW 000Eh
 	DEFB 43h
 	DEFB 4Fh
@@ -5840,130 +7704,114 @@ __LABEL303:
 	DEFB 4Fh
 	DEFB 2Fh
 	DEFB 50h
-__LABEL304:
+__LABEL402:
 	DEFW 0020h
 	DEFB 0A0h
-	DEFB 0A0h
-	DEFB 0A0h
-	DEFB 0A1h
-	DEFB 0A0h
-	DEFB 0A0h
-	DEFB 0A0h
-	DEFB 0A1h
 	DEFB 0A1h
 	DEFB 0A0h
 	DEFB 0A1h
 	DEFB 0A0h
 	DEFB 0A1h
-	DEFB 0A1h
-	DEFB 0A1h
-	DEFB 0A0h
-	DEFB 0A1h
-	DEFB 0A0h
-	DEFB 0A0h
-	DEFB 0A1h
-	DEFB 0A1h
-	DEFB 0A0h
-	DEFB 0A1h
-	DEFB 0A1h
-	DEFB 0A0h
 	DEFB 0A0h
 	DEFB 0A1h
 	DEFB 0A0h
 	DEFB 0A1h
 	DEFB 0A0h
+	DEFB 0A1h
 	DEFB 0A0h
 	DEFB 0A1h
-__LABEL305:
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+__LABEL413:
+	DEFW 0008h
+	DEFB 20h
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ch
+	DEFB 9Dh
+	DEFB 98h
+	DEFB 99h
+	DEFB 20h
+__LABEL414:
+	DEFW 0008h
+	DEFB 20h
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 9Eh
+	DEFB 9Fh
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 20h
+__LABEL415:
+	DEFW 0008h
+	DEFB 20h
+	DEFB 9Ch
+	DEFB 9Dh
+	DEFB 98h
+	DEFB 99h
+	DEFB 9Ch
+	DEFB 9Dh
+	DEFB 20h
+__LABEL416:
+	DEFW 0008h
+	DEFB 20h
+	DEFB 9Eh
+	DEFB 9Fh
+	DEFB 9Ah
+	DEFB 9Bh
+	DEFB 9Eh
+	DEFB 9Fh
+	DEFB 20h
+__LABEL433:
 	DEFW 0020h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-__LABEL306:
-	DEFW 0008h
-	DEFB 20h
-	DEFB 98h
-	DEFB 99h
-	DEFB 9Ch
-	DEFB 9Dh
-	DEFB 98h
-	DEFB 99h
-	DEFB 20h
-__LABEL307:
-	DEFW 0008h
-	DEFB 20h
-	DEFB 9Ah
-	DEFB 9Bh
-	DEFB 9Eh
-	DEFB 9Fh
-	DEFB 9Ah
-	DEFB 9Bh
-	DEFB 20h
-__LABEL308:
-	DEFW 0008h
-	DEFB 20h
-	DEFB 9Ch
-	DEFB 9Dh
-	DEFB 98h
-	DEFB 99h
-	DEFB 9Ch
-	DEFB 9Dh
-	DEFB 20h
-__LABEL309:
-	DEFW 0008h
-	DEFB 20h
-	DEFB 9Eh
-	DEFB 9Fh
-	DEFB 9Ah
-	DEFB 9Bh
-	DEFB 9Eh
-	DEFB 9Fh
-	DEFB 20h
-__LABEL310:
-	DEFW 0002h
-	DEFB 90h
-	DEFB 91h
-__LABEL311:
-	DEFW 0002h
-	DEFB 92h
-	DEFB 93h
-__LABEL312:
-	DEFW 0002h
-	DEFB 94h
-	DEFB 95h
-__LABEL313:
-	DEFW 0002h
-	DEFB 96h
-	DEFB 97h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
+	DEFB 0A1h
+	DEFB 0A0h
 #line 1 "addf.asm"
 
 #line 1 "stackf.asm"
@@ -6034,7 +7882,7 @@ __ADDF:	; Addition
 
 		jp __FPSTACK_POP
 
-#line 5951 "IslaTesoro.zxbas"
+#line 7799 "IslaTesoro.zxbas"
 #line 1 "alloc.asm"
 
 ; vim: ts=4:et:sw=4:
@@ -6388,7 +8236,7 @@ __MEM_SUBTRACT:
 
 	        ENDP
 
-#line 5952 "IslaTesoro.zxbas"
+#line 7800 "IslaTesoro.zxbas"
 #line 1 "array.asm"
 
 ; vim: ts=4:et:sw=4:
@@ -6558,7 +8406,7 @@ TMP_ARR_PTR:
 
 		ENDP
 
-#line 5953 "IslaTesoro.zxbas"
+#line 7801 "IslaTesoro.zxbas"
 #line 1 "border.asm"
 
 	; __FASTCALL__ Routine to change de border
@@ -6568,7 +8416,7 @@ TMP_ARR_PTR:
 
 	; Nothing to do! (Directly from the ZX Spectrum ROM)
 
-#line 5954 "IslaTesoro.zxbas"
+#line 7802 "IslaTesoro.zxbas"
 #line 1 "bright.asm"
 
 	; Sets bright flag in ATTR_P permanently
@@ -6625,7 +8473,7 @@ BRIGHT_TMP:
 		ld hl, ATTR_T
 		jr __SET_BRIGHT
 	    ENDP
-#line 5955 "IslaTesoro.zxbas"
+#line 7803 "IslaTesoro.zxbas"
 #line 1 "chr.asm"
 
 	; CHR$(x, y, x) returns the string CHR$(x) + CHR$(y) + CHR$(z)
@@ -6703,15 +8551,23 @@ __CHR_END:
 
 			ENDP
 
-#line 5956 "IslaTesoro.zxbas"
-#line 1 "cls.asm"
+#line 7804 "IslaTesoro.zxbas"
+#line 1 "circle.asm"
 
-	; JUMPS directly to spectrum CLS
-	; This routine does not clear lower screen
+	; Bresenham's like circle algorithm
+	; best known as Middle Point Circle drawing algorithm
 
-	;CLS	EQU	0DAFh
 
-	; Our faster implementation
+#line 1 "plot.asm"
+
+	; MIXED __FASTCAL__ / __CALLE__ PLOT Function
+	; Plots a point into the screen calling the ZX ROM PLOT routine
+
+	; Y in A (accumulator)
+	; X in top of the stack
+
+
+#line 1 "in_screen.asm"
 
 #line 1 "sposn.asm"
 
@@ -6746,7 +8602,46 @@ __SAVE_S_POSN:		; Saves ROW, COL from DE into S_POSN mem var.
 
 			ENDP
 
-#line 9 "cls.asm"
+#line 2 "in_screen.asm"
+
+
+__IN_SCREEN:
+		; Returns NO carry if current coords (D, E)
+		; are OUT of the screen limits (MAXX, MAXY)
+
+		PROC
+		LOCAL __IN_SCREEN_ERR
+
+		ld hl, MAXX
+		ld a, e
+		cp (hl)
+		jr nc, __IN_SCREEN_ERR	; Do nothing and return if out of range
+
+		ld a, d
+		inc hl
+		cp (hl)
+		;; jr nc, __IN_SCREEN_ERR	; Do nothing and return if out of range
+		;; ret
+	    ret c                       ; Return if carry (OK)
+
+__IN_SCREEN_ERR:
+__OUT_OF_SCREEN_ERR:
+		; Jumps here if out of screen
+		ld a, ERROR_OutOfScreen
+	    jp __STOP   ; Saves error code and exits
+
+		ENDP
+#line 9 "plot.asm"
+#line 1 "cls.asm"
+
+	; JUMPS directly to spectrum CLS
+	; This routine does not clear lower screen
+
+	;CLS	EQU	0DAFh
+
+	; Our faster implementation
+
+
 
 CLS:
 		PROC
@@ -6786,7 +8681,366 @@ __CLS_SCR:
 								    ; to get the start of the screen
 		ENDP
 
-#line 5957 "IslaTesoro.zxbas"
+#line 10 "plot.asm"
+#line 1 "attr.asm"
+
+	; Attribute routines
+; vim:ts=4:et:sw:
+
+
+
+
+
+
+
+__ATTR_ADDR:
+	    ; calc start address in DE (as (32 * d) + e)
+    ; Contributed by Santiago Romero at http://www.speccy.org
+	    ld h, 0                     ;  7 T-States
+	    ld a, d                     ;  4 T-States
+	    add a, a     ; a * 2        ;  4 T-States
+	    add a, a     ; a * 4        ;  4 T-States
+	    ld l, a      ; HL = A * 4   ;  4 T-States
+
+	    add hl, hl   ; HL = A * 8   ; 15 T-States
+	    add hl, hl   ; HL = A * 16  ; 15 T-States
+	    add hl, hl   ; HL = A * 32  ; 15 T-States
+
+    ld d, 18h ; DE = 6144 + E. Note: 6144 is the screen size (before attr zone)
+	    add hl, de
+
+	    ld de, (SCREEN_ADDR)    ; Adds the screen address
+	    add hl, de
+
+	    ; Return current screen address in HL
+	    ret
+
+
+	; Sets the attribute at a given screen coordinate (D, E).
+	; The attribute is taken from the ATTR_T memory variable
+	; Used by PRINT routines
+SET_ATTR:
+
+	    ; Checks for valid coords
+	    call __IN_SCREEN
+	    ret nc
+
+__SET_ATTR:
+	    ; Internal __FASTCALL__ Entry used by printing routines
+	    PROC
+
+	    call __ATTR_ADDR
+
+__SET_ATTR2:  ; Sets attr from ATTR_T to (HL) which points to the scr address
+	    ld de, (ATTR_T)    ; E = ATTR_T, D = MASK_T
+
+	    ld a, d
+	    and (hl)
+	    ld c, a    ; C = current screen color, masked
+
+	    ld a, d
+	    cpl        ; Negate mask
+	    and e    ; Mask current attributes
+	    or c    ; Mix them
+	    ld (hl), a ; Store result in screen
+
+	    ret
+
+	    ENDP
+
+
+	; Sets the attribute at a given screen pixel address in hl
+	; HL contains the address in RAM for a given pixel (not a coordinate)
+SET_PIXEL_ADDR_ATTR:
+	    ;; gets ATTR position with offset given in SCREEN_ADDR
+	    ld a, h
+	    rrca
+	    rrca
+	    rrca
+	    and 3
+	    or 18h
+	    ld h, a
+	    ld de, (SCREEN_ADDR)
+	    add hl, de  ;; Final screen addr
+	    jp __SET_ATTR2
+#line 11 "plot.asm"
+
+PLOT:
+		PROC
+
+		LOCAL PLOT_SUB
+		LOCAL PIXEL_ADDR
+		LOCAL COORDS
+		LOCAL __PLOT_ERR
+	    LOCAL P_FLAG
+	    LOCAL __PLOT_OVER1
+
+	P_FLAG EQU 23697
+
+		pop hl
+		ex (sp), hl ; Callee
+
+		ld b, a
+		ld c, h
+
+		ld a, 191
+		cp b
+		jr c, __PLOT_ERR ; jr is faster here (#1)
+
+__PLOT:			; __FASTCALL__ entry (b, c) = pixel coords (y, x)
+		ld (COORDS), bc	; Saves current point
+		ld a, 191 ; Max y coord
+		call PIXEL_ADDR
+	    res 6, h    ; Starts from 0
+	    ld bc, (SCREEN_ADDR)
+	    add hl, bc  ; Now current offset
+
+	    ld b, a
+	    inc b
+	    ld a, 0FEh
+	LOCAL __PLOT_LOOP
+__PLOT_LOOP:
+	    rrca
+	    djnz __PLOT_LOOP
+
+	    ld b, a
+	    ld a, (P_FLAG)
+	    ld c, a
+	    ld a, (hl)
+	    bit 0, c        ; is it OVER 1
+	    jr nz, __PLOT_OVER1
+	    and b
+
+__PLOT_OVER1:
+	    bit 2, c        ; is it inverse 1
+	    jr nz, __PLOT_END
+
+	    xor b
+	    cpl
+
+	LOCAL __PLOT_END
+__PLOT_END:
+	    ld (hl), a
+	    jp SET_PIXEL_ADDR_ATTR
+
+__PLOT_ERR:
+	    jp __OUT_OF_SCREEN_ERR ; Spent 3 bytes, but saves 3 T-States at (#1)
+
+	PLOT_SUB EQU 22ECh
+	PIXEL_ADDR EQU 22ACh
+	COORDS EQU 5C7Dh
+		ENDP
+#line 6 "circle.asm"
+
+
+	; Draws a circle at X, Y of radius R
+	; X, Y on the Stack, R in accumulator (Byte)
+
+			PROC
+			LOCAL __CIRCLE_ERROR
+			LOCAL __CIRCLE_LOOP
+			LOCAL __CIRCLE_NEXT
+
+__CIRCLE_ERROR:
+	        jp __OUT_OF_SCREEN_ERR
+	;; __CIRCLE_ERROR EQU __OUT_OF_SCREEN_ERR
+;; __CIRCLE_ERROR:
+	;; 		; Jumps here if out of screen
+	;; 		scf ; Always sets carry Flag
+	;;
+	;; 		ld a, ERROR_OutOfScreen
+	;; 		ld (ERR_NR), a
+	;; 		ret
+CIRCLE:
+	        ;; Entry point
+			pop hl	; Return Address
+			pop de	; D = Y
+			ex (sp), hl ; __CALLEE__ convention
+			ld e, h ; E = X
+
+
+			ld h, a ; H = R
+			add a, d
+			sub 192
+			jr nc, __CIRCLE_ERROR
+
+			ld a, d
+			sub h
+			jr c, __CIRCLE_ERROR
+
+			ld a, e
+			sub h
+			jr c, __CIRCLE_ERROR
+
+			ld a, h
+			add a, e
+			jr c, __CIRCLE_ERROR
+
+
+; __FASTCALL__ Entry: D, E = Y, X point of the center
+	; A = Radious
+__CIRCLE:
+			push de
+			ld a, h
+			exx
+			pop de		; D'E' = x0, y0
+			ld h, a		; H' = r
+
+			ld c, e
+			ld a, h
+			add a, d
+			ld b, a
+			call __CIRCLE_PLOT	; PLOT (x0, y0 + r)
+
+			ld b, d
+			ld a, h
+			add a, e
+			ld c, a
+			call __CIRCLE_PLOT	; PLOT (x0 + r, y0)
+
+			ld c, e
+			ld a, d
+			sub h
+			ld b, a
+			call __CIRCLE_PLOT ; PLOT (x0, y0 - r)
+
+			ld b, d
+			ld a, e
+			sub h
+			ld c, a
+			call __CIRCLE_PLOT ; PLOT (x0 - r, y0)
+
+			exx
+			ld b, 0		; B = x = 0
+			ld c, h		; C = y = Radius
+			ld hl, 1
+			or a
+			sbc hl, bc	; HL = f = 1 - radius
+
+			ex de, hl
+			ld hl, 0
+			or a
+			sbc hl, bc  ; HL = -radius
+			add hl, hl	; HL = -2 * radius
+			ex de, hl	; DE = -2 * radius = ddF_y, HL = f
+
+			xor a		; A = ddF_x = 0
+			ex af, af'	; Saves it
+
+__CIRCLE_LOOP:
+			ld a, b
+			cp c
+			ret nc		; Returns when x >= y
+
+		bit 7, h	; HL >= 0? : if (f >= 0)...
+			jp nz, __CIRCLE_NEXT
+
+			dec c		; y--
+			inc de
+			inc de		; ddF_y += 2
+
+			add hl, de	; f += ddF_y
+
+__CIRCLE_NEXT:
+			inc b		; x++
+			ex af, af'
+			add a, 2	; 1 Cycle faster than inc a, inc a
+
+			inc hl		; f++
+			push af
+			add a, l
+			ld l, a
+			ld a, h
+			adc a, 0	; f = f + ddF_x
+			ld h, a
+			pop af
+			ex af, af'
+
+			push bc
+			exx
+			pop hl		; H'L' = Y, X
+
+			ld a, d
+			add a, h
+			ld b, a		; B = y0 + y
+			ld a, e
+			add a, l
+			ld c, a		; C = x0 + x
+			call __CIRCLE_PLOT ; plot(x0 + x, y0 + y)
+
+			ld a, d
+			add a, h
+			ld b, a		; B = y0 + y
+			ld a, e
+			sub l
+			ld c, a		; C = x0 - x
+			call __CIRCLE_PLOT ; plot(x0 - x, y0 + y)
+
+			ld a, d
+			sub h
+			ld b, a		; B = y0 - y
+			ld a, e
+			add a, l
+			ld c, a		; C = x0 + x
+			call __CIRCLE_PLOT ; plot(x0 + x, y0 - y)
+
+			ld a, d
+			sub h
+			ld b, a		; B = y0 - y
+			ld a, e
+			sub l
+			ld c, a		; C = x0 - x
+			call __CIRCLE_PLOT ; plot(x0 - x, y0 - y)
+
+			ld a, d
+			add a, l
+			ld b, a		; B = y0 + x
+			ld a, e
+			add a, h
+			ld c, a		; C = x0 + y
+			call __CIRCLE_PLOT ; plot(x0 + y, y0 + x)
+
+			ld a, d
+			add a, l
+			ld b, a		; B = y0 + x
+			ld a, e
+			sub h
+			ld c, a		; C = x0 - y
+			call __CIRCLE_PLOT ; plot(x0 - y, y0 + x)
+
+			ld a, d
+			sub l
+			ld b, a		; B = y0 - x
+			ld a, e
+			add a, h
+			ld c, a		; C = x0 + y
+			call __CIRCLE_PLOT ; plot(x0 + y, y0 - x)
+
+			ld a, d
+			sub l
+			ld b, a		; B = y0 - x
+			ld a, e
+			sub h
+			ld c, a		; C = x0 + y
+			call __CIRCLE_PLOT ; plot(x0 - y, y0 - x)
+
+			exx
+			jp __CIRCLE_LOOP
+
+
+
+__CIRCLE_PLOT:
+			; Plots a point of the circle, preserving HL and DE
+			push hl
+			push de
+			call __PLOT
+			pop de
+			pop hl
+			ret
+
+			ENDP
+#line 7805 "IslaTesoro.zxbas"
+
 #line 1 "copy_attr.asm"
 
 
@@ -6798,38 +9052,7 @@ __CLS_SCR:
 
 
 
-#line 1 "in_screen.asm"
 
-
-
-
-__IN_SCREEN:
-		; Returns NO carry if current coords (D, E)
-		; are OUT of the screen limits (MAXX, MAXY)
-
-		PROC
-		LOCAL __IN_SCREEN_ERR
-
-		ld hl, MAXX
-		ld a, e
-		cp (hl)
-		jr nc, __IN_SCREEN_ERR	; Do nothing and return if out of range
-
-		ld a, d
-		inc hl
-		cp (hl)
-		;; jr nc, __IN_SCREEN_ERR	; Do nothing and return if out of range
-		;; ret
-	    ret c                       ; Return if carry (OK)
-
-__IN_SCREEN_ERR:
-__OUT_OF_SCREEN_ERR:
-		; Jumps here if out of screen
-		ld a, ERROR_OutOfScreen
-	    jp __STOP   ; Saves error code and exits
-
-		ENDP
-#line 8 "print.asm"
 #line 1 "table_jump.asm"
 
 
@@ -7143,88 +9366,7 @@ ITALIC_TMP:
 
 #line 17 "print.asm"
 
-#line 1 "attr.asm"
 
-	; Attribute routines
-; vim:ts=4:et:sw:
-
-
-
-
-
-
-
-__ATTR_ADDR:
-	    ; calc start address in DE (as (32 * d) + e)
-    ; Contributed by Santiago Romero at http://www.speccy.org
-	    ld h, 0                     ;  7 T-States
-	    ld a, d                     ;  4 T-States
-	    add a, a     ; a * 2        ;  4 T-States
-	    add a, a     ; a * 4        ;  4 T-States
-	    ld l, a      ; HL = A * 4   ;  4 T-States
-
-	    add hl, hl   ; HL = A * 8   ; 15 T-States
-	    add hl, hl   ; HL = A * 16  ; 15 T-States
-	    add hl, hl   ; HL = A * 32  ; 15 T-States
-
-    ld d, 18h ; DE = 6144 + E. Note: 6144 is the screen size (before attr zone)
-	    add hl, de
-
-	    ld de, (SCREEN_ADDR)    ; Adds the screen address
-	    add hl, de
-
-	    ; Return current screen address in HL
-	    ret
-
-
-	; Sets the attribute at a given screen coordinate (D, E).
-	; The attribute is taken from the ATTR_T memory variable
-	; Used by PRINT routines
-SET_ATTR:
-
-	    ; Checks for valid coords
-	    call __IN_SCREEN
-	    ret nc
-
-__SET_ATTR:
-	    ; Internal __FASTCALL__ Entry used by printing routines
-	    PROC
-
-	    call __ATTR_ADDR
-
-__SET_ATTR2:  ; Sets attr from ATTR_T to (HL) which points to the scr address
-	    ld de, (ATTR_T)    ; E = ATTR_T, D = MASK_T
-
-	    ld a, d
-	    and (hl)
-	    ld c, a    ; C = current screen color, masked
-
-	    ld a, d
-	    cpl        ; Negate mask
-	    and e    ; Mask current attributes
-	    or c    ; Mix them
-	    ld (hl), a ; Store result in screen
-
-	    ret
-
-	    ENDP
-
-
-	; Sets the attribute at a given screen pixel address in hl
-	; HL contains the address in RAM for a given pixel (not a coordinate)
-SET_PIXEL_ADDR_ATTR:
-	    ;; gets ATTR position with offset given in SCREEN_ADDR
-	    ld a, h
-	    rrca
-	    rrca
-	    rrca
-	    and 3
-	    or 18h
-	    ld h, a
-	    ld de, (SCREEN_ADDR)
-	    add hl, de  ;; Final screen addr
-	    jp __SET_ATTR2
-#line 19 "print.asm"
 
 	; Putting a comment starting with @INIT <address>
 	; will make the compiler to add a CALL to <address>
@@ -7259,7 +9401,6 @@ __PRINTCHAR: ; Print character store in accumulator (A register)
 	        LOCAL __PRINT_UDG
 	        LOCAL __PRGRAPH
 	        LOCAL __PRINT_START
-	        LOCAL __NO_SCROLL
 	        LOCAL __ROM_SCROLL_SCR
 	        LOCAL __TVFLAGS
 
@@ -7271,6 +9412,18 @@ __PRINTCHAR: ; Print character store in accumulator (A register)
 __PRINT_JUMP:
 	        jp __PRINT_START    ; Where to jump. If we print 22 (AT), next two calls jumps to AT1 and AT2 respectively
 
+
+	        LOCAL __SCROLL
+__SCROLL:  ; Scroll?
+	        ld hl, __TVFLAGS
+	        bit 1, (hl)
+	        ret z
+	        call __ROM_SCROLL_SCR
+	        ld hl, __TVFLAGS
+	        res 1, (hl)
+	        ret
+#line 75 "C:/ZXBasic/library-asm/print.asm"
+
 __PRINT_START:
 	        cp ' '
 	        jp c, __PRINT_SPECIAL    ; Characters below ' ' are special ones
@@ -7278,25 +9431,21 @@ __PRINT_START:
 	        exx               ; Switch to alternative registers
 	        ex af, af'        ; Saves a value (char to print) for later
 
-	        ld hl, __TVFLAGS
-	        bit 1, (hl)
-	        jp z, __NO_SCROLL
-	        call __ROM_SCROLL_SCR
-	        ld hl, __TVFLAGS
-	        res 1, (hl)
-__NO_SCROLL:
+
+	        call __SCROLL
+#line 86 "C:/ZXBasic/library-asm/print.asm"
 	        call __LOAD_S_POSN
 
 	; At this point we have the new coord
 	        ld hl, (SCREEN_ADDR)
 
 	        ld a, d
-	        ld c, a        ; Saves it for later
+	        ld c, a     ; Saves it for later
 
 	        and 0F8h    ; Masks 3 lower bit ; zy
 	        ld d, a
 
-	        ld a, c        ; Recovers it
+	        ld a, c     ; Recovers it
 	        and 07h     ; MOD 7 ; y1
 	        rrca
 	        rrca
@@ -7334,9 +9483,9 @@ __SRCADDR:
 	        ld bc, (CHARS)
 
 __PRGRAPH0:
-        add a, a    ; A = a * 2 (since a < 80h) ; Thanks to Metalbrain at http://foro.speccy.org
+        add a, a   ; A = a * 2 (since a < 80h) ; Thanks to Metalbrain at http://foro.speccy.org
 	        ld l, a
-	        ld h, 0        ; HL = a * 2 (accumulator)
+	        ld h, 0    ; HL = a * 2 (accumulator)
 	        add hl, hl
 	        add hl, hl ; HL = a * 8
 	        add hl, bc ; HL = CHARS address
@@ -7351,20 +9500,20 @@ __PRGRAPH:
 __PRCHAR:
 	        ld a, (de) ; DE *must* be ALWAYS source, and HL destiny
 
-PRINT_MODE:        ; Which operation is used to write on the screen
+PRINT_MODE:     ; Which operation is used to write on the screen
                 ; Set it with:
 	                ; LD A, <OPERATION>
 	                ; LD (PRINT_MODE), A
 	                ;
                 ; Available opertions:
-                ; NORMAL: 0h  --> NOP    ; OVER 0
-                ; XOR    : AEh --> XOR (HL)        ; OVER 1
-                ; OR    : B6h --> OR (HL)        ; PUTSPRITE
-                ; AND   : A6h --> AND (HL)        ; PUTMASK
-	        nop        ;
+                ; NORMAL : 0h  --> NOP         ; OVER 0
+                ; XOR    : AEh --> XOR (HL)    ; OVER 1
+                ; OR     : B6h --> OR (HL)     ; PUTSPRITE
+                ; AND    : A6h --> AND (HL)    ; PUTMASK
+	        nop     ;
 
-INVERSE_MODE:    ; 00 -> NOP -> INVERSE 0
-	        nop        ; 2F -> CPL -> INVERSE 1
+INVERSE_MODE:   ; 00 -> NOP -> INVERSE 0
+	        nop     ; 2F -> CPL -> INVERSE 1
 
 	        ld (hl), a
 
@@ -7405,6 +9554,9 @@ PRINT_EOL:        ; Called WHENEVER there is no ";" at end of PRINT sentence
 	        exx
 
 __PRINT_0Dh:        ; Called WHEN printing CHR$(13)
+
+	        call __SCROLL
+#line 209 "C:/ZXBasic/library-asm/print.asm"
 	        call __LOAD_S_POSN
 
 __PRINT_EOL1:        ; Another entry called from PRINT when next line required
@@ -7658,7 +9810,7 @@ LOOP:
 	        ret
 	        ENDP
 
-PRINT_AT: ; CHanges cursor to ROW, COL
+PRINT_AT: ; Changes cursor to ROW, COL
 	         ; COL in A register
 	         ; ROW in stack
 
@@ -7669,7 +9821,8 @@ PRINT_AT: ; CHanges cursor to ROW, COL
 
 	        call __IN_SCREEN
 	        ret nc    ; Return if out of screen
-
+	        ld hl, __TVFLAGS
+	        res 1, (hl)
 	        jp __SAVE_S_POSN
 
 	        LOCAL __PRINT_COM
@@ -7707,7 +9860,7 @@ __PRINT_TABLE:    ; Jump table for 0 .. 22 codes
 	        DW __PRINT_NOP    ; 11
 	        DW __PRINT_NOP    ; 12
 	        DW __PRINT_0Dh    ; 13
-	        DW __PRINT_BOLD    ; 14
+	        DW __PRINT_BOLD   ; 14
 	        DW __PRINT_ITA    ; 15
 	        DW __PRINT_INK    ; 16
 	        DW __PRINT_PAP    ; 17
@@ -7715,8 +9868,8 @@ __PRINT_TABLE:    ; Jump table for 0 .. 22 codes
 	        DW __PRINT_BRI    ; 19
 	        DW __PRINT_INV    ; 20
 	        DW __PRINT_OVR    ; 21
-	        DW __PRINT_AT    ; 22 AT
-	        DW __PRINT_TAB  ; 23 TAB
+	        DW __PRINT_AT     ; 22 AT
+	        DW __PRINT_TAB    ; 23 TAB
 
 	        ENDP
 
@@ -7794,7 +9947,556 @@ __REFRESH_TMP:
 
 		ENDP
 
-#line 5958 "IslaTesoro.zxbas"
+#line 7807 "IslaTesoro.zxbas"
+#line 1 "divf.asm"
+
+
+
+
+	; -------------------------------------------------------------
+	; Floating point library using the FP ROM Calculator (ZX 48K)
+
+	; All of them uses C EDHL registers as 1st paramter.
+	; For binary operators, the 2n operator must be pushed into the
+	; stack, in the order BC DE HL (B not used).
+	;
+	; Uses CALLEE convention
+	; -------------------------------------------------------------
+
+__DIVF:	; Division
+		PROC
+		LOCAL __DIVBYZERO
+		LOCAL TMP, ERR_SP
+
+	TMP         EQU 23629 ;(DEST)
+	ERR_SP      EQU 23613
+
+		call __FPSTACK_PUSH2
+
+		ld hl, (ERR_SP)
+		ld (TMP), hl
+		ld hl, __DIVBYZERO
+		push hl
+		ld hl, 0
+		add hl, sp
+		ld (ERR_SP), hl
+
+		; ------------- ROM DIV
+		rst 28h
+		defb 01h	; EXCHANGE
+		defb 05h	; DIV
+		defb 38h;   ; END CALC
+
+		pop hl
+		ld hl, (TMP)
+		ld (ERR_SP), hl
+
+		jp __FPSTACK_POP
+
+__DIVBYZERO:
+		ld hl, (TMP)
+		ld (ERR_SP), hl
+
+		ld a, ERROR_NumberTooBig
+		ld (ERR_NR), a
+
+		; Returns 0 on DIV BY ZERO error
+		xor a
+		ld b, a
+		ld c, a
+		ld d, a
+		ld e, a
+		ret
+
+		ENDP
+
+#line 7808 "IslaTesoro.zxbas"
+#line 1 "draw.asm"
+
+	; DRAW using bresenhams algorithm and screen positioning
+; Copyleft (k) 2010 by J. Rodriguez (a.k.a. Boriel) http://www.boriel.com
+; vim:ts=4:et:sw=4:
+
+	; Y parameter in A
+	; X parameter in high byte on top of the stack
+
+
+
+
+
+
+
+#line 1 "PixelDown.asm"
+
+	;
+	; PixelDown
+	; Alvin Albrecht 2002
+	;
+
+	; Pixel Down
+	;
+	; Adjusts screen address HL to move one pixel down in the display.
+	; (0,0) is located at the top left corner of the screen.
+	;
+; enter: HL = valid screen address
+; exit : Carry = moved off screen
+	;        Carry'= moved off current cell (needs ATTR update)
+	;        HL = moves one pixel down
+; used : AF, HL
+
+SP.PixelDown:
+	   inc h
+	   ld a,h
+	   and $07
+	   ret nz
+	   ex af, af'  ; Sets carry on F'
+	   scf         ; which flags ATTR must be updated
+	   ex af, af'
+	   ld a,h
+	   sub $08
+	   ld h,a
+	   ld a,l
+	   add a,$20
+	   ld l,a
+	   ret nc
+	   ld a,h
+	   add a,$08
+	   ld h,a
+	;IF DISP_HIRES
+	;   and $18
+	;   cp $18
+	;ELSE
+	   cp $58
+	;ENDIF
+	   ccf
+	   ret
+#line 15 "draw.asm"
+#line 1 "PixelUp.asm"
+
+	;
+	; PixelUp
+	; Alvin Albrecht 2002
+	;
+
+	; Pixel Up
+	;
+	; Adjusts screen address HL to move one pixel up in the display.
+	; (0,0) is located at the top left corner of the screen.
+	;
+; enter: HL = valid screen address
+; exit : Carry = moved off screen
+	;        HL = moves one pixel up
+; used : AF, HL
+
+SP.PixelUp:
+	   ld a,h
+	   dec h
+	   and $07
+	   ret nz
+	   ex af, af'
+	   scf
+	   ex af, af'
+	   ld a,$08
+	   add a,h
+	   ld h,a
+	   ld a,l
+	   sub $20
+	   ld l,a
+	   ret nc
+	   ld a,h
+	   sub $08
+	   ld h,a
+	;IF DISP_HIRES
+	;   and $18
+	;   cp $18
+	;   ccf
+	;ELSE
+	   cp $40
+	;ENDIF
+	   ret
+#line 16 "draw.asm"
+#line 1 "PixelLeft.asm"
+
+	;
+	; PixelLeft
+	; Jose Rodriguez 2012
+	;
+
+	; PixelLeft
+	;
+	; Adjusts screen address HL and Pixel bit A to move one pixel to the left
+	; on the display.  Start of line set Carry (Out of Screen)
+	;
+; enter: HL = valid screen address
+	;        A = Bit Set
+; exit : Carry = moved off screen
+	;        Carry' Set if moved off current ATTR CELL
+	;        HL = moves one character left, if needed
+	;        A = Bit Set with new pixel pos.
+; used : AF, HL
+
+
+SP.PixelLeft:
+	    rlca    ; Sets new pixel bit 1 to the right
+	    ret nc
+	    ex af, af' ; Signal in C' we've moved off current ATTR cell
+	    ld a,l
+	    dec a
+	    ld l,a
+	    cp 32      ; Carry if in screen
+	    ccf
+	    ld a, 1
+	    ret
+
+#line 17 "draw.asm"
+#line 1 "PixelRight.asm"
+
+	;
+	; PixelRight
+	; Jose Rodriguez 2012
+	;
+
+
+	; PixelRight
+	;
+	; Adjusts screen address HL and Pixel bit A to move one pixel to the left
+	; on the display.  Start of line set Carry (Out of Screen)
+	;
+; enter: HL = valid screen address
+	;        A = Bit Set
+; exit : Carry = moved off screen
+	;        Carry' Set if moved off current ATTR CELL
+	;        HL = moves one character left, if needed
+	;        A = Bit Set with new pixel pos.
+; used : AF, HL
+
+
+SP.PixelRight:
+	    rrca    ; Sets new pixel bit 1 to the right
+	    ret nc
+	    ex af, af' ; Signal in C' we've moved off current ATTR cell
+	    ld a, l
+	    inc a
+	    ld l, a
+	    cp 32      ; Carry if IN screen
+	    ccf
+	    ld a, 80h
+	    ret
+
+#line 18 "draw.asm"
+
+	;; DRAW PROCEDURE
+	    PROC
+
+	    LOCAL __DRAW1
+	    LOCAL __DRAW2
+	    LOCAL __DRAW3
+	    LOCAL __DRAW4, __DRAW4_LOOP
+	    LOCAL __DRAW5
+	    LOCAL __DRAW6, __DRAW6_LOOP
+	    LOCAL __DRAW_ERROR
+	    LOCAL DX1, DX2, DY1, DY2
+	    LOCAL __INCX, __INCY, __DECX, __DECY
+	    LOCAL P_FLAG
+	P_FLAG EQU 23697
+
+__DRAW_ERROR:
+	    jp __OUT_OF_SCREEN_ERR
+
+DRAW:
+	    ;; ENTRY POINT
+
+	    LOCAL COORDS
+	    LOCAL __DRAW_SETUP1, __DRAW_START, __PLOTOVER, __PLOTINVERSE
+
+	    ex de, hl ; DE = Y OFFSET
+	    pop hl	; return addr
+	    ex (sp), hl ; CALLEE => HL = X OFFSET
+	    ld bc, (COORDS)
+
+	    ld a, c
+	    add a, l
+	    ld l, a
+	    ld a, h
+	    adc a, 0 ; HL = HL + C
+	    ld h, a
+	    jr nz, __DRAW_ERROR	; if a <> 0 => Out of Screen
+
+	    ld a, b
+	    add a, e
+	    ld e, a
+	    ld a, d
+	    adc a, 0 ; DE = DE + B
+	    ld d, a
+	    jr nz, __DRAW_ERROR	; if a <> 0 => Out of Screen
+
+	    ld a, 191
+	    sub e
+	    jr c, __DRAW_ERROR	; Out of screen
+
+	    ld h, e			; now H,L = y2, x2
+
+__DRAW:
+	    ; __FASTCALL__ Entry. Plots from (COORDS) to coord H, L
+	    push hl
+	    ex de, hl		; D,E = y2, x2;
+
+	    ld a, (P_FLAG)
+	    ld c, a
+	    bit 2, a        ; Test for INVERSE1
+	    jr z, __DRAW_SETUP1
+	    ld a, 2Fh       ; CPL
+	    ld (__PLOTINVERSE), a
+	    ld a, 0A6h      ; and (hl)
+	    jp __DRAW_START
+
+__DRAW_SETUP1:
+	    xor a           ; nop
+	    ld (__PLOTINVERSE), a
+	    ld a, 0B6h      ; or (hl)
+	    bit 0, c        ; Test for OVER
+	    jr z, __DRAW_START
+	    ld a, 0AEh      ; xor (hl)
+
+__DRAW_START:
+	    ld (__PLOTOVER), a ; "Pokes" last operation
+	    exx
+	    ld bc, (COORDS) ; B'C' = y1, x1
+	    ld d, b         ; Saves B' in D'
+	    ld a, 191
+	    LOCAL __PIXEL_ADDR
+	__PIXEL_ADDR EQU 22ACh
+	    call __PIXEL_ADDR
+
+	    ;; Now gets pixel mask in A register
+	    ld b, a
+	    inc b
+	    xor a
+	    scf
+	    LOCAL __PIXEL_MASK
+__PIXEL_MASK:
+	    rra
+	    djnz __PIXEL_MASK
+
+	    ld b, d         ; Restores B' from D'
+	    pop de			; D'E' = y2, x2
+    exx             ; At this point: D'E' = y2,x2 coords
+	                    ; B'C' = y1, y1  coords
+	    ex af, af'      ; Saves A reg for later
+	                    ; A' = Pixel mask
+	                    ; H'L' = Screen Address of pixel
+
+	    ld bc, (COORDS) ; B,C = y1, x1
+
+	    ld a, e
+	    sub c			; dx = X2 - X1
+	    ld c, a			; Saves dx in c
+
+	    ld a, 0Ch       ; INC C opcode
+	    ld hl, __INCX   ; xi = 1
+	    jr nc, __DRAW1
+
+	    ld a, c
+	    neg		 		; dx = X1 - X2
+	    ld c, a
+	    ld a, 0Dh       ; DEC C opcode
+	    ld hl, __DECX   ; xi = -1
+
+__DRAW1:
+	    ld (DX1), a
+	    ld (DX1 + 2), hl ; Updates DX1 call address
+	    ld (DX2), a
+	    ld (DX2 + 2), hl ; Updates DX2 call address
+
+	    ld a, d
+	    sub b			; dy = Y2 - Y1
+	    ld b, a			; Saves dy in b
+
+	    ld a, 4         ; INC B opcode
+	    ld hl, __INCY   ; y1 = 1
+	    jr nc, __DRAW2
+
+	    ld a, b
+	    neg
+	    ld b, a         ; dy = Y2 - Y1
+	    ld a, 5         ; DEC B opcode
+	    ld hl, __DECY   ; y1 = -1
+
+__DRAW2:
+	    ld (DY1), a
+	    ld (DY1 + 2), hl ; Updates DX1 call address
+	    ld (DY2), a
+	    ld (DY2 + 2), hl ; Updates DX2 call address
+
+	    ld a, b
+	    sub c			; dy - dx
+	    jr c, __DRAW_DX_GT_DY	; DX > DY
+
+	    ; At this point DY >= DX
+	    ; --------------------------
+	    ; HL = error = dY / 2
+	    ld h, 0
+	    ld l, b
+	    srl l
+
+	    ; DE = -dX
+	    xor a
+	    sub c
+	    ld e, a
+	    sbc a, a
+	    ld d, a
+
+	    ; BC = DY
+	    ld c, b
+	    ld b, h
+
+	    exx
+	    scf             ; Sets Carry to signal update ATTR
+	    ex af, af'      ; Brings back pixel mask
+	    ld e, a         ; Saves it in free E register
+	    jp __DRAW4_LOOP
+
+__DRAW3:			; While c != e => while y != y2
+	    exx
+	    add hl, de		; error -= dX
+	    bit 7, h		;
+	    exx				; recover coordinates
+	    jr z, __DRAW4	; if error < 0
+
+	    exx
+	    add hl, bc		; error += dY
+	    exx
+
+	    ld a, e
+DX1:                ; x += xi
+	    inc c
+	    call __INCX     ; This address will be dynamically updated
+	    ld e, a
+
+__DRAW4:
+
+DY1:                ; y += yi
+	    inc b
+	    call __INCY     ; This address will be dynamically updated
+	    ld a, e         ; Restores A reg.
+	    call __FASTPLOT
+
+__DRAW4_LOOP:
+	    ld a, b
+	    cp d
+	    jp nz, __DRAW3
+	    ld (COORDS), bc
+	    ret
+
+__DRAW_DX_GT_DY:	; DX > DY
+	    ; --------------------------
+	    ; HL = error = dX / 2
+	    ld h, 0
+	    ld l, c
+	    srl l			; HL = error = DX / 2
+
+	    ; DE = -dY
+	    xor a
+	    sub b
+	    ld e, a
+	    sbc a, a
+	    ld d, a
+
+	    ; BC = dX
+	    ld b, h
+
+	    exx
+	    ld d, e
+	    scf             ; Sets Carry to signal update ATTR
+	    ex af, af'      ; Brings back pixel mask
+	    ld e, a         ; Saves it in free E register
+	    jp __DRAW6_LOOP
+
+__DRAW5:			; While loop
+	    exx
+	    add hl, de		; error -= dY
+	    bit 7, h		; if (error < 0)
+	    exx				; Restore coords
+	    jr z, __DRAW6	;
+	    exx
+	    add hl, bc		; error += dX
+	    exx
+
+DY2:                ; y += yi
+	    inc b
+	    call __INCY     ; This address will be dynamically updated
+
+__DRAW6:
+	    ld a, e
+DX2:                ; x += xi
+	    inc c
+	    call __INCX     ; This address will be dynamically updated
+	    ld e, a
+	    call __FASTPLOT
+
+__DRAW6_LOOP:
+	    ld a, c			; Current X coord
+	    cp d
+	    jp nz, __DRAW5
+	    ld (COORDS), bc
+	    ret
+
+	COORDS   EQU 5C7Dh
+
+__DRAW_END:
+	    exx
+	    ret
+
+	    ;; Given a A mask and an HL screen position
+	    ;; return the next left position
+	    ;; Also updates BC coords
+	__DECX EQU SP.PixelLeft
+
+	    ;; Like the above, but to the RIGHT
+	    ;; Also updates BC coords
+	__INCX EQU SP.PixelRight
+
+	    ;; Given an HL screen position, calculates
+	    ;; the above position
+	    ;; Also updates BC coords
+	__INCY EQU SP.PixelUp
+
+	    ;; Given an HL screen position, calculates
+	    ;; the above position
+	    ;; Also updates BC coords
+	__DECY EQU SP.PixelDown
+
+	    ;; Puts the A register MASK in (HL)
+__FASTPLOT:
+__PLOTINVERSE:
+	    nop         ; Replace with CPL if INVERSE 1
+__PLOTOVER:
+	    or (hl)     ; Replace with XOR (hl) if OVER 1 AND INVERSE 0
+	                ; Replace with AND (hl) if INVERSE 1
+
+	    ld (hl), a
+	    ex af, af'  ; Recovers flag. If Carry set => update ATTR
+	    ld a, e     ; Recovers A reg
+	    ret nc
+
+	    push hl
+	    push de
+	    push bc
+	    call SET_PIXEL_ADDR_ATTR
+	    pop bc
+	    pop de
+	    pop hl
+
+	    LOCAL __FASTPLOTEND
+__FASTPLOTEND:
+	    or a        ; Resets carry flag
+	    ex af, af'  ; Recovers A reg
+	    ld a, e
+	    ret
+
+	    ENDP
+
+#line 7809 "IslaTesoro.zxbas"
 #line 1 "eq16.asm"
 
 __EQ16:	; Test if 16bit values HL == DE
@@ -7805,7 +10507,7 @@ __EQ16:	; Test if 16bit values HL == DE
 			inc a
 			ret
 
-#line 5959 "IslaTesoro.zxbas"
+#line 7810 "IslaTesoro.zxbas"
 
 #line 1 "free.asm"
 
@@ -7998,7 +10700,7 @@ __MEM_BLOCK_JOIN:  ; Joins current block (pointed by HL) with next one (pointed 
 
 	        ENDP
 
-#line 5961 "IslaTesoro.zxbas"
+#line 7812 "IslaTesoro.zxbas"
 #line 1 "ftou32reg.asm"
 
 #line 1 "neg32.asm"
@@ -8126,7 +10828,7 @@ __FTOU8:	; Converts float in C ED LH to Unsigned byte in A
 		ld a, l
 		ret
 
-#line 5962 "IslaTesoro.zxbas"
+#line 7813 "IslaTesoro.zxbas"
 #line 1 "gtf.asm"
 
 #line 1 "u32tofreg.asm"
@@ -8246,7 +10948,7 @@ __GTF:	; A > B
 		call __FPSTACK_POP
 		jp __FTOU8; Convert to 8 bits
 
-#line 5963 "IslaTesoro.zxbas"
+#line 7814 "IslaTesoro.zxbas"
 
 #line 1 "inkey.asm"
 
@@ -8310,7 +11012,7 @@ __EMPTY_INKEY:
 
 		ENDP
 
-#line 5965 "IslaTesoro.zxbas"
+#line 7816 "IslaTesoro.zxbas"
 #line 1 "lei8.asm"
 
 __LEI8: ; Signed <= comparison for 8bit int
@@ -8334,7 +11036,7 @@ checkParity:
 	    inc a       ; True
 	    ret
 	    ENDP
-#line 5966 "IslaTesoro.zxbas"
+#line 7817 "IslaTesoro.zxbas"
 #line 1 "loadstr.asm"
 
 
@@ -8380,7 +11082,7 @@ __LOADSTR:		; __FASTCALL__ entry
 			ldir	; Copies string (length number included)
 			pop hl	; Recovers destiny in hl as result
 			ret
-#line 5967 "IslaTesoro.zxbas"
+#line 7818 "IslaTesoro.zxbas"
 #line 1 "ltf.asm"
 
 
@@ -8409,11 +11111,11 @@ __LTF:	; A < B
 		call __FPSTACK_POP
 		jp __FTOU8 ; Convert to 8 bits
 
-#line 5968 "IslaTesoro.zxbas"
+#line 7819 "IslaTesoro.zxbas"
 #line 1 "lti8.asm"
 
 
-#line 5969 "IslaTesoro.zxbas"
+#line 7820 "IslaTesoro.zxbas"
 #line 1 "mul32.asm"
 
 #line 1 "_mul32.asm"
@@ -8506,7 +11208,7 @@ __TO32BIT:  ; Converts H'L'HLB'C'AC to DEHL (Discards H'L'HL)
 			ret
 
 
-#line 5970 "IslaTesoro.zxbas"
+#line 7821 "IslaTesoro.zxbas"
 #line 1 "mulf.asm"
 
 
@@ -8530,7 +11232,7 @@ __MULF:	; Multiplication
 
 		jp __FPSTACK_POP
 
-#line 5971 "IslaTesoro.zxbas"
+#line 7822 "IslaTesoro.zxbas"
 
 
 #line 1 "pause.asm"
@@ -8541,7 +11243,7 @@ __PAUSE:
 		ld b, h
 	    ld c, l
 	    jp 1F3Dh  ; PAUSE_1
-#line 5974 "IslaTesoro.zxbas"
+#line 7825 "IslaTesoro.zxbas"
 #line 1 "ploadf.asm"
 
 	; Parameter / Local var load
@@ -8587,7 +11289,8 @@ __PLOADF:
 	    add hl, de
 	    jp __LOADF
 
-#line 5975 "IslaTesoro.zxbas"
+#line 7826 "IslaTesoro.zxbas"
+
 
 #line 1 "print_eol_attr.asm"
 
@@ -8600,7 +11303,7 @@ __PLOADF:
 PRINT_EOL_ATTR:
 		call PRINT_EOL
 		jp COPY_ATTR
-#line 5977 "IslaTesoro.zxbas"
+#line 7829 "IslaTesoro.zxbas"
 #line 1 "printstr.asm"
 
 
@@ -8659,7 +11362,7 @@ __PRINT_STR:
 
 			ENDP
 
-#line 5978 "IslaTesoro.zxbas"
+#line 7830 "IslaTesoro.zxbas"
 #line 1 "pstoref.asm"
 
 	; Stores FP number in A ED CB at location HL+IX
@@ -8709,7 +11412,7 @@ __PSTOREF:
 		pop de
 	    jp __STOREF
 
-#line 5979 "IslaTesoro.zxbas"
+#line 7831 "IslaTesoro.zxbas"
 #line 1 "pstorestr.asm"
 
 ; vim:ts=4:et:sw=4
@@ -9030,7 +11733,7 @@ __PSTORE_STR:
 	    add hl, bc
 	    jp __STORE_STR
 
-#line 5980 "IslaTesoro.zxbas"
+#line 7832 "IslaTesoro.zxbas"
 #line 1 "pstorestr2.asm"
 
 ; vim:ts=4:et:sw=4
@@ -9089,7 +11792,7 @@ __PSTORE_STR2:
 	    add hl, bc
 	    jp __STORE_STR2
 
-#line 5981 "IslaTesoro.zxbas"
+#line 7833 "IslaTesoro.zxbas"
 #line 1 "random.asm"
 
 	; RANDOM functions
@@ -9209,7 +11912,7 @@ RND_LOOP:
 
 	    ENDP
 
-#line 5982 "IslaTesoro.zxbas"
+#line 7834 "IslaTesoro.zxbas"
 #line 1 "sgnf.asm"
 
 #line 1 "sgn.asm"
@@ -9256,7 +11959,7 @@ __ENDSGN:
 
 #line 2 "sgnf.asm"
 
-#line 5983 "IslaTesoro.zxbas"
+#line 7835 "IslaTesoro.zxbas"
 #line 1 "sgni8.asm"
 
 	; Returns SGN (SIGN) for 8 bits signed integer
@@ -9269,7 +11972,7 @@ __SGNI8:
 		neg
 		ret
 
-#line 5984 "IslaTesoro.zxbas"
+#line 7836 "IslaTesoro.zxbas"
 
 
 #line 1 "strcat.asm"
@@ -9418,7 +12121,7 @@ __STRCATEND:
 
 			ENDP
 
-#line 5987 "IslaTesoro.zxbas"
+#line 7839 "IslaTesoro.zxbas"
 #line 1 "string.asm"
 
 	; String library
@@ -9647,7 +12350,7 @@ __FREE_END:
 
 			ENDP
 
-#line 5988 "IslaTesoro.zxbas"
+#line 7840 "IslaTesoro.zxbas"
 
 #line 1 "strslice.asm"
 
@@ -9757,7 +12460,7 @@ __FREE_ON_EXIT:
 
 		ENDP
 
-#line 5990 "IslaTesoro.zxbas"
+#line 7842 "IslaTesoro.zxbas"
 #line 1 "sub32.asm"
 
 	; SUB32
@@ -9787,7 +12490,7 @@ __SUB32:
 		push bc		; puts return address back
 		exx
 		ret
-#line 5991 "IslaTesoro.zxbas"
+#line 7843 "IslaTesoro.zxbas"
 #line 1 "subf.asm"
 
 
@@ -9814,7 +12517,7 @@ __SUBF:	; Subtraction
 
 		jp __FPSTACK_POP
 
-#line 5992 "IslaTesoro.zxbas"
+#line 7844 "IslaTesoro.zxbas"
 #line 1 "val.asm"
 
 
@@ -9936,7 +12639,7 @@ __RET_ZERO:	; Returns 0 Floating point on error
 
 		ENDP
 
-#line 5993 "IslaTesoro.zxbas"
+#line 7845 "IslaTesoro.zxbas"
 
 ZXBASIC_USER_DATA:
 	_input_LastK EQU 23560
@@ -9950,10 +12653,23 @@ _PasosPiratas:
 	DEFB 32h
 _PasosJugadorRetroceso:
 	DEFB 0Ah
+_AvancesPirataMapa:
+	DEFB 01h
+_VelocidadTemplo:
+	DEFB 32h
+	DEFB 00h
+_HastaTeclaArena:
+	DEFB 88h
+	DEFB 13h
+_ParaTeclaArena:
+	DEFB 0E8h
+	DEFB 03h
+_cuenta:
+	DEFB 00
 _res:
 	DEFB 00, 00
 _imgCaptura:
-	DEFW __LABEL347
+	DEFW __LABEL471
 _imgCaptura.__DATA__.__PTR__:
 	DEFW _imgCaptura.__DATA__
 _imgCaptura.__DATA__:
@@ -13866,11 +16582,11 @@ _imgCaptura.__DATA__:
 	DEFB 6Ah
 	DEFB 6Ah
 	DEFB 39h
-__LABEL347:
+__LABEL471:
 	DEFW 0000h
 	DEFB 01h
 _imgArena:
-	DEFW __LABEL348
+	DEFW __LABEL472
 _imgArena.__DATA__.__PTR__:
 	DEFW _imgArena.__DATA__
 _imgArena.__DATA__:
@@ -17586,11 +20302,11 @@ _imgArena.__DATA__:
 	DEFB 70h
 	DEFB 70h
 	DEFB 02h
-__LABEL348:
+__LABEL472:
 	DEFW 0000h
 	DEFB 01h
 _imgLanzas:
-	DEFW __LABEL349
+	DEFW __LABEL473
 _imgLanzas.__DATA__.__PTR__:
 	DEFW _imgLanzas.__DATA__
 _imgLanzas.__DATA__:
@@ -21363,11 +24079,11 @@ _imgLanzas.__DATA__:
 	DEFB 50h
 	DEFB 50h
 	DEFB 47h
-__LABEL349:
+__LABEL473:
 	DEFW 0000h
 	DEFB 01h
 _imgTesoro:
-	DEFW __LABEL350
+	DEFW __LABEL474
 _imgTesoro.__DATA__.__PTR__:
 	DEFW _imgTesoro.__DATA__
 _imgTesoro.__DATA__:
@@ -24491,22 +27207,2866 @@ _imgTesoro.__DATA__:
 	DEFB 70h
 	DEFB 70h
 	DEFB 9Eh
-__LABEL350:
+__LABEL474:
 	DEFW 0000h
 	DEFB 01h
-_graficos:
-	DEFW __LABEL351
-_graficos.__DATA__.__PTR__:
-	DEFW _graficos.__DATA__
-_graficos.__DATA__:
-	DEFB 20h
-	DEFB 36h
-	DEFB 3Eh
-	DEFB 1Ch
-	DEFB 1Eh
-	DEFB 27h
-	DEFB 40h
+_imgPiedra:
+	DEFW __LABEL475
+_imgPiedra.__DATA__.__PTR__:
+	DEFW _imgPiedra.__DATA__
+_imgPiedra.__DATA__:
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
 	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 00h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 00h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 00h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Dh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 60h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Dh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Dh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 70h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 01h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Dh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Dh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ah
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FEh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 01h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0C0h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Ah
+	DEFB 0F3h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 00h
+	DEFB 00h
+	DEFB 02h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 3Fh
+	DEFB 83h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0F0h
+	DEFB 03h
+	DEFB 52h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 03h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 11h
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 00h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 13h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 11h
+	DEFB 0E7h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 11h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 80h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 3Fh
+	DEFB 0EFh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0F0h
+	DEFB 01h
+	DEFB 24h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 7Fh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 81h
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 13h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 17h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 11h
+	DEFB 0E7h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 80h
+	DEFB 00h
+	DEFB 60h
+	DEFB 40h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F9h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0F0h
+	DEFB 08h
+	DEFB 81h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 3Fh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0C3h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 13h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0D3h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0F9h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 5Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0CFh
+	DEFB 0FFh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 80h
+	DEFB 00h
+	DEFB 80h
+	DEFB 40h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0F8h
+	DEFB 7Eh
+	DEFB 03h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 3Fh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0E7h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 13h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0F9h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0CFh
+	DEFB 0FFh
+	DEFB 0FCh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 70h
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 11h
+	DEFB 0C0h
+	DEFB 00h
+	DEFB 81h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 80h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0F8h
+	DEFB 0FEh
+	DEFB 2Fh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 1Ch
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 14h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0FBh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 8Fh
+	DEFB 0FFh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 11h
+	DEFB 0C0h
+	DEFB 00h
+	DEFB 80h
+	DEFB 80h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FCh
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 0C1h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0F3h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 8Fh
+	DEFB 0FFh
+	DEFB 0FCh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 7Eh
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 11h
+	DEFB 0E0h
+	DEFB 08h
+	DEFB 0C9h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 9Fh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 3Fh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 80h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 12h
+	DEFB 0F3h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FCh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 10h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Dh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 13h
+	DEFB 0F0h
+	DEFB 05h
+	DEFB 52h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 80h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Eh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 7Fh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 13h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 0E0h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 80h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 03h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 17h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Bh
+	DEFB 01h
+	DEFB 0E0h
+	DEFB 78h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 07h
+	DEFB 60h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0Fh
+	DEFB 83h
+	DEFB 0C3h
+	DEFB 0C3h
+	DEFB 00h
+	DEFB 0C1h
+	DEFB 0E6h
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0EFh
+	DEFB 9Eh
+	DEFB 1Eh
+	DEFB 3Ch
+	DEFB 1Eh
+	DEFB 78h
+	DEFB 7Eh
+	DEFB 07h
+	DEFB 81h
+	DEFB 0F1h
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 0F0h
+	DEFB 0Fh
+	DEFB 0C3h
+	DEFB 0F7h
+	DEFB 0E7h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 78h
+	DEFB 70h
+	DEFB 0FCh
+	DEFB 7Eh
+	DEFB 7Ch
+	DEFB 3Fh
+	DEFB 0E3h
+	DEFB 0C0h
+	DEFB 0Fh
+	DEFB 0E1h
+	DEFB 0FEh
+	DEFB 07h
+	DEFB 0C7h
+	DEFB 0C7h
+	DEFB 00h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 03h
+	DEFB 0F0h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0C0h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 03h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 3Fh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 17h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Bh
+	DEFB 01h
+	DEFB 0E0h
+	DEFB 0F0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 07h
+	DEFB 0F0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0Fh
+	DEFB 03h
+	DEFB 83h
+	DEFB 0C3h
+	DEFB 0C1h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0CFh
+	DEFB 0BCh
+	DEFB 1Eh
+	DEFB 7Ch
+	DEFB 3Ch
+	DEFB 78h
+	DEFB 7Ch
+	DEFB 07h
+	DEFB 81h
+	DEFB 0E1h
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 0E0h
+	DEFB 07h
+	DEFB 83h
+	DEFB 0E7h
+	DEFB 0C3h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 78h
+	DEFB 70h
+	DEFB 78h
+	DEFB 7Ch
+	DEFB 78h
+	DEFB 1Fh
+	DEFB 0C1h
+	DEFB 0C0h
+	DEFB 07h
+	DEFB 0C0h
+	DEFB 0F8h
+	DEFB 07h
+	DEFB 87h
+	DEFB 87h
+	DEFB 00h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 03h
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0E0h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FCh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 03h
+	DEFB 0F8h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 01h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 70h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 7Eh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 17h
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0FCh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Bh
+	DEFB 03h
+	DEFB 0C0h
+	DEFB 0F0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 07h
+	DEFB 0F0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 0Fh
+	DEFB 07h
+	DEFB 83h
+	DEFB 0C7h
+	DEFB 81h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 9Fh
+	DEFB 3Ch
+	DEFB 3Ch
+	DEFB 00h
+	DEFB 78h
+	DEFB 3Ch
+	DEFB 0F0h
+	DEFB 78h
+	DEFB 07h
+	DEFB 01h
+	DEFB 0E1h
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 00h
+	DEFB 04h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0Dh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 03h
+	DEFB 0C0h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F0h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FCh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 7Ch
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 17h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Bh
+	DEFB 03h
+	DEFB 0C0h
+	DEFB 0F0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 06h
+	DEFB 01h
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 1Eh
+	DEFB 07h
+	DEFB 87h
+	DEFB 87h
+	DEFB 00h
+	DEFB 80h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 1Fh
+	DEFB 1Eh
+	DEFB 78h
+	DEFB 3Ch
+	DEFB 0F8h
+	DEFB 7Bh
+	DEFB 0E0h
+	DEFB 0F8h
+	DEFB 0Fh
+	DEFB 03h
+	DEFB 0C3h
+	DEFB 0C0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 00h
+	DEFB 04h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0Dh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FEh
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 80h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F8h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0F8h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 78h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 17h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Bh
+	DEFB 03h
+	DEFB 0C1h
+	DEFB 0E0h
+	DEFB 1Eh
+	DEFB 0E0h
+	DEFB 7Eh
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 1Eh
+	DEFB 3Ch
+	DEFB 1Eh
+	DEFB 0Fh
+	DEFB 01h
+	DEFB 0F0h
+	DEFB 79h
+	DEFB 0E7h
+	DEFB 0FCh
+	DEFB 0Fh
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 1Eh
+	DEFB 07h
+	DEFB 07h
+	DEFB 00h
+	DEFB 8Fh
+	DEFB 80h
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 1Eh
+	DEFB 3Eh
+	DEFB 78h
+	DEFB 7Ch
+	DEFB 0F8h
+	DEFB 7Fh
+	DEFB 80h
+	DEFB 0F0h
+	DEFB 0Fh
+	DEFB 03h
+	DEFB 0C3h
+	DEFB 0C0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 00h
+	DEFB 04h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0Dh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Dh
+	DEFB 0F8h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0F0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 03h
+	DEFB 0FCh
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 80h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0FCh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 03h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 17h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 0Fh
+	DEFB 0C0h
+	DEFB 78h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Bh
+	DEFB 03h
+	DEFB 0C1h
+	DEFB 0E0h
+	DEFB 7Fh
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0Fh
+	DEFB 0BFh
+	DEFB 7Eh
+	DEFB 1Fh
+	DEFB 0Fh
+	DEFB 07h
+	DEFB 0F8h
+	DEFB 7Bh
+	DEFB 0E3h
+	DEFB 0F0h
+	DEFB 3Fh
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 1Ch
+	DEFB 0Fh
+	DEFB 07h
+	DEFB 8Fh
+	DEFB 00h
+	DEFB 7Ch
+	DEFB 0FFh
+	DEFB 3Ch
+	DEFB 3Ch
+	DEFB 00h
+	DEFB 0F0h
+	DEFB 79h
+	DEFB 0F0h
+	DEFB 78h
+	DEFB 00h
+	DEFB 0F0h
+	DEFB 0Fh
+	DEFB 03h
+	DEFB 0C7h
+	DEFB 0C0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 00h
+	DEFB 04h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0Dh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 0FBh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 80h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 03h
+	DEFB 0F8h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 80h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0F0h
+	DEFB 0FFh
+	DEFB 0C0h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 17h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 1Fh
+	DEFB 0E0h
+	DEFB 78h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Bh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0F0h
+	DEFB 0F3h
+	DEFB 0E1h
+	DEFB 0E7h
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FEh
+	DEFB 0Fh
+	DEFB 1Eh
+	DEFB 0Fh
+	DEFB 38h
+	DEFB 7Fh
+	DEFB 0E3h
+	DEFB 0C0h
+	DEFB 79h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 3Ch
+	DEFB 0Fh
+	DEFB 07h
+	DEFB 9Fh
+	DEFB 07h
+	DEFB 3Ch
+	DEFB 0FFh
+	DEFB 3Ch
+	DEFB 78h
+	DEFB 0F0h
+	DEFB 7Bh
+	DEFB 0F0h
+	DEFB 78h
+	DEFB 31h
+	DEFB 0E0h
+	DEFB 0Fh
+	DEFB 33h
+	DEFB 0C7h
+	DEFB 87h
+	DEFB 87h
+	DEFB 01h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 00h
+	DEFB 04h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0Dh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 04h
+	DEFB 0F0h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 01h
+	DEFB 80h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 05h
+	DEFB 00h
+	DEFB 3Fh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 02h
+	DEFB 03h
+	DEFB 0F0h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 80h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0Fh
+	DEFB 0E0h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 06h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0FEh
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 17h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Ch
+	DEFB 01h
+	DEFB 0E0h
+	DEFB 78h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 1Bh
+	DEFB 1Fh
+	DEFB 0FFh
+	DEFB 0E1h
+	DEFB 0E3h
+	DEFB 0E1h
+	DEFB 0C7h
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0FFh
+	DEFB 0DEh
+	DEFB 0Fh
+	DEFB 1Eh
+	DEFB 1Eh
+	DEFB 00h
+	DEFB 38h
+	DEFB 7Fh
+	DEFB 0E3h
+	DEFB 80h
+	DEFB 0F1h
+	DEFB 0E0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0Bh
+	DEFB 78h
+	DEFB 0Fh
+	DEFB 0C7h
+	DEFB 0BFh
+	DEFB 0Fh
+	DEFB 38h
+	DEFB 0FFh
+	DEFB 78h
+	DEFB 78h
+	DEFB 00h
+	DEFB 0FCh
+	DEFB 7Fh
+	DEFB 76h
+	DEFB 78h
+	DEFB 71h
+	DEFB 0E0h
+	DEFB 0Fh
+	DEFB 73h
+	DEFB 0CFh
+	DEFB 07h
+	DEFB 0C7h
+	DEFB 0C7h
+	DEFB 00h
+	DEFB 0C0h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 08h
+	DEFB 00h
+	DEFB 00h
+	DEFB 04h
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 0Dh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 02h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 05h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Bh
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 0Dh
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Ch
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 0Ch
+	DEFB 50h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Eh
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 0Bh
+	DEFB 50h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Fh
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 0Bh
+	DEFB 50h
+	DEFB 38h
+	DEFB 38h
+	DEFB 10h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 0Ah
+	DEFB 50h
+	DEFB 38h
+	DEFB 38h
+	DEFB 10h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 08h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Fh
+	DEFB 10h
+	DEFB 50h
+	DEFB 10h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 05h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Fh
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 05h
+	DEFB 50h
+	DEFB 38h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Fh
+	DEFB 10h
+	DEFB 10h
+	DEFB 00h
+	DEFB 38h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 06h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 10h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Fh
+	DEFB 10h
+	DEFB 38h
+	DEFB 10h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 08h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Eh
+	DEFB 50h
+	DEFB 38h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 0Bh
+	DEFB 50h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Fh
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 07h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 10h
+	DEFB 50h
+	DEFB 50h
+	DEFB 02h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 04h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 50h
+	DEFB 50h
+	DEFB 01h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Eh
+	DEFB 50h
+	DEFB 50h
+	DEFB 02h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 02h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 00h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 10h
+	DEFB 50h
+	DEFB 50h
+	DEFB 01h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 06h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 0Ah
+	DEFB 50h
+	DEFB 50h
+	DEFB 02h
+	DEFB 10h
+	DEFB 38h
+	DEFB 38h
+	DEFB 02h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 05h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 03h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 04h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 00h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 01h
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 05h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 00h
+	DEFB 50h
+	DEFB 50h
+	DEFB 05h
+	DEFB 38h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 38h
+	DEFB 01h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 50h
+	DEFB 03h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 06h
+	DEFB 50h
+	DEFB 50h
+	DEFB 01h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 02h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 00h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 38h
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 50h
+	DEFB 00h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 17h
+	DEFB 50h
+	DEFB 50h
+	DEFB 01h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 0Ch
+	DEFB 50h
+	DEFB 50h
+	DEFB 01h
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 1Bh
+	DEFB 50h
+	DEFB 50h
+	DEFB 04h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 50h
+	DEFB 0Ah
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 0Bh
+	DEFB 50h
+	DEFB 50h
+	DEFB 04h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 50h
+	DEFB 0Dh
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 08h
+	DEFB 50h
+	DEFB 50h
+	DEFB 04h
+	DEFB 7Ah
+	DEFB 50h
+	DEFB 50h
+	DEFB 0Dh
+	DEFB 7Ah
+	DEFB 7Ah
+	DEFB 02h
+__LABEL475:
+	DEFW 0000h
+	DEFB 01h
+_graficosGenerales:
+	DEFW __LABEL476
+_graficosGenerales.__DATA__.__PTR__:
+	DEFW _graficosGenerales.__DATA__
+_graficosGenerales.__DATA__:
+	DEFB 18h
+	DEFB 3Ch
+	DEFB 24h
+	DEFB 7Eh
+	DEFB 42h
+	DEFB 0FFh
+	DEFB 81h
+	DEFB 0FFh
 	DEFB 01h
 	DEFB 19h
 	DEFB 0D9h
@@ -24659,12 +30219,12 @@ _graficos.__DATA__:
 	DEFB 0BDh
 	DEFB 42h
 	DEFB 3Ch
-__LABEL351:
+__LABEL476:
 	DEFW 0001h
 	DEFW 0008h
 	DEFB 01h
 _graficosCarrera:
-	DEFW __LABEL352
+	DEFW __LABEL477
 _graficosCarrera.__DATA__.__PTR__:
 	DEFW _graficosCarrera.__DATA__
 _graficosCarrera.__DATA__:
@@ -24812,11 +30372,411 @@ _graficosCarrera.__DATA__:
 	DEFB 0FFh
 	DEFB 0BFh
 	DEFB 0FFh
-__LABEL352:
+__LABEL477:
+	DEFW 0000h
+	DEFB 01h
+_graficosPiedra:
+	DEFW __LABEL478
+_graficosPiedra.__DATA__.__PTR__:
+	DEFW _graficosPiedra.__DATA__
+_graficosPiedra.__DATA__:
+	DEFB 07h
+	DEFB 18h
+	DEFB 20h
+	DEFB 42h
+	DEFB 41h
+	DEFB 82h
+	DEFB 8Ah
+	DEFB 9Ch
+	DEFB 0E0h
+	DEFB 18h
+	DEFB 04h
+	DEFB 82h
+	DEFB 02h
+	DEFB 0C9h
+	DEFB 69h
+	DEFB 01h
+	DEFB 88h
+	DEFB 90h
+	DEFB 84h
+	DEFB 42h
+	DEFB 45h
+	DEFB 20h
+	DEFB 18h
+	DEFB 07h
+	DEFB 01h
+	DEFB 61h
+	DEFB 11h
+	DEFB 06h
+	DEFB 08h
+	DEFB 08h
+	DEFB 10h
+	DEFB 0E0h
+	DEFB 07h
+	DEFB 18h
+	DEFB 20h
+	DEFB 42h
+	DEFB 41h
+	DEFB 94h
+	DEFB 88h
+	DEFB 90h
+	DEFB 0E0h
+	DEFB 18h
+	DEFB 04h
+	DEFB 82h
+	DEFB 0C2h
+	DEFB 81h
+	DEFB 69h
+	DEFB 11h
+	DEFB 80h
+	DEFB 82h
+	DEFB 82h
+	DEFB 44h
+	DEFB 30h
+	DEFB 08h
+	DEFB 08h
+	DEFB 07h
+	DEFB 29h
+	DEFB 61h
+	DEFB 41h
+	DEFB 02h
+	DEFB 62h
+	DEFB 04h
+	DEFB 18h
+	DEFB 0E0h
+	DEFB 07h
+	DEFB 08h
+	DEFB 10h
+	DEFB 10h
+	DEFB 60h
+	DEFB 88h
+	DEFB 86h
+	DEFB 80h
+	DEFB 0E0h
+	DEFB 18h
+	DEFB 04h
+	DEFB 0A2h
+	DEFB 42h
+	DEFB 21h
+	DEFB 09h
+	DEFB 11h
+	DEFB 80h
+	DEFB 96h
+	DEFB 93h
+	DEFB 40h
+	DEFB 41h
+	DEFB 20h
+	DEFB 18h
+	DEFB 07h
+	DEFB 39h
+	DEFB 51h
+	DEFB 41h
+	DEFB 82h
+	DEFB 42h
+	DEFB 04h
+	DEFB 18h
+	DEFB 0E0h
+	DEFB 07h
+	DEFB 18h
+	DEFB 20h
+	DEFB 46h
+	DEFB 40h
+	DEFB 82h
+	DEFB 86h
+	DEFB 94h
+	DEFB 0E0h
+	DEFB 10h
+	DEFB 10h
+	DEFB 0Ch
+	DEFB 22h
+	DEFB 41h
+	DEFB 41h
+	DEFB 01h
+	DEFB 88h
+	DEFB 96h
+	DEFB 81h
+	DEFB 43h
+	DEFB 41h
+	DEFB 20h
+	DEFB 18h
+	DEFB 07h
+	DEFB 09h
+	DEFB 11h
+	DEFB 29h
+	DEFB 82h
+	DEFB 42h
+	DEFB 04h
+	DEFB 18h
+	DEFB 0E0h
+__LABEL478:
+	DEFW 0000h
+	DEFB 01h
+_graficosTemplo:
+	DEFW __LABEL479
+_graficosTemplo.__DATA__.__PTR__:
+	DEFW _graficosTemplo.__DATA__
+_graficosTemplo.__DATA__:
+	DEFB 07h
+	DEFB 0Fh
+	DEFB 3Eh
+	DEFB 08h
+	DEFB 08h
+	DEFB 04h
+	DEFB 03h
+	DEFB 07h
+	DEFB 0C0h
+	DEFB 0F0h
+	DEFB 40h
+	DEFB 0C0h
+	DEFB 20h
+	DEFB 40h
+	DEFB 80h
+	DEFB 0C0h
+	DEFB 0Bh
+	DEFB 13h
+	DEFB 13h
+	DEFB 03h
+	DEFB 02h
+	DEFB 3Ch
+	DEFB 20h
+	DEFB 00h
+	DEFB 0A8h
+	DEFB 90h
+	DEFB 80h
+	DEFB 80h
+	DEFB 40h
+	DEFB 20h
+	DEFB 20h
+	DEFB 30h
+	DEFB 07h
+	DEFB 0Fh
+	DEFB 3Eh
+	DEFB 08h
+	DEFB 08h
+	DEFB 04h
+	DEFB 03h
+	DEFB 07h
+	DEFB 0C0h
+	DEFB 0F0h
+	DEFB 40h
+	DEFB 0C0h
+	DEFB 20h
+	DEFB 40h
+	DEFB 80h
+	DEFB 0C0h
+	DEFB 07h
+	DEFB 07h
+	DEFB 03h
+	DEFB 03h
+	DEFB 03h
+	DEFB 02h
+	DEFB 04h
+	DEFB 06h
+	DEFB 0C0h
+	DEFB 0C0h
+	DEFB 0A0h
+	DEFB 80h
+	DEFB 80h
+	DEFB 80h
+	DEFB 80h
+	DEFB 0C0h
+	DEFB 77h
+	DEFB 88h
+	DEFB 9Ch
+	DEFB 0A0h
+	DEFB 0A6h
+	DEFB 80h
+	DEFB 80h
+	DEFB 7Fh
+	DEFB 0F7h
+	DEFB 08h
+	DEFB 00h
+	DEFB 60h
+	DEFB 0Eh
+	DEFB 00h
+	DEFB 20h
+	DEFB 0DFh
+	DEFB 0BEh
+	DEFB 41h
+	DEFB 1Dh
+	DEFB 01h
+	DEFB 09h
+	DEFB 71h
+	DEFB 01h
+	DEFB 0FEh
+	DEFB 0FFh
+	DEFB 7Eh
+	DEFB 7Eh
+	DEFB 3Ch
+	DEFB 7Eh
+	DEFB 18h
+	DEFB 18h
+	DEFB 18h
+	DEFB 54h
+	DEFB 34h
+	DEFB 7Dh
+	DEFB 0D6h
+	DEFB 7Ch
+	DEFB 6Ah
+	DEFB 2Ch
+	DEFB 38h
+	DEFB 0A5h
+	DEFB 66h
+	DEFB 3Ch
+	DEFB 3Ch
+	DEFB 5Ah
+	DEFB 7Eh
+	DEFB 0BDh
+	DEFB 0E7h
+	DEFB 00h
+	DEFB 00h
+	DEFB 64h
+	DEFB 25h
+	DEFB 0D3h
+	DEFB 4Fh
+	DEFB 2Fh
+	DEFB 1Fh
+	DEFB 04h
+	DEFB 9Eh
+	DEFB 0A7h
+	DEFB 47h
+	DEFB 43h
+	DEFB 0CBh
+	DEFB 0AFh
+	DEFB 12h
+__LABEL479:
+	DEFW 0000h
+	DEFB 01h
+_graficosArena:
+	DEFW __LABEL480
+_graficosArena.__DATA__.__PTR__:
+	DEFW _graficosArena.__DATA__
+_graficosArena.__DATA__:
+	DEFB 07h
+	DEFB 0Fh
+	DEFB 3Eh
+	DEFB 08h
+	DEFB 08h
+	DEFB 04h
+	DEFB 03h
+	DEFB 07h
+	DEFB 0C0h
+	DEFB 0F0h
+	DEFB 40h
+	DEFB 0C0h
+	DEFB 20h
+	DEFB 40h
+	DEFB 80h
+	DEFB 0C0h
+	DEFB 0Bh
+	DEFB 13h
+	DEFB 13h
+	DEFB 03h
+	DEFB 02h
+	DEFB 3Ch
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 0A8h
+	DEFB 90h
+	DEFB 80h
+	DEFB 80h
+	DEFB 40h
+	DEFB 22h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 07h
+	DEFB 0Fh
+	DEFB 3Eh
+	DEFB 08h
+	DEFB 08h
+	DEFB 04h
+	DEFB 03h
+	DEFB 07h
+	DEFB 0C0h
+	DEFB 0F0h
+	DEFB 40h
+	DEFB 0C0h
+	DEFB 20h
+	DEFB 40h
+	DEFB 80h
+	DEFB 0C0h
+	DEFB 07h
+	DEFB 07h
+	DEFB 03h
+	DEFB 03h
+	DEFB 03h
+	DEFB 0BBh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 0C0h
+	DEFB 0C0h
+	DEFB 0A0h
+	DEFB 80h
+	DEFB 80h
+	DEFB 0C6h
+	DEFB 0EFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 01h
+	DEFB 0BBh
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 80h
+	DEFB 0C6h
+	DEFB 0EFh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 38h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 00h
+	DEFB 02h
+	DEFB 7Fh
+	DEFB 0FFh
+	DEFB 00h
+	DEFB 20h
+	DEFB 61h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 61h
+	DEFB 20h
+	DEFB 00h
+	DEFB 00h
+	DEFB 04h
+	DEFB 86h
+	DEFB 0FFh
+	DEFB 0FFh
+	DEFB 86h
+	DEFB 04h
+	DEFB 00h
+	DEFB 3Ch
+	DEFB 18h
+	DEFB 18h
+	DEFB 18h
+	DEFB 18h
+	DEFB 7Eh
+	DEFB 3Ch
+	DEFB 18h
+__LABEL480:
 	DEFW 0000h
 	DEFB 01h
 _Isla:
-	DEFW __LABEL353
+	DEFW __LABEL481
 _Isla.__DATA__.__PTR__:
 	DEFW _Isla.__DATA__
 _Isla.__DATA__:
@@ -24862,12 +30822,12 @@ _Isla.__DATA__:
 	DEFB 00h
 	DEFB 00h
 	DEFB 00h
-__LABEL353:
+__LABEL481:
 	DEFW 0001h
 	DEFW 0002h
 	DEFB 01h
 _Camino:
-	DEFW __LABEL354
+	DEFW __LABEL482
 _Camino.__DATA__.__PTR__:
 	DEFW _Camino.__DATA__
 _Camino.__DATA__:
@@ -24890,21 +30850,21 @@ _Camino.__DATA__:
 	DEFB 00h
 	DEFB 00h
 	DEFB 00h
-__LABEL354:
+__LABEL482:
 	DEFW 0000h
 	DEFB 01h
 _Tesoro:
-	DEFW __LABEL355
+	DEFW __LABEL483
 _Tesoro.__DATA__.__PTR__:
 	DEFW _Tesoro.__DATA__
 _Tesoro.__DATA__:
 	DEFB 00h
 	DEFB 00h
-__LABEL355:
+__LABEL483:
 	DEFW 0000h
 	DEFB 01h
 _ArenasMovedizas:
-	DEFW __LABEL356
+	DEFW __LABEL484
 _ArenasMovedizas.__DATA__.__PTR__:
 	DEFW _ArenasMovedizas.__DATA__
 _ArenasMovedizas.__DATA__:
@@ -24928,37 +30888,50 @@ _ArenasMovedizas.__DATA__:
 	DEFB 00h
 	DEFB 00h
 	DEFB 00h
-__LABEL356:
+__LABEL484:
 	DEFW 0001h
 	DEFW 0002h
 	DEFB 01h
 _Jugador:
-	DEFW __LABEL357
+	DEFW __LABEL485
 _Jugador.__DATA__.__PTR__:
 	DEFW _Jugador.__DATA__
 _Jugador.__DATA__:
 	DEFB 00h
 	DEFB 00h
-__LABEL357:
+__LABEL485:
 	DEFW 0000h
 	DEFB 01h
 _Piratas:
-	DEFW __LABEL358
+	DEFW __LABEL486
 _Piratas.__DATA__.__PTR__:
 	DEFW _Piratas.__DATA__
 _Piratas.__DATA__:
 	DEFB 00h
 	DEFB 00h
-__LABEL358:
+__LABEL486:
 	DEFW 0000h
 	DEFB 01h
-__LABEL333:
+__LABEL442:
 	DEFB 00h
 	DEFB 40h
-__LABEL344:
+__LABEL454:
+	DEFB 08h
+__LABEL456:
+	DEFB 18h
+__LABEL457:
+	DEFB 10h
+__LABEL458:
+	DEFB 07h
+__LABEL459:
+	DEFB 12h
+__LABEL465:
 	DEFB 0Ch
-__LABEL345:
+__LABEL466:
 	DEFB 1Ch
+__LABEL468:
+	DEFB 0FFh
+	DEFB 5Ah
 ZXBASIC_MEM_HEAP:
 	; Defines DATA END
 ZXBASIC_USER_DATA_END EQU ZXBASIC_MEM_HEAP + ZXBASIC_HEAP_SIZE

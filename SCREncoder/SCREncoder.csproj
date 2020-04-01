@@ -12,6 +12,9 @@
     <None Update="ColorTest.scr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="MuertePiedra.scr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="RealTest.scr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

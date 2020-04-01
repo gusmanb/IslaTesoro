@@ -2,7 +2,7 @@
   "profiles": {
     "SCREncoder": {
       "commandName": "Project",
-      "commandLineArgs": "MuerteLanzas.scr MuerteLanzas.zxbas imgLanzas"
+      "commandLineArgs": "MuertePiedra.scr MuertePiedra.zxbas imgPiedra"
     }
   }
 }
