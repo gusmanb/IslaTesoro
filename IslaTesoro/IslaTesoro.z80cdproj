@@ -24,6 +24,8 @@
     <ZxBasic Include="ZxBasicFiles\MuerteArena.zxbas" />
     <ZxBasic Include="ZxBasicFiles\MuerteLanzas.zxbas" />
     <ZxBasic Include="ZxBasicFiles\Tesoro.zxbas" />
+    <ZxBasic Include="ZxBasicFiles\VecttyImages.zxbas" />
+    <ZxBasic Include="ZxBasicFiles\VecttyRenderer.zxbas" />
   </ItemGroup>
   <ItemGroup>
     <Tap Include="TapeFiles\isla.tap" />

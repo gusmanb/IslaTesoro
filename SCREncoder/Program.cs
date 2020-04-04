@@ -107,51 +107,6 @@ Dim {0}({1}) as uByte => {{ _
 
             File.WriteAllText(outFile, string.Format(template, arrName, outBuffer.Count - 1, sb));
 
-            
-
-            int posE = 0;
-            List<byte> reconstr = new List<byte>();
-
-            byte currentE;
-            byte nextE;
-
-            while (posE < outBuffer.Count)
-            {
-
-                if (posE > 3769)
-                    posE = posE;
-
-                currentE = outBuffer[posE];
-
-                if (posE + 1 < outBuffer.Count)
-                {
-                    nextE = outBuffer[posE + 1];
-                    if (nextE == currentE)
-                    {
-                        int runlen = outBuffer[posE + 2] + 2;
-
-                        while (runlen > 0)
-                        {
-                            reconstr.Add(currentE);
-                            runlen -= 1;
-                        }
-
-                        posE += 3;
-                    }
-                    else
-                    {
-                        reconstr.Add(currentE);
-                        posE++;
-                    }
-                }
-                else
-                {
-                    reconstr.Add(currentE);
-                    posE++;
-                }
-            }
-
-
             Console.WriteLine("Screen compressed");
         }
     }

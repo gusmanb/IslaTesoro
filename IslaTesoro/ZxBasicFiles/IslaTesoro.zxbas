@@ -8,6 +8,9 @@
 
 #include "ScreenDecompressor.zxbas"
 
+#include "VecttyImages.zxbas"
+#include "VecttyRenderer.zxbas"
+
 #define UDG_VAR 23675
 #define PasosNativoAvance 500
 
@@ -1014,68 +1017,12 @@ sub IniciarGraficosArena()
     print at 17, 0; "\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L";
     print at 16, 8; "\A\B"
     print at 17, 8; "\C\D"
-    print at 18, 0; paper 0; "                                ";
-    print at 19, 0; paper 0; "                                ";
-    print at 20, 0; paper 0; "                                ";
-    print at 21, 0; paper 0; "                                ";
-    print at 22, 0; paper 0; "                                ";
 
-    DibujarArbol(10, 50)
-    DibujarArbol(18, 51)
-    DibujarArbol(26, 50)
-    DibujarArbol(230, 51)
-    DibujarArbol(238, 50)
-    DibujarArbol(246, 51)
-    
-    INK 0
-
-    AtributoUltimaLinea(0,0,0,0)
+    Dibujar(@vectImgArena(0), 478)
 
     print at 2, 0;          "ESCAPA PULSANDO COMO SE INDIQUE!"
 
 end sub
-
-sub DibujarArbol(X as uByte, Y as uByte)
-
-     ink 0
-    
-    plot X + 1,Y
-    draw 0,8
-
-    plot X - 1,Y
-    draw 0,8
-
-    plot X,Y
-    draw 0,8
-
-    ink 4
-
-    draw -7,0
-    draw 7,32
-    draw 7,-32
-    draw -7,0
-
-    plot X, Y + 8
-
-    draw -5,0
-    draw 5,26
-    draw 5,-26
-    draw -5,0
-
-    plot X, Y + 8
-
-    draw -3,0
-    draw 3,20
-    draw 3,-20
-    draw -3,0
-
-    plot X, Y + 8
-    draw 0,32
-    
-    ink 0
-
-end sub
-
 
 function EscaparArena() as uByte
 
@@ -1103,13 +1050,13 @@ function EscaparArena() as uByte
                 
                 if rndTecla < 50 then
                     teclaEsperada = "o"
-                    print at 12, 15; ink 2; "\M"
+                    print at 8, 15; ink 2; "\M \M \M"
                 else if rndTecla < 100 then
                     teclaEsperada = "p"
-                    print at 12, 15; ink 2; "\N"
+                    print at 8, 15; ink 2; "\N \N \N"
                 else
                     teclaEsperada = "a"
-                    print at 12, 15; ink 2; "\O"
+                    print at 8, 15; ink 2; "\O \O \O"
                 end if
 
                 Sonido(1)
@@ -1132,9 +1079,11 @@ function EscaparArena() as uByte
 
                     while inkey$ <> ""
                     end while
+                    
+                    print at 8, 15; ink 2; "     "
 
                     print at 12, 15; "  "
-                    print at 17, 6; "\K\L\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L";
+                    print at 17, 7; "\L\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L\I\J\K\L";
 
                     posJugador = posJugador + 1
 
@@ -1176,6 +1125,8 @@ sub IniciarGraficosTemplo()
     border 0
     ink 7
     cls
+
+    Dibujar(@vectImgTemplo(0), 146)
 
     print at 8,2; "SALTA LOS OBSTACULOS USANDO M!"
 
@@ -1348,6 +1299,8 @@ sub IniciarGraficosCarrera()
     ink 0
     cls
 
+    Dibujar(@vectImgCielo(0), 233)
+
     print at 8, 9; "CORRE! USA O/P";
 
     PRINT AT 18,0; INK 4; paper 7; "\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R";
@@ -1358,24 +1311,6 @@ sub IniciarGraficosCarrera()
     'PRINT AT 23,0; PAPER 4; "                                ";
 
     AtributoUltimaLinea(4,4,0,0)
-
-    DibujarNube(48, 148)
-    DibujarNube(189, 160)
-
-end sub
-
-sub DibujarNube(X as uByte, Y as uByte)
-
-    Dim buc as uByte
-
-    for buc = 12 to 1 step -1
-        circle paper 7; ink 5; X, Y, buc
-    next buc
-
-    for buc = 8 to 1 step -1
-        circle paper 7; ink 5; X - 12, Y, buc
-        circle paper 7; ink 5; X + 12, Y, buc
-    next buc
 
 end sub
 

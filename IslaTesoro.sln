@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F16D4249-6279-474E-8826-742E7FF7445C}") = "IslaTesoro", "IslaTesoro\IslaTesoro.z80cdproj", "{980861BE-72FF-4F1B-B01D-181BEE736689}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCREncoder", "SCREncoder\SCREncoder.csproj", "{4CD23367-667D-4419-974F-B65976644B0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCREncoder", "SCREncoder\SCREncoder.csproj", "{4CD23367-667D-4419-974F-B65976644B0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vectty", "Vectty\Vectty.csproj", "{6AAD4432-9E56-4803-ACEF-50F6FC3F9235}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{4CD23367-667D-4419-974F-B65976644B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CD23367-667D-4419-974F-B65976644B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CD23367-667D-4419-974F-B65976644B0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AAD4432-9E56-4803-ACEF-50F6FC3F9235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AAD4432-9E56-4803-ACEF-50F6FC3F9235}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AAD4432-9E56-4803-ACEF-50F6FC3F9235}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AAD4432-9E56-4803-ACEF-50F6FC3F9235}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
