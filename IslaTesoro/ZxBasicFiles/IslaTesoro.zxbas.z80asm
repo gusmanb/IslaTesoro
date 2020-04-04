@@ -41,7 +41,6 @@ __LABEL1:
 	xor a
 	push af
 	call _MostrarMapa
-	call _ImprimirArenasMovedizas
 	ld de, 0
 	ld hl, 0
 	call RANDOMIZE
@@ -6046,7 +6045,7 @@ _AtributoUltimaLinea__leave:
 	exx
 	ret
 _Sonido:
-#line 1424
+#line 1423
 		ld hl,sfxData
 		di
 		push ix
@@ -6320,7 +6319,7 @@ Sample1Data:
 		defb 127,224,63,225,255,128,127,227,255,0,255,227,255,0,255,225
 		defb 255,224,63,252,31,252,1,255,228,255,192,31,255,231,255,128
 		defb 127,255,240,127,224,31,255,255,255,255,192,63,255,255,255,255
-#line 1697
+#line 1696
 _Sonido__leave:
 	ret
 __LABEL2:
@@ -8400,7 +8399,7 @@ __ADDF:	; Addition
 
 		jp __FPSTACK_POP
 
-#line 8317 "IslaTesoro.zxbas"
+#line 8316 "IslaTesoro.zxbas"
 #line 1 "alloc.asm"
 
 ; vim: ts=4:et:sw=4:
@@ -8754,7 +8753,7 @@ __MEM_SUBTRACT:
 
 	        ENDP
 
-#line 8318 "IslaTesoro.zxbas"
+#line 8317 "IslaTesoro.zxbas"
 #line 1 "array.asm"
 
 ; vim: ts=4:et:sw=4:
@@ -8924,7 +8923,7 @@ TMP_ARR_PTR:
 
 		ENDP
 
-#line 8319 "IslaTesoro.zxbas"
+#line 8318 "IslaTesoro.zxbas"
 #line 1 "bor16.asm"
 
 ; vim:ts=4:et:
@@ -8946,7 +8945,7 @@ __BOR16:
 
 	    ret
 
-#line 8320 "IslaTesoro.zxbas"
+#line 8319 "IslaTesoro.zxbas"
 #line 1 "border.asm"
 
 	; __FASTCALL__ Routine to change de border
@@ -8956,7 +8955,7 @@ __BOR16:
 
 	; Nothing to do! (Directly from the ZX Spectrum ROM)
 
-#line 8321 "IslaTesoro.zxbas"
+#line 8320 "IslaTesoro.zxbas"
 #line 1 "bright.asm"
 
 	; Sets bright flag in ATTR_P permanently
@@ -9013,7 +9012,7 @@ BRIGHT_TMP:
 		ld hl, ATTR_T
 		jr __SET_BRIGHT
 	    ENDP
-#line 8322 "IslaTesoro.zxbas"
+#line 8321 "IslaTesoro.zxbas"
 #line 1 "chr.asm"
 
 	; CHR$(x, y, x) returns the string CHR$(x) + CHR$(y) + CHR$(z)
@@ -9091,7 +9090,7 @@ __CHR_END:
 
 			ENDP
 
-#line 8323 "IslaTesoro.zxbas"
+#line 8322 "IslaTesoro.zxbas"
 #line 1 "circle.asm"
 
 	; Bresenham's like circle algorithm
@@ -9579,7 +9578,7 @@ __CIRCLE_PLOT:
 			ret
 
 			ENDP
-#line 8324 "IslaTesoro.zxbas"
+#line 8323 "IslaTesoro.zxbas"
 
 #line 1 "copy_attr.asm"
 
@@ -10487,7 +10486,7 @@ __REFRESH_TMP:
 
 		ENDP
 
-#line 8326 "IslaTesoro.zxbas"
+#line 8325 "IslaTesoro.zxbas"
 #line 1 "divf.asm"
 
 
@@ -10550,7 +10549,7 @@ __DIVBYZERO:
 
 		ENDP
 
-#line 8327 "IslaTesoro.zxbas"
+#line 8326 "IslaTesoro.zxbas"
 #line 1 "draw.asm"
 
 	; DRAW using bresenhams algorithm and screen positioning
@@ -11036,7 +11035,7 @@ __FASTPLOTEND:
 
 	    ENDP
 
-#line 8328 "IslaTesoro.zxbas"
+#line 8327 "IslaTesoro.zxbas"
 #line 1 "draw3.asm"
 
 	; -----------------------------------------------------------
@@ -11543,7 +11542,7 @@ SUM_B:
 	        jp      __DRAW          ;;forward to LINE-DRAW (Fastcalled)
 
 	        ENDP
-#line 8329 "IslaTesoro.zxbas"
+#line 8328 "IslaTesoro.zxbas"
 #line 1 "eq16.asm"
 
 __EQ16:	; Test if 16bit values HL == DE
@@ -11554,7 +11553,7 @@ __EQ16:	; Test if 16bit values HL == DE
 			inc a
 			ret
 
-#line 8330 "IslaTesoro.zxbas"
+#line 8329 "IslaTesoro.zxbas"
 
 #line 1 "free.asm"
 
@@ -11747,7 +11746,7 @@ __MEM_BLOCK_JOIN:  ; Joins current block (pointed by HL) with next one (pointed 
 
 	        ENDP
 
-#line 8332 "IslaTesoro.zxbas"
+#line 8331 "IslaTesoro.zxbas"
 #line 1 "ftou32reg.asm"
 
 #line 1 "neg32.asm"
@@ -11875,7 +11874,7 @@ __FTOU8:	; Converts float in C ED LH to Unsigned byte in A
 		ld a, l
 		ret
 
-#line 8333 "IslaTesoro.zxbas"
+#line 8332 "IslaTesoro.zxbas"
 #line 1 "gtf.asm"
 
 #line 1 "u32tofreg.asm"
@@ -11995,7 +11994,7 @@ __GTF:	; A > B
 		call __FPSTACK_POP
 		jp __FTOU8; Convert to 8 bits
 
-#line 8334 "IslaTesoro.zxbas"
+#line 8333 "IslaTesoro.zxbas"
 
 #line 1 "inkey.asm"
 
@@ -12059,7 +12058,7 @@ __EMPTY_INKEY:
 
 		ENDP
 
-#line 8336 "IslaTesoro.zxbas"
+#line 8335 "IslaTesoro.zxbas"
 #line 1 "lei8.asm"
 
 __LEI8: ; Signed <= comparison for 8bit int
@@ -12083,7 +12082,7 @@ checkParity:
 	    inc a       ; True
 	    ret
 	    ENDP
-#line 8337 "IslaTesoro.zxbas"
+#line 8336 "IslaTesoro.zxbas"
 #line 1 "loadstr.asm"
 
 
@@ -12129,7 +12128,7 @@ __LOADSTR:		; __FASTCALL__ entry
 			ldir	; Copies string (length number included)
 			pop hl	; Recovers destiny in hl as result
 			ret
-#line 8338 "IslaTesoro.zxbas"
+#line 8337 "IslaTesoro.zxbas"
 #line 1 "ltf.asm"
 
 
@@ -12158,11 +12157,11 @@ __LTF:	; A < B
 		call __FPSTACK_POP
 		jp __FTOU8 ; Convert to 8 bits
 
-#line 8339 "IslaTesoro.zxbas"
+#line 8338 "IslaTesoro.zxbas"
 #line 1 "lti8.asm"
 
 
-#line 8340 "IslaTesoro.zxbas"
+#line 8339 "IslaTesoro.zxbas"
 #line 1 "mul32.asm"
 
 #line 1 "_mul32.asm"
@@ -12255,7 +12254,7 @@ __TO32BIT:  ; Converts H'L'HLB'C'AC to DEHL (Discards H'L'HL)
 			ret
 
 
-#line 8341 "IslaTesoro.zxbas"
+#line 8340 "IslaTesoro.zxbas"
 #line 1 "mulf.asm"
 
 
@@ -12279,7 +12278,7 @@ __MULF:	; Multiplication
 
 		jp __FPSTACK_POP
 
-#line 8342 "IslaTesoro.zxbas"
+#line 8341 "IslaTesoro.zxbas"
 
 
 #line 1 "pause.asm"
@@ -12290,7 +12289,7 @@ __PAUSE:
 		ld b, h
 	    ld c, l
 	    jp 1F3Dh  ; PAUSE_1
-#line 8345 "IslaTesoro.zxbas"
+#line 8344 "IslaTesoro.zxbas"
 #line 1 "ploadf.asm"
 
 	; Parameter / Local var load
@@ -12336,7 +12335,7 @@ __PLOADF:
 	    add hl, de
 	    jp __LOADF
 
-#line 8346 "IslaTesoro.zxbas"
+#line 8345 "IslaTesoro.zxbas"
 
 
 #line 1 "print_eol_attr.asm"
@@ -12350,7 +12349,7 @@ __PLOADF:
 PRINT_EOL_ATTR:
 		call PRINT_EOL
 		jp COPY_ATTR
-#line 8349 "IslaTesoro.zxbas"
+#line 8348 "IslaTesoro.zxbas"
 #line 1 "printstr.asm"
 
 
@@ -12409,7 +12408,7 @@ __PRINT_STR:
 
 			ENDP
 
-#line 8350 "IslaTesoro.zxbas"
+#line 8349 "IslaTesoro.zxbas"
 #line 1 "pstoref.asm"
 
 	; Stores FP number in A ED CB at location HL+IX
@@ -12459,7 +12458,7 @@ __PSTOREF:
 		pop de
 	    jp __STOREF
 
-#line 8351 "IslaTesoro.zxbas"
+#line 8350 "IslaTesoro.zxbas"
 #line 1 "pstorestr.asm"
 
 ; vim:ts=4:et:sw=4
@@ -12780,7 +12779,7 @@ __PSTORE_STR:
 	    add hl, bc
 	    jp __STORE_STR
 
-#line 8352 "IslaTesoro.zxbas"
+#line 8351 "IslaTesoro.zxbas"
 #line 1 "pstorestr2.asm"
 
 ; vim:ts=4:et:sw=4
@@ -12839,7 +12838,7 @@ __PSTORE_STR2:
 	    add hl, bc
 	    jp __STORE_STR2
 
-#line 8353 "IslaTesoro.zxbas"
+#line 8352 "IslaTesoro.zxbas"
 #line 1 "random.asm"
 
 	; RANDOM functions
@@ -12959,7 +12958,7 @@ RND_LOOP:
 
 	    ENDP
 
-#line 8354 "IslaTesoro.zxbas"
+#line 8353 "IslaTesoro.zxbas"
 #line 1 "sgnf.asm"
 
 #line 1 "sgn.asm"
@@ -13006,7 +13005,7 @@ __ENDSGN:
 
 #line 2 "sgnf.asm"
 
-#line 8355 "IslaTesoro.zxbas"
+#line 8354 "IslaTesoro.zxbas"
 #line 1 "sgni8.asm"
 
 	; Returns SGN (SIGN) for 8 bits signed integer
@@ -13019,7 +13018,7 @@ __SGNI8:
 		neg
 		ret
 
-#line 8356 "IslaTesoro.zxbas"
+#line 8355 "IslaTesoro.zxbas"
 
 
 #line 1 "strcat.asm"
@@ -13168,7 +13167,7 @@ __STRCATEND:
 
 			ENDP
 
-#line 8359 "IslaTesoro.zxbas"
+#line 8358 "IslaTesoro.zxbas"
 #line 1 "string.asm"
 
 	; String library
@@ -13397,7 +13396,7 @@ __FREE_END:
 
 			ENDP
 
-#line 8360 "IslaTesoro.zxbas"
+#line 8359 "IslaTesoro.zxbas"
 
 #line 1 "strslice.asm"
 
@@ -13507,7 +13506,7 @@ __FREE_ON_EXIT:
 
 		ENDP
 
-#line 8362 "IslaTesoro.zxbas"
+#line 8361 "IslaTesoro.zxbas"
 #line 1 "sub32.asm"
 
 	; SUB32
@@ -13537,7 +13536,7 @@ __SUB32:
 		push bc		; puts return address back
 		exx
 		ret
-#line 8363 "IslaTesoro.zxbas"
+#line 8362 "IslaTesoro.zxbas"
 #line 1 "subf.asm"
 
 
@@ -13564,7 +13563,7 @@ __SUBF:	; Subtraction
 
 		jp __FPSTACK_POP
 
-#line 8364 "IslaTesoro.zxbas"
+#line 8363 "IslaTesoro.zxbas"
 
 #line 1 "val.asm"
 
@@ -13687,7 +13686,7 @@ __RET_ZERO:	; Returns 0 Floating point on error
 
 		ENDP
 
-#line 8366 "IslaTesoro.zxbas"
+#line 8365 "IslaTesoro.zxbas"
 
 ZXBASIC_USER_DATA:
 	_input_LastK EQU 23560

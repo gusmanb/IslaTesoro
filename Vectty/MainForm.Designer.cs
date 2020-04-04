@@ -35,8 +35,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.pnlMode = new System.Windows.Forms.Panel();
+            this.pnlTool = new System.Windows.Forms.Panel();
+            this.pnlBright = new System.Windows.Forms.Panel();
             this.pnlInk = new System.Windows.Forms.Panel();
             this.pnlPaper = new System.Windows.Forms.Panel();
+            this.drawArea = new Vectty.SpeccyDrawControl();
             this.strpColors = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.btnBlackPaper = new System.Windows.Forms.ToolStripButton();
@@ -58,17 +62,8 @@
             this.btnYellowInk = new System.Windows.Forms.ToolStripButton();
             this.btnWhiteInk = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.strpTools = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.strpFile = new System.Windows.Forms.ToolStrip();
-            this.strpActions = new System.Windows.Forms.ToolStrip();
-            this.drawArea = new Vectty.SpeccyDrawControl();
-            this.pnlMode = new System.Windows.Forms.Panel();
-            this.pnlTool = new System.Windows.Forms.Panel();
-            this.pnlBright = new System.Windows.Forms.Panel();
             this.btnBright = new System.Windows.Forms.ToolStripButton();
+            this.strpTools = new System.Windows.Forms.ToolStrip();
             this.btnLine = new System.Windows.Forms.ToolStripButton();
             this.btnRect = new System.Windows.Forms.ToolStripButton();
             this.btnCircle = new System.Windows.Forms.ToolStripButton();
@@ -76,17 +71,22 @@
             this.btnFill = new System.Windows.Forms.ToolStripButton();
             this.btnErase = new System.Windows.Forms.ToolStripButton();
             this.btnBrush = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.btnBitmap = new System.Windows.Forms.ToolStripButton();
             this.btnInk = new System.Windows.Forms.ToolStripButton();
             this.btnPaper = new System.Windows.Forms.ToolStripButton();
             this.btnInkPaper = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnSetPaper = new System.Windows.Forms.ToolStripButton();
             this.btnSetInk = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnGrid = new System.Windows.Forms.ToolStripButton();
+            this.strpFile = new System.Windows.Forms.ToolStrip();
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.btnExport = new System.Windows.Forms.ToolStripButton();
+            this.strpActions = new System.Windows.Forms.ToolStrip();
             this.btnUndo = new System.Windows.Forms.ToolStripButton();
             this.btnRedo = new System.Windows.Forms.ToolStripButton();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -110,7 +110,7 @@
             this.toolStripContainer1.ContentPanel.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.toolStripContainer1.ContentPanel.Controls.Add(this.panel1);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.drawArea);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(562, 470);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(570, 470);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             // 
             // toolStripContainer1.LeftToolStripPanel
@@ -149,7 +149,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 444);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(562, 26);
+            this.panel1.Size = new System.Drawing.Size(570, 26);
             this.panel1.TabIndex = 1;
             // 
             // label5
@@ -197,6 +197,31 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Paper";
             // 
+            // pnlMode
+            // 
+            this.pnlMode.BackgroundImage = global::Vectty.Properties.Resources.Bitmap;
+            this.pnlMode.Location = new System.Drawing.Point(256, 5);
+            this.pnlMode.Name = "pnlMode";
+            this.pnlMode.Size = new System.Drawing.Size(16, 16);
+            this.pnlMode.TabIndex = 4;
+            // 
+            // pnlTool
+            // 
+            this.pnlTool.BackgroundImage = global::Vectty.Properties.Resources.Line;
+            this.pnlTool.Location = new System.Drawing.Point(194, 5);
+            this.pnlTool.Name = "pnlTool";
+            this.pnlTool.Size = new System.Drawing.Size(16, 16);
+            this.pnlTool.TabIndex = 3;
+            // 
+            // pnlBright
+            // 
+            this.pnlBright.BackgroundImage = global::Vectty.Properties.Resources.BrightOff;
+            this.pnlBright.Enabled = false;
+            this.pnlBright.Location = new System.Drawing.Point(143, 5);
+            this.pnlBright.Name = "pnlBright";
+            this.pnlBright.Size = new System.Drawing.Size(16, 16);
+            this.pnlBright.TabIndex = 2;
+            // 
             // pnlInk
             // 
             this.pnlInk.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
@@ -214,6 +239,19 @@
             this.pnlPaper.Name = "pnlPaper";
             this.pnlPaper.Size = new System.Drawing.Size(16, 16);
             this.pnlPaper.TabIndex = 0;
+            // 
+            // drawArea
+            // 
+            this.drawArea.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.drawArea.Grid = true;
+            this.drawArea.Location = new System.Drawing.Point(29, 30);
+            this.drawArea.Margin = new System.Windows.Forms.Padding(0);
+            this.drawArea.Mode = Vectty.SpeccyDrawControlMode.Bitmap;
+            this.drawArea.Name = "drawArea";
+            this.drawArea.Size = new System.Drawing.Size(512, 384);
+            this.drawArea.TabIndex = 0;
+            this.drawArea.Tool = Vectty.SpeccyDrawControlTool.Line;
+            this.drawArea.HistoryChanged += new System.EventHandler(this.drawArea_HistoryChanged);
             // 
             // strpColors
             // 
@@ -458,6 +496,22 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(36, 6);
             // 
+            // btnBright
+            // 
+            this.btnBright.AutoSize = false;
+            this.btnBright.BackColor = System.Drawing.Color.Transparent;
+            this.btnBright.BackgroundImage = global::Vectty.Properties.Resources.Bright;
+            this.btnBright.CheckOnClick = true;
+            this.btnBright.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnBright.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnBright.ImageTransparentColor = System.Drawing.Color.Maroon;
+            this.btnBright.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
+            this.btnBright.Name = "btnBright";
+            this.btnBright.Padding = new System.Windows.Forms.Padding(8, 4, 8, 4);
+            this.btnBright.Size = new System.Drawing.Size(16, 16);
+            this.btnBright.Text = "Brightness on/off";
+            this.btnBright.Click += new System.EventHandler(this.btnBright_Click);
+            // 
             // strpTools
             // 
             this.strpTools.Dock = System.Windows.Forms.DockStyle.None;
@@ -481,23 +535,163 @@
             this.btnGrid});
             this.strpTools.Location = new System.Drawing.Point(0, 3);
             this.strpTools.Name = "strpTools";
-            this.strpTools.Size = new System.Drawing.Size(32, 370);
+            this.strpTools.Size = new System.Drawing.Size(24, 351);
             this.strpTools.TabIndex = 0;
+            // 
+            // btnLine
+            // 
+            this.btnLine.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnLine.Image = global::Vectty.Properties.Resources.Line;
+            this.btnLine.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnLine.Name = "btnLine";
+            this.btnLine.Size = new System.Drawing.Size(22, 20);
+            this.btnLine.Text = "Line tool";
+            this.btnLine.Click += new System.EventHandler(this.btnLine_Click);
+            // 
+            // btnRect
+            // 
+            this.btnRect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRect.Image = global::Vectty.Properties.Resources.Rectangle;
+            this.btnRect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRect.Name = "btnRect";
+            this.btnRect.Size = new System.Drawing.Size(22, 20);
+            this.btnRect.Text = "Rectangle tool";
+            this.btnRect.Click += new System.EventHandler(this.btnRect_Click);
+            // 
+            // btnCircle
+            // 
+            this.btnCircle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCircle.Image = global::Vectty.Properties.Resources.Circle;
+            this.btnCircle.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCircle.Name = "btnCircle";
+            this.btnCircle.Size = new System.Drawing.Size(22, 20);
+            this.btnCircle.Text = "Circle tool";
+            this.btnCircle.Click += new System.EventHandler(this.btnCircle_Click);
+            // 
+            // btnArc
+            // 
+            this.btnArc.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnArc.Image = global::Vectty.Properties.Resources.Arc;
+            this.btnArc.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnArc.Name = "btnArc";
+            this.btnArc.Size = new System.Drawing.Size(22, 20);
+            this.btnArc.Text = "toolStripButton1";
+            this.btnArc.Click += new System.EventHandler(this.btnArc_Click);
+            // 
+            // btnFill
+            // 
+            this.btnFill.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnFill.Image = global::Vectty.Properties.Resources.Bucket;
+            this.btnFill.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFill.Name = "btnFill";
+            this.btnFill.Size = new System.Drawing.Size(22, 20);
+            this.btnFill.Text = "Fill tool";
+            this.btnFill.Click += new System.EventHandler(this.btnFill_Click);
+            // 
+            // btnErase
+            // 
+            this.btnErase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnErase.Image = global::Vectty.Properties.Resources.Eraser;
+            this.btnErase.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnErase.Name = "btnErase";
+            this.btnErase.Size = new System.Drawing.Size(22, 20);
+            this.btnErase.Text = "Block eraser tool";
+            this.btnErase.Click += new System.EventHandler(this.btnErase_Click);
+            // 
+            // btnBrush
+            // 
+            this.btnBrush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnBrush.Image = global::Vectty.Properties.Resources.Brusht;
+            this.btnBrush.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnBrush.Name = "btnBrush";
+            this.btnBrush.Size = new System.Drawing.Size(22, 20);
+            this.btnBrush.Text = "Attribute brush";
+            this.btnBrush.Click += new System.EventHandler(this.btnBrush_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(30, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(22, 6);
+            // 
+            // btnBitmap
+            // 
+            this.btnBitmap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnBitmap.Image = global::Vectty.Properties.Resources.Bitmap;
+            this.btnBitmap.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnBitmap.Name = "btnBitmap";
+            this.btnBitmap.Size = new System.Drawing.Size(22, 20);
+            this.btnBitmap.Text = "Bitmap mode";
+            this.btnBitmap.Click += new System.EventHandler(this.btnBitmap_Click);
+            // 
+            // btnInk
+            // 
+            this.btnInk.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnInk.Image = global::Vectty.Properties.Resources.Ink;
+            this.btnInk.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnInk.Name = "btnInk";
+            this.btnInk.Size = new System.Drawing.Size(22, 20);
+            this.btnInk.Text = "Ink mode";
+            this.btnInk.Click += new System.EventHandler(this.btnInk_Click);
+            // 
+            // btnPaper
+            // 
+            this.btnPaper.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnPaper.Image = global::Vectty.Properties.Resources.Paper;
+            this.btnPaper.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPaper.Name = "btnPaper";
+            this.btnPaper.Size = new System.Drawing.Size(22, 20);
+            this.btnPaper.Text = "Paper mode";
+            this.btnPaper.Click += new System.EventHandler(this.btnPaper_Click);
+            // 
+            // btnInkPaper
+            // 
+            this.btnInkPaper.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnInkPaper.Image = global::Vectty.Properties.Resources.InkPaper;
+            this.btnInkPaper.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnInkPaper.Name = "btnInkPaper";
+            this.btnInkPaper.Size = new System.Drawing.Size(22, 20);
+            this.btnInkPaper.Text = "Ink + Paper mode";
+            this.btnInkPaper.Click += new System.EventHandler(this.btnInkPaper_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(30, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(22, 6);
+            // 
+            // btnSetPaper
+            // 
+            this.btnSetPaper.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSetPaper.Image = global::Vectty.Properties.Resources.SetPaper;
+            this.btnSetPaper.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSetPaper.Name = "btnSetPaper";
+            this.btnSetPaper.Size = new System.Drawing.Size(22, 20);
+            this.btnSetPaper.Text = "Fill Paper";
+            this.btnSetPaper.Click += new System.EventHandler(this.btnSetPaper_Click);
+            // 
+            // btnSetInk
+            // 
+            this.btnSetInk.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSetInk.Image = global::Vectty.Properties.Resources.SetInk;
+            this.btnSetInk.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSetInk.Name = "btnSetInk";
+            this.btnSetInk.Size = new System.Drawing.Size(22, 20);
+            this.btnSetInk.Text = "Fill Ink";
+            this.btnSetInk.Click += new System.EventHandler(this.btnSetInk_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(30, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(22, 6);
+            // 
+            // btnGrid
+            // 
+            this.btnGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnGrid.Image = global::Vectty.Properties.Resources.Grid;
+            this.btnGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnGrid.Name = "btnGrid";
+            this.btnGrid.Size = new System.Drawing.Size(22, 20);
+            this.btnGrid.Text = "Toggle grid";
+            this.btnGrid.Click += new System.EventHandler(this.btnGrid_Click);
             // 
             // strpFile
             // 
@@ -509,213 +703,8 @@
             this.btnExport});
             this.strpFile.Location = new System.Drawing.Point(3, 0);
             this.strpFile.Name = "strpFile";
-            this.strpFile.Size = new System.Drawing.Size(104, 25);
+            this.strpFile.Size = new System.Drawing.Size(135, 25);
             this.strpFile.TabIndex = 1;
-            // 
-            // strpActions
-            // 
-            this.strpActions.Dock = System.Windows.Forms.DockStyle.None;
-            this.strpActions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnUndo,
-            this.btnRedo});
-            this.strpActions.Location = new System.Drawing.Point(107, 0);
-            this.strpActions.Name = "strpActions";
-            this.strpActions.Size = new System.Drawing.Size(58, 25);
-            this.strpActions.TabIndex = 2;
-            // 
-            // drawArea
-            // 
-            this.drawArea.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.drawArea.Grid = true;
-            this.drawArea.Location = new System.Drawing.Point(25, 30);
-            this.drawArea.Margin = new System.Windows.Forms.Padding(0);
-            this.drawArea.Mode = Vectty.SpeccyDrawControlMode.Bitmap;
-            this.drawArea.Name = "drawArea";
-            this.drawArea.Size = new System.Drawing.Size(512, 384);
-            this.drawArea.TabIndex = 0;
-            this.drawArea.Tool = Vectty.SpeccyDrawControlTool.Line;
-            this.drawArea.HistoryChanged += new System.EventHandler(this.drawArea_HistoryChanged);
-            // 
-            // pnlMode
-            // 
-            this.pnlMode.BackgroundImage = global::Vectty.Properties.Resources.Bitmap;
-            this.pnlMode.Location = new System.Drawing.Point(256, 5);
-            this.pnlMode.Name = "pnlMode";
-            this.pnlMode.Size = new System.Drawing.Size(16, 16);
-            this.pnlMode.TabIndex = 4;
-            // 
-            // pnlTool
-            // 
-            this.pnlTool.BackgroundImage = global::Vectty.Properties.Resources.Line;
-            this.pnlTool.Location = new System.Drawing.Point(194, 5);
-            this.pnlTool.Name = "pnlTool";
-            this.pnlTool.Size = new System.Drawing.Size(16, 16);
-            this.pnlTool.TabIndex = 3;
-            // 
-            // pnlBright
-            // 
-            this.pnlBright.BackgroundImage = global::Vectty.Properties.Resources.BrightOff;
-            this.pnlBright.Enabled = false;
-            this.pnlBright.Location = new System.Drawing.Point(143, 5);
-            this.pnlBright.Name = "pnlBright";
-            this.pnlBright.Size = new System.Drawing.Size(16, 16);
-            this.pnlBright.TabIndex = 2;
-            // 
-            // btnBright
-            // 
-            this.btnBright.AutoSize = false;
-            this.btnBright.BackColor = System.Drawing.Color.Transparent;
-            this.btnBright.BackgroundImage = global::Vectty.Properties.Resources.Bright;
-            this.btnBright.CheckOnClick = true;
-            this.btnBright.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnBright.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.btnBright.ImageTransparentColor = System.Drawing.Color.Maroon;
-            this.btnBright.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
-            this.btnBright.Name = "btnBright";
-            this.btnBright.Padding = new System.Windows.Forms.Padding(8, 4, 8, 4);
-            this.btnBright.Size = new System.Drawing.Size(16, 16);
-            this.btnBright.Text = "Brightness on/off";
-            this.btnBright.Click += new System.EventHandler(this.btnBright_Click);
-            // 
-            // btnLine
-            // 
-            this.btnLine.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnLine.Image = global::Vectty.Properties.Resources.Line;
-            this.btnLine.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnLine.Name = "btnLine";
-            this.btnLine.Size = new System.Drawing.Size(30, 20);
-            this.btnLine.Text = "Line tool";
-            this.btnLine.Click += new System.EventHandler(this.btnLine_Click);
-            // 
-            // btnRect
-            // 
-            this.btnRect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRect.Image = global::Vectty.Properties.Resources.Rectangle;
-            this.btnRect.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRect.Name = "btnRect";
-            this.btnRect.Size = new System.Drawing.Size(30, 20);
-            this.btnRect.Text = "Rectangle tool";
-            this.btnRect.Click += new System.EventHandler(this.btnRect_Click);
-            // 
-            // btnCircle
-            // 
-            this.btnCircle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnCircle.Image = global::Vectty.Properties.Resources.Circle;
-            this.btnCircle.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnCircle.Name = "btnCircle";
-            this.btnCircle.Size = new System.Drawing.Size(30, 20);
-            this.btnCircle.Text = "Circle tool";
-            this.btnCircle.Click += new System.EventHandler(this.btnCircle_Click);
-            // 
-            // btnArc
-            // 
-            this.btnArc.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnArc.Image = global::Vectty.Properties.Resources.Arc;
-            this.btnArc.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnArc.Name = "btnArc";
-            this.btnArc.Size = new System.Drawing.Size(30, 20);
-            this.btnArc.Text = "toolStripButton1";
-            this.btnArc.Click += new System.EventHandler(this.btnArc_Click);
-            // 
-            // btnFill
-            // 
-            this.btnFill.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnFill.Image = global::Vectty.Properties.Resources.Bucket;
-            this.btnFill.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnFill.Name = "btnFill";
-            this.btnFill.Size = new System.Drawing.Size(30, 20);
-            this.btnFill.Text = "Fill tool";
-            this.btnFill.Click += new System.EventHandler(this.btnFill_Click);
-            // 
-            // btnErase
-            // 
-            this.btnErase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnErase.Image = global::Vectty.Properties.Resources.Eraser;
-            this.btnErase.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnErase.Name = "btnErase";
-            this.btnErase.Size = new System.Drawing.Size(30, 20);
-            this.btnErase.Text = "Block eraser tool";
-            this.btnErase.Click += new System.EventHandler(this.btnErase_Click);
-            // 
-            // btnBrush
-            // 
-            this.btnBrush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnBrush.Image = global::Vectty.Properties.Resources.Brusht;
-            this.btnBrush.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnBrush.Name = "btnBrush";
-            this.btnBrush.Size = new System.Drawing.Size(30, 20);
-            this.btnBrush.Text = "Attribute brush";
-            this.btnBrush.Click += new System.EventHandler(this.btnBrush_Click);
-            // 
-            // btnBitmap
-            // 
-            this.btnBitmap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnBitmap.Image = global::Vectty.Properties.Resources.Bitmap;
-            this.btnBitmap.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnBitmap.Name = "btnBitmap";
-            this.btnBitmap.Size = new System.Drawing.Size(30, 20);
-            this.btnBitmap.Text = "Bitmap mode";
-            this.btnBitmap.Click += new System.EventHandler(this.btnBitmap_Click);
-            // 
-            // btnInk
-            // 
-            this.btnInk.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnInk.Image = global::Vectty.Properties.Resources.Ink;
-            this.btnInk.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnInk.Name = "btnInk";
-            this.btnInk.Size = new System.Drawing.Size(30, 20);
-            this.btnInk.Text = "Ink mode";
-            this.btnInk.Click += new System.EventHandler(this.btnInk_Click);
-            // 
-            // btnPaper
-            // 
-            this.btnPaper.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnPaper.Image = global::Vectty.Properties.Resources.Paper;
-            this.btnPaper.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnPaper.Name = "btnPaper";
-            this.btnPaper.Size = new System.Drawing.Size(30, 20);
-            this.btnPaper.Text = "Paper mode";
-            this.btnPaper.Click += new System.EventHandler(this.btnPaper_Click);
-            // 
-            // btnInkPaper
-            // 
-            this.btnInkPaper.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnInkPaper.Image = global::Vectty.Properties.Resources.InkPaper;
-            this.btnInkPaper.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnInkPaper.Name = "btnInkPaper";
-            this.btnInkPaper.Size = new System.Drawing.Size(30, 20);
-            this.btnInkPaper.Text = "Ink + Paper mode";
-            this.btnInkPaper.Click += new System.EventHandler(this.btnInkPaper_Click);
-            // 
-            // btnSetPaper
-            // 
-            this.btnSetPaper.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSetPaper.Image = global::Vectty.Properties.Resources.SetPaper;
-            this.btnSetPaper.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSetPaper.Name = "btnSetPaper";
-            this.btnSetPaper.Size = new System.Drawing.Size(30, 20);
-            this.btnSetPaper.Text = "Fill Paper";
-            this.btnSetPaper.Click += new System.EventHandler(this.btnSetPaper_Click);
-            // 
-            // btnSetInk
-            // 
-            this.btnSetInk.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSetInk.Image = global::Vectty.Properties.Resources.SetInk;
-            this.btnSetInk.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSetInk.Name = "btnSetInk";
-            this.btnSetInk.Size = new System.Drawing.Size(30, 20);
-            this.btnSetInk.Text = "Fill Ink";
-            this.btnSetInk.Click += new System.EventHandler(this.btnSetInk_Click);
-            // 
-            // btnGrid
-            // 
-            this.btnGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnGrid.Image = global::Vectty.Properties.Resources.Grid;
-            this.btnGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnGrid.Name = "btnGrid";
-            this.btnGrid.Size = new System.Drawing.Size(30, 20);
-            this.btnGrid.Text = "Toggle grid";
-            this.btnGrid.Click += new System.EventHandler(this.btnGrid_Click);
             // 
             // btnNew
             // 
@@ -754,8 +743,19 @@
             this.btnExport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(23, 22);
-            this.btnExport.Text = "toolStripButton6";
+            this.btnExport.Text = "Export";
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // strpActions
+            // 
+            this.strpActions.Dock = System.Windows.Forms.DockStyle.None;
+            this.strpActions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnUndo,
+            this.btnRedo});
+            this.strpActions.Location = new System.Drawing.Point(138, 0);
+            this.strpActions.Name = "strpActions";
+            this.strpActions.Size = new System.Drawing.Size(58, 25);
+            this.strpActions.TabIndex = 2;
             // 
             // btnUndo
             // 
