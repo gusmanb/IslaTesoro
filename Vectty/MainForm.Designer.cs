@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
@@ -40,7 +41,6 @@
             this.pnlBright = new System.Windows.Forms.Panel();
             this.pnlInk = new System.Windows.Forms.Panel();
             this.pnlPaper = new System.Windows.Forms.Panel();
-            this.drawArea = new Vectty.SpeccyDrawControl();
             this.strpColors = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.btnBlackPaper = new System.Windows.Forms.ToolStripButton();
@@ -89,6 +89,7 @@
             this.strpActions = new System.Windows.Forms.ToolStrip();
             this.btnUndo = new System.Windows.Forms.ToolStripButton();
             this.btnRedo = new System.Windows.Forms.ToolStripButton();
+            this.drawArea = new Vectty.SpeccyDrawControl();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.LeftToolStripPanel.SuspendLayout();
             this.toolStripContainer1.RightToolStripPanel.SuspendLayout();
@@ -239,19 +240,6 @@
             this.pnlPaper.Name = "pnlPaper";
             this.pnlPaper.Size = new System.Drawing.Size(16, 16);
             this.pnlPaper.TabIndex = 0;
-            // 
-            // drawArea
-            // 
-            this.drawArea.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.drawArea.Grid = true;
-            this.drawArea.Location = new System.Drawing.Point(29, 30);
-            this.drawArea.Margin = new System.Windows.Forms.Padding(0);
-            this.drawArea.Mode = Vectty.SpeccyDrawControlMode.Bitmap;
-            this.drawArea.Name = "drawArea";
-            this.drawArea.Size = new System.Drawing.Size(512, 384);
-            this.drawArea.TabIndex = 0;
-            this.drawArea.Tool = Vectty.SpeccyDrawControlTool.Line;
-            this.drawArea.HistoryChanged += new System.EventHandler(this.drawArea_HistoryChanged);
             // 
             // strpColors
             // 
@@ -703,7 +691,7 @@
             this.btnExport});
             this.strpFile.Location = new System.Drawing.Point(3, 0);
             this.strpFile.Name = "strpFile";
-            this.strpFile.Size = new System.Drawing.Size(135, 25);
+            this.strpFile.Size = new System.Drawing.Size(104, 25);
             this.strpFile.TabIndex = 1;
             // 
             // btnNew
@@ -752,7 +740,7 @@
             this.strpActions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnUndo,
             this.btnRedo});
-            this.strpActions.Location = new System.Drawing.Point(138, 0);
+            this.strpActions.Location = new System.Drawing.Point(107, 0);
             this.strpActions.Name = "strpActions";
             this.strpActions.Size = new System.Drawing.Size(58, 25);
             this.strpActions.TabIndex = 2;
@@ -779,12 +767,26 @@
             this.btnRedo.Text = "toolStripButton8";
             this.btnRedo.Click += new System.EventHandler(this.btnRedo_Click);
             // 
+            // drawArea
+            // 
+            this.drawArea.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.drawArea.Grid = true;
+            this.drawArea.Location = new System.Drawing.Point(29, 30);
+            this.drawArea.Margin = new System.Windows.Forms.Padding(0);
+            this.drawArea.Mode = Vectty.SpeccyDrawControlMode.Bitmap;
+            this.drawArea.Name = "drawArea";
+            this.drawArea.Size = new System.Drawing.Size(512, 384);
+            this.drawArea.TabIndex = 0;
+            this.drawArea.Tool = Vectty.SpeccyDrawControlTool.Line;
+            this.drawArea.HistoryChanged += new System.EventHandler(this.drawArea_HistoryChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(632, 495);
             this.Controls.Add(this.toolStripContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Vectty";

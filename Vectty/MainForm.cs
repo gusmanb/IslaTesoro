@@ -225,9 +225,9 @@ namespace Vectty
                     return;
 
                 if (drawArea.SaveFile(dlg.FileName))
-                    MessageBox.Show("File saved");
+                    MessageBox.Show("Save file", "File saved");
                 else
-                    MessageBox.Show("Error saving file");
+                    MessageBox.Show("Save file", "Error saving file");
             }
         }
 
@@ -258,9 +258,9 @@ namespace Vectty
                     return;
 
                 if (drawArea.ExportFile(dlg.FileName, dlg.Mode))
-                    MessageBox.Show("File exported");
+                    MessageBox.Show("Export", "File exported");
                 else
-                    MessageBox.Show("Error exporting file");
+                    MessageBox.Show("Export", "Error exporting file");
             }
         }
 

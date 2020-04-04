@@ -1,7 +1,7 @@
 	.zxbasic
 	org 24000
 	; Defines HEAP SIZE
-ZXBASIC_HEAP_SIZE EQU 2048
+ZXBASIC_HEAP_SIZE EQU 1024
 __START_PROGRAM:
 	di
 	push ix
@@ -375,9 +375,9 @@ __LABEL57:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL461
+	jr z, __LABEL450
 	ld a, h
-__LABEL461:
+__LABEL450:
 	or a
 	jp z, __LABEL65
 	ld l, (ix-2)
@@ -537,7 +537,7 @@ _DescomprimirImagen:
 	ld bc, -4
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL462
+	ld hl, __LABEL451
 	ld bc, 2
 	ldir
 	ld l, (ix+4)
@@ -692,7 +692,7 @@ _Dibujar:
 	ld bc, -7
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL463
+	ld hl, __LABEL452
 	ld bc, 2
 	ldir
 	ld l, (ix+4)
@@ -991,9 +991,9 @@ __LABEL88:
 	ld l, (ix-21)
 	ld h, (ix-20)
 	ld b, 8
-__LABEL464:
+__LABEL453:
 	add hl, hl
-	djnz __LABEL464
+	djnz __LABEL453
 	ld (ix-21), l
 	ld (ix-20), h
 	ld l, (ix-21)
@@ -1193,12 +1193,12 @@ __LABEL94:
 	inc hl
 	ld (ix-5), l
 	ld (ix-4), h
-	ld l, (ix-13)
-	ld h, (ix-12)
-	ld a, l
-	push af
 	ld l, (ix-15)
 	ld h, (ix-14)
+	ld a, l
+	push af
+	ld l, (ix-13)
+	ld h, (ix-12)
 	ld a, l
 	call PRINT_AT
 	ld hl, __LABEL71
@@ -1561,42 +1561,29 @@ _Instrucciones:
 	call PRINT_EOL
 	call _Esperar
 	call CLS
-	xor a
-	push af
-	xor a
-	call PRINT_AT
 	ld hl, __LABEL128
 	xor a
 	call __PRINTSTR
-	ld a, 1
-	call INK_TMP
-	ld a, 7
-	call PAPER_TMP
+	call PRINT_EOL
 	ld hl, __LABEL129
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL_ATTR
-	ld a, 1
-	push af
-	xor a
-	call PRINT_AT
+	call PRINT_EOL
 	ld hl, __LABEL130
 	xor a
 	call __PRINTSTR
-	ld a, 2
-	call INK_TMP
+	call PRINT_EOL
 	ld hl, __LABEL131
 	xor a
 	call __PRINTSTR
-	ld a, 7
-	call INK_TMP
+	call PRINT_EOL
 	ld hl, __LABEL132
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL_ATTR
 	ld hl, __LABEL133
 	xor a
 	call __PRINTSTR
+	call PRINT_EOL
 	call PRINT_EOL
 	ld hl, __LABEL134
 	xor a
@@ -1605,7 +1592,6 @@ _Instrucciones:
 	ld hl, __LABEL135
 	xor a
 	call __PRINTSTR
-	call PRINT_EOL
 	call PRINT_EOL
 	ld hl, __LABEL136
 	xor a
@@ -1619,69 +1605,10 @@ _Instrucciones:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
+	call PRINT_EOL
+	call PRINT_EOL
+	call PRINT_EOL
 	ld hl, __LABEL139
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	call PRINT_EOL
-	ld a, 21
-	push af
-	xor a
-	call PRINT_AT
-	ld hl, __LABEL127
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	call _Esperar
-	call CLS
-	ld hl, __LABEL140
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL141
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL142
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL143
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL144
-	xor a
-	call __PRINTSTR
-	ld hl, __LABEL145
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	call PRINT_EOL
-	ld hl, __LABEL146
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL147
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL148
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL149
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	ld hl, __LABEL150
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL
-	call PRINT_EOL
-	call PRINT_EOL
-	call PRINT_EOL
-	ld hl, __LABEL151
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -1704,7 +1631,7 @@ _SeleccionarDificultad:
 	add ix, sp
 	ld hl, 0
 	push hl
-__LABEL152:
+__LABEL140:
 	call INKEY
 	push hl
 	ld de, __LABEL9
@@ -1712,13 +1639,13 @@ __LABEL152:
 	ld a, 1
 	call __STRNE
 	or a
-	jp nz, __LABEL152
-__LABEL153:
+	jp nz, __LABEL140
+__LABEL141:
 	ld a, 12
 	push af
 	ld a, 7
 	call PRINT_AT
-	ld hl, __LABEL154
+	ld hl, __LABEL142
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -1739,32 +1666,32 @@ __LABEL__esperaNivel:
 	ld l, (ix-2)
 	ld h, (ix-1)
 	push hl
-	ld de, __LABEL155
+	ld de, __LABEL143
 	pop hl
 	xor a
 	call __STRGE
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL465
+	jr z, __LABEL454
 	ld a, h
-__LABEL465:
+__LABEL454:
 	push af
 	ld l, (ix-2)
 	ld h, (ix-1)
 	push hl
-	ld de, __LABEL156
+	ld de, __LABEL144
 	pop hl
 	xor a
 	call __STRLE
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL466
+	jr z, __LABEL455
 	ld a, h
-__LABEL466:
+__LABEL455:
 	or a
-	jp z, __LABEL157
+	jp z, __LABEL145
 	ld l, (ix-2)
 	ld h, (ix-1)
 	xor a
@@ -1888,10 +1815,10 @@ __LABEL466:
 	call __SUBF
 	call __FTOU32REG
 	ld (_ParaTeclaArena), hl
-	jp __LABEL158
-__LABEL157:
+	jp __LABEL146
+__LABEL145:
 	jp __LABEL__esperaNivel
-__LABEL158:
+__LABEL146:
 	call CLS
 _SeleccionarDificultad__leave:
 	ex af, af'
@@ -1918,8 +1845,8 @@ _ActualizarOlas:
 	inc de
 	ldir
 	ld (ix-1), 1
-	jp __LABEL159
-__LABEL162:
+	jp __LABEL147
+__LABEL150:
 	call RND
 	push bc
 	push de
@@ -2001,19 +1928,19 @@ __LABEL162:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL467
+	jr z, __LABEL456
 	ld a, h
-__LABEL467:
+__LABEL456:
 	pop de
 	or d
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL468
+	jr z, __LABEL457
 	ld a, h
-__LABEL468:
+__LABEL457:
 	or a
-	jp z, __LABEL165
+	jp z, __LABEL153
 	call RND
 	push bc
 	push de
@@ -2037,12 +1964,12 @@ __LABEL468:
 	ld bc, 00000h
 	call __LTF
 	or a
-	jp z, __LABEL166
-	ld de, __LABEL168
+	jp z, __LABEL154
+	ld de, __LABEL156
 	ld bc, -5
 	call __PSTORE_STR
-	jp __LABEL167
-__LABEL166:
+	jp __LABEL155
+__LABEL154:
 	push ix
 	pop hl
 	ld de, -10
@@ -2056,17 +1983,17 @@ __LABEL166:
 	ld bc, 00000h
 	call __LTF
 	or a
-	jp z, __LABEL169
-	ld de, __LABEL171
+	jp z, __LABEL157
+	ld de, __LABEL159
 	ld bc, -5
 	call __PSTORE_STR
-	jp __LABEL170
-__LABEL169:
+	jp __LABEL158
+__LABEL157:
 	ld de, __LABEL71
 	ld bc, -5
 	call __PSTORE_STR
-__LABEL170:
-__LABEL167:
+__LABEL158:
+__LABEL155:
 	ld a, (ix-3)
 	push af
 	ld a, (ix-2)
@@ -2080,17 +2007,17 @@ __LABEL167:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL165:
-__LABEL163:
+__LABEL153:
+__LABEL151:
 	inc (ix-1)
-__LABEL159:
+__LABEL147:
 	ld a, (ix-1)
 	push af
 	ld a, 10
 	pop hl
 	cp h
-	jp nc, __LABEL162
-__LABEL161:
+	jp nc, __LABEL150
+__LABEL149:
 _ActualizarOlas__leave:
 	ex af, af'
 	exx
@@ -2108,7 +2035,7 @@ _ComprobarPiratas:
 	add ix, sp
 	ld a, (_Piratas.__DATA__ + 1)
 	sub 19
-	jp nz, __LABEL173
+	jp nz, __LABEL161
 	ld a, 12
 	call _Sonido
 	ld a, 20
@@ -2119,7 +2046,7 @@ _ComprobarPiratas:
 	call INK_TMP
 	ld a, 7
 	call PAPER_TMP
-	ld hl, __LABEL129
+	ld hl, __LABEL162
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2131,12 +2058,12 @@ _ComprobarPiratas:
 	call PAPER_TMP
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL131
+	ld hl, __LABEL163
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL174
+	ld hl, __LABEL164
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2158,7 +2085,7 @@ _ComprobarPiratas:
 	call _Esperar
 	xor a
 	jp _ComprobarPiratas__leave
-__LABEL173:
+__LABEL161:
 	ld a, 1
 _ComprobarPiratas__leave:
 	ld sp, ix
@@ -2185,11 +2112,11 @@ _ComprobarCamino:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL469
+	jr z, __LABEL458
 	ld a, h
-__LABEL469:
+__LABEL458:
 	or a
-	jp z, __LABEL175
+	jp z, __LABEL165
 	xor a
 	call BORDER
 	xor a
@@ -2217,7 +2144,7 @@ __LABEL469:
 	call _Esperar
 	xor a
 	jp _ComprobarCamino__leave
-__LABEL175:
+__LABEL165:
 	ld a, (_Jugador.__DATA__ + 0)
 	push af
 	ld a, (_Jugador.__DATA__ + 1)
@@ -2229,16 +2156,16 @@ __LABEL175:
 	call __ARRAY
 	pop af
 	sub (hl)
-	jp nz, __LABEL177
+	jp nz, __LABEL167
 	ld a, 3
 	call _Sonido
-	jp __LABEL178
-__LABEL177:
+	jp __LABEL168
+__LABEL167:
 	ld a, 2
 	call _Sonido
 	ld (ix-1), 0
-	jp __LABEL179
-__LABEL182:
+	jp __LABEL169
+__LABEL172:
 	ld hl, 0
 	push hl
 	ld a, (ix-1)
@@ -2269,11 +2196,11 @@ __LABEL182:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL470
+	jr z, __LABEL459
 	ld a, h
-__LABEL470:
+__LABEL459:
 	or a
-	jp z, __LABEL185
+	jp z, __LABEL175
 	ld a, (_Jugador.__DATA__ + 1)
 	push af
 	ld a, (_Jugador.__DATA__ + 0)
@@ -2282,7 +2209,7 @@ __LABEL470:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL186
+	ld hl, __LABEL176
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2296,12 +2223,12 @@ __LABEL470:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL186
+	ld hl, __LABEL176
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL187
+	ld hl, __LABEL177
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2311,7 +2238,7 @@ __LABEL470:
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL188
+	jp nc, __LABEL178
 	call _ImprimirIsla
 	call _ImprimirPiratas
 	call _ActualizarOlas
@@ -2323,12 +2250,12 @@ __LABEL470:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL190
+	ld hl, __LABEL180
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL191
+	ld hl, __LABEL181
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2340,7 +2267,7 @@ __LABEL470:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL190
+	ld hl, __LABEL180
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2374,13 +2301,13 @@ __LABEL470:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL192
+	ld hl, __LABEL182
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
 	ld a, 1
 	jp _ComprobarCamino__leave
-__LABEL188:
+__LABEL178:
 	xor a
 	call BORDER
 	xor a
@@ -2398,18 +2325,18 @@ __LABEL188:
 	call _Esperar
 	xor a
 	jp _ComprobarCamino__leave
-__LABEL189:
-__LABEL185:
-__LABEL183:
-	inc (ix-1)
 __LABEL179:
+__LABEL175:
+__LABEL173:
+	inc (ix-1)
+__LABEL169:
 	ld a, (ix-1)
 	push af
 	ld a, 9
 	pop hl
 	cp h
-	jp nc, __LABEL182
-__LABEL181:
+	jp nc, __LABEL172
+__LABEL171:
 	call RND
 	push bc
 	push de
@@ -2419,7 +2346,7 @@ __LABEL181:
 	ld bc, 00000h
 	call __GTF
 	or a
-	jp z, __LABEL194
+	jp z, __LABEL184
 	ld a, 4
 	call _Sonido
 	ld a, 4
@@ -2434,12 +2361,12 @@ __LABEL181:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL190
+	ld hl, __LABEL180
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL195
+	ld hl, __LABEL185
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2449,7 +2376,7 @@ __LABEL181:
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL196
+	jp nc, __LABEL186
 	call _ImprimirIsla
 	call _ImprimirPiratas
 	call _ActualizarOlas
@@ -2461,7 +2388,7 @@ __LABEL181:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL190
+	ld hl, __LABEL180
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2473,7 +2400,7 @@ __LABEL181:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL198
+	ld hl, __LABEL188
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2503,13 +2430,13 @@ __LABEL181:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL199
+	ld hl, __LABEL189
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
 	ld a, 1
 	jp _ComprobarCamino__leave
-__LABEL196:
+__LABEL186:
 	ld a, 2
 	call BORDER
 	ld a, 2
@@ -2527,8 +2454,8 @@ __LABEL196:
 	call _Esperar
 	xor a
 	jp _ComprobarCamino__leave
-__LABEL197:
-__LABEL194:
+__LABEL187:
+__LABEL184:
 	call RND
 	push bc
 	push de
@@ -2538,7 +2465,7 @@ __LABEL194:
 	ld bc, 00000h
 	call __GTF
 	or a
-	jp z, __LABEL201
+	jp z, __LABEL191
 	ld a, 10
 	call _Sonido
 	ld a, 21
@@ -2549,14 +2476,14 @@ __LABEL194:
 	call INK_TMP
 	ld a, 1
 	call PAPER_TMP
-	ld hl, __LABEL202
+	ld hl, __LABEL192
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL203
+	ld hl, __LABEL193
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2566,7 +2493,7 @@ __LABEL194:
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL204
+	jp nc, __LABEL194
 	call _ImprimirIsla
 	call _ImprimirPiratas
 	call _ActualizarOlas
@@ -2578,7 +2505,7 @@ __LABEL194:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL202
+	ld hl, __LABEL192
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2590,7 +2517,7 @@ __LABEL194:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL198
+	ld hl, __LABEL188
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2620,13 +2547,13 @@ __LABEL194:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL199
+	ld hl, __LABEL189
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
 	ld a, 1
 	jp _ComprobarCamino__leave
-__LABEL204:
+__LABEL194:
 	ld a, 2
 	call BORDER
 	ld a, 2
@@ -2644,10 +2571,10 @@ __LABEL204:
 	call _Esperar
 	xor a
 	jp _ComprobarCamino__leave
-__LABEL205:
-__LABEL201:
-__LABEL178:
-__LABEL176:
+__LABEL195:
+__LABEL191:
+__LABEL168:
+__LABEL166:
 	ld a, 1
 _ComprobarCamino__leave:
 	ld sp, ix
@@ -2657,7 +2584,7 @@ _Esperar:
 	push ix
 	ld ix, 0
 	add ix, sp
-__LABEL206:
+__LABEL196:
 	call INKEY
 	push hl
 	ld de, __LABEL9
@@ -2665,9 +2592,9 @@ __LABEL206:
 	ld a, 1
 	call __STREQ
 	or a
-	jp nz, __LABEL206
-__LABEL207:
-__LABEL208:
+	jp nz, __LABEL196
+__LABEL197:
+__LABEL198:
 	call INKEY
 	push hl
 	ld de, __LABEL9
@@ -2675,8 +2602,8 @@ __LABEL208:
 	ld a, 1
 	call __STRNE
 	or a
-	jp nz, __LABEL208
-__LABEL209:
+	jp nz, __LABEL198
+__LABEL199:
 _Esperar__leave:
 	ld sp, ix
 	pop ix
@@ -2692,7 +2619,7 @@ _DesplazarPiratas:
 	ld a, (_MoverPiratas)
 	cp h
 	jp c, _DesplazarPiratas__leave
-__LABEL211:
+__LABEL201:
 	xor a
 	ld (_MoverPiratas), a
 	ld a, (_Piratas.__DATA__ + 1)
@@ -2712,7 +2639,7 @@ __LABEL211:
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL213
+	jp nc, __LABEL203
 	ld hl, 0
 	push hl
 	ld a, (_Piratas.__DATA__ + 1)
@@ -2725,11 +2652,11 @@ __LABEL211:
 	ld a, (hl)
 	ld hl, (_Piratas.__DATA__ + 0 - 1)
 	sub h
-	jp nz, __LABEL214
+	jp nz, __LABEL204
 	ld a, (_Piratas.__DATA__ + 1)
 	dec a
 	and 1
-	jp nz, __LABEL216
+	jp nz, __LABEL206
 	ld a, (_Piratas.__DATA__ + 1)
 	dec a
 	push af
@@ -2739,12 +2666,12 @@ __LABEL211:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL218
+	ld hl, __LABEL208
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL217
-__LABEL216:
+	jp __LABEL207
+__LABEL206:
 	ld a, (_Piratas.__DATA__ + 1)
 	dec a
 	push af
@@ -2754,13 +2681,13 @@ __LABEL216:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL219
+	ld hl, __LABEL209
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL217:
-	jp __LABEL215
-__LABEL214:
+__LABEL207:
+	jp __LABEL205
+__LABEL204:
 	ld a, (_Piratas.__DATA__ + 1)
 	dec a
 	push af
@@ -2774,8 +2701,8 @@ __LABEL214:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL215:
-__LABEL213:
+__LABEL205:
+__LABEL203:
 	ld hl, _Piratas.__DATA__ + 0
 	inc (hl)
 	ld hl, _Piratas.__DATA__ + 1
@@ -2785,19 +2712,19 @@ __LABEL213:
 	ld a, 19
 	pop hl
 	cp h
-	jp nc, __LABEL221
+	jp nc, __LABEL211
 	ld a, 19
 	ld (_Piratas.__DATA__ + 1), a
-__LABEL221:
+__LABEL211:
 	ld a, (_Piratas.__DATA__ + 1)
 	push af
 	ld h, 1
 	pop af
 	cp h
-	jp nc, __LABEL223
+	jp nc, __LABEL213
 	xor a
 	ld (_Piratas.__DATA__ + 1), a
-__LABEL223:
+__LABEL213:
 	ld a, (_Piratas.__DATA__ + 0)
 	push af
 	ld hl, 0
@@ -2811,7 +2738,7 @@ __LABEL223:
 	pop af
 	sub (hl)
 	ccf
-	jp nc, __LABEL225
+	jp nc, __LABEL215
 	ld hl, 0
 	push hl
 	ld a, (_Piratas.__DATA__ + 1)
@@ -2823,7 +2750,7 @@ __LABEL223:
 	ld a, (hl)
 	dec a
 	ld (_Piratas.__DATA__ + 0), a
-__LABEL225:
+__LABEL215:
 	call _ImprimirPiratas
 	xor a
 	call _Sonido
@@ -2842,7 +2769,7 @@ _ImprimirPiratas:
 	ld a, (_Piratas.__DATA__ + 0)
 	or a
 	jp z, _ImprimirPiratas__leave
-__LABEL227:
+__LABEL217:
 	ld a, (_Piratas.__DATA__ + 1)
 	push af
 	ld a, (_Piratas.__DATA__ + 0)
@@ -2851,7 +2778,7 @@ __LABEL227:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL131
+	ld hl, __LABEL163
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2864,7 +2791,7 @@ __LABEL227:
 	call PAPER_TMP
 	ld a, 1
 	call INK_TMP
-	ld hl, __LABEL129
+	ld hl, __LABEL162
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2883,13 +2810,13 @@ _MostrarMapa:
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL228
+	jp nc, __LABEL218
 	call CLS
-	jp __LABEL229
-__LABEL228:
+	jp __LABEL219
+__LABEL218:
 	ld a, 5
 	call _Sonido
-__LABEL229:
+__LABEL219:
 	call _ImprimirIsla
 	call _ImprimirCamino
 	call RND
@@ -2935,7 +2862,7 @@ _DesplazarJugador:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL230
+	ld hl, __LABEL220
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -2949,19 +2876,19 @@ _DesplazarJugador:
 	ld a, 19
 	pop hl
 	cp h
-	jp nc, __LABEL232
+	jp nc, __LABEL222
 	ld a, 19
 	ld (_Jugador.__DATA__ + 1), a
-__LABEL232:
+__LABEL222:
 	ld a, (_Jugador.__DATA__ + 1)
 	push af
 	ld h, 1
 	pop af
 	cp h
-	jp nc, __LABEL234
+	jp nc, __LABEL224
 	ld a, 1
 	ld (_Jugador.__DATA__ + 1), a
-__LABEL234:
+__LABEL224:
 	ld a, (_Jugador.__DATA__ + 0)
 	push af
 	ld hl, 0
@@ -2976,7 +2903,7 @@ __LABEL234:
 	pop hl
 	sub h
 	ccf
-	jp nc, __LABEL236
+	jp nc, __LABEL226
 	ld hl, 0
 	push hl
 	ld a, (_Jugador.__DATA__ + 1)
@@ -2988,7 +2915,7 @@ __LABEL234:
 	ld a, (hl)
 	inc a
 	ld (_Jugador.__DATA__ + 0), a
-__LABEL236:
+__LABEL226:
 	ld a, (_Jugador.__DATA__ + 0)
 	push af
 	ld hl, 0
@@ -3015,7 +2942,7 @@ __LABEL236:
 	pop af
 	sub h
 	ccf
-	jp nc, __LABEL238
+	jp nc, __LABEL228
 	ld hl, 0
 	push hl
 	ld a, (_Jugador.__DATA__ + 1)
@@ -3038,7 +2965,7 @@ __LABEL236:
 	add a, (hl)
 	dec a
 	ld (_Jugador.__DATA__ + 0), a
-__LABEL238:
+__LABEL228:
 	ld a, (_Jugador.__DATA__ + 1)
 	push af
 	ld a, (_Jugador.__DATA__ + 0)
@@ -3068,8 +2995,8 @@ _ImprimirArenasMovedizas:
 	push hl
 	inc sp
 	ld (ix-1), 0
-	jp __LABEL239
-__LABEL242:
+	jp __LABEL229
+__LABEL232:
 	ld hl, 1
 	push hl
 	ld a, (ix-1)
@@ -3094,20 +3021,20 @@ __LABEL242:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL186
+	ld hl, __LABEL176
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL243:
+__LABEL233:
 	inc (ix-1)
-__LABEL239:
+__LABEL229:
 	ld a, (ix-1)
 	push af
 	ld a, 9
 	pop hl
 	cp h
-	jp nc, __LABEL242
-__LABEL241:
+	jp nc, __LABEL232
+__LABEL231:
 _ImprimirArenasMovedizas__leave:
 	ld sp, ix
 	pop ix
@@ -3120,8 +3047,8 @@ _ImprimirCamino:
 	push hl
 	inc sp
 	ld (ix-1), 1
-	jp __LABEL244
-__LABEL247:
+	jp __LABEL234
+__LABEL237:
 	ld a, (ix-1)
 	ld hl, (_Tesoro.__DATA__ + 1 - 1)
 	cp h
@@ -3137,14 +3064,14 @@ __LABEL247:
 	pop af
 	ld h, (hl)
 	or a
-	jr z, __LABEL471
+	jr z, __LABEL460
 	ld a, h
-__LABEL471:
+__LABEL460:
 	or a
-	jp z, __LABEL250
+	jp z, __LABEL240
 	ld a, (ix-1)
 	and 1
-	jp nz, __LABEL251
+	jp nz, __LABEL241
 	ld a, (ix-1)
 	push af
 	ld a, (ix-1)
@@ -3160,12 +3087,12 @@ __LABEL471:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL253
+	ld hl, __LABEL243
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL252
-__LABEL251:
+	jp __LABEL242
+__LABEL241:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-1)
@@ -3181,22 +3108,22 @@ __LABEL251:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL254
+	ld hl, __LABEL244
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL252:
-__LABEL250:
-__LABEL248:
+__LABEL242:
+__LABEL240:
+__LABEL238:
 	inc (ix-1)
-__LABEL244:
+__LABEL234:
 	ld a, (ix-1)
 	push af
 	ld a, 19
 	pop hl
 	cp h
-	jp nc, __LABEL247
-__LABEL246:
+	jp nc, __LABEL237
+__LABEL236:
 	ld a, (_Tesoro.__DATA__ + 1)
 	push af
 	ld a, (_Tesoro.__DATA__ + 0)
@@ -3205,7 +3132,7 @@ __LABEL246:
 	call INK_TMP
 	ld a, 4
 	call PAPER_TMP
-	ld hl, __LABEL255
+	ld hl, __LABEL245
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -3217,12 +3144,12 @@ __LABEL246:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL255
+	ld hl, __LABEL245
 	xor a
 	call __PRINTSTR
 	xor a
 	call INK_TMP
-	ld hl, __LABEL256
+	ld hl, __LABEL246
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -3259,19 +3186,19 @@ _ImprimirIsla:
 	call COPY_ATTR
 	ld a, (_Isla.__DATA__ + 0)
 	ld (ix-1), a
-	jp __LABEL257
-__LABEL260:
+	jp __LABEL247
+__LABEL250:
 	xor a
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL262
+	ld hl, __LABEL252
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL261:
+__LABEL251:
 	inc (ix-1)
-__LABEL257:
+__LABEL247:
 	ld a, (ix-1)
 	push af
 	ld a, (_Isla.__DATA__ + 1)
@@ -3279,23 +3206,23 @@ __LABEL257:
 	add a, h
 	pop hl
 	cp h
-	jp nc, __LABEL260
-__LABEL259:
+	jp nc, __LABEL250
+__LABEL249:
 	ld a, (_Isla.__DATA__ + 40)
 	ld (ix-1), a
-	jp __LABEL263
-__LABEL266:
+	jp __LABEL253
+__LABEL256:
 	ld a, 20
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL268
+	ld hl, __LABEL258
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL267:
+__LABEL257:
 	inc (ix-1)
-__LABEL263:
+__LABEL253:
 	ld a, (ix-1)
 	push af
 	ld a, (_Isla.__DATA__ + 41)
@@ -3303,11 +3230,11 @@ __LABEL263:
 	add a, h
 	pop hl
 	cp h
-	jp nc, __LABEL266
-__LABEL265:
+	jp nc, __LABEL256
+__LABEL255:
 	ld (ix-5), 1
-	jp __LABEL269
-__LABEL272:
+	jp __LABEL259
+__LABEL262:
 	ld hl, 0
 	push hl
 	ld a, (ix-5)
@@ -3365,9 +3292,9 @@ __LABEL272:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL472
+	jr z, __LABEL461
 	ld a, h
-__LABEL472:
+__LABEL461:
 	push af
 	ld a, (ix-1)
 	cp (ix-2)
@@ -3379,24 +3306,24 @@ __LABEL472:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL473
+	jr z, __LABEL462
 	ld a, h
-__LABEL473:
+__LABEL462:
 	pop de
 	or d
-	jp z, __LABEL274
+	jp z, __LABEL264
 	ld a, (ix-5)
 	and 1
-	jp nz, __LABEL276
-	ld de, __LABEL218
+	jp nz, __LABEL266
+	ld de, __LABEL208
 	ld bc, -9
 	call __PSTORE_STR
-	jp __LABEL277
-__LABEL276:
-	ld de, __LABEL219
+	jp __LABEL267
+__LABEL266:
+	ld de, __LABEL209
 	ld bc, -9
 	call __PSTORE_STR
-__LABEL277:
+__LABEL267:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -3406,49 +3333,49 @@ __LABEL277:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL275
-__LABEL274:
+	jp __LABEL265
+__LABEL264:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-2)
 	pop hl
 	cp h
-	jp nc, __LABEL278
+	jp nc, __LABEL268
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL280
+	ld hl, __LABEL270
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL279
-__LABEL278:
+	jp __LABEL269
+__LABEL268:
 	ld a, (ix-1)
 	cp (ix-2)
-	jp nc, __LABEL281
+	jp nc, __LABEL271
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL283
+	ld hl, __LABEL273
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL282
-__LABEL281:
+	jp __LABEL272
+__LABEL271:
 	ld a, (ix-5)
 	and 1
-	jp nz, __LABEL284
-	ld de, __LABEL218
+	jp nz, __LABEL274
+	ld de, __LABEL208
 	ld bc, -9
 	call __PSTORE_STR
-	jp __LABEL285
-__LABEL284:
-	ld de, __LABEL219
+	jp __LABEL275
+__LABEL274:
+	ld de, __LABEL209
 	ld bc, -9
 	call __PSTORE_STR
-__LABEL285:
+__LABEL275:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -3458,9 +3385,9 @@ __LABEL285:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL282:
-__LABEL279:
-__LABEL275:
+__LABEL272:
+__LABEL269:
+__LABEL265:
 	ld hl, 0
 	push hl
 	ld a, (ix-5)
@@ -3559,9 +3486,9 @@ __LABEL275:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL474
+	jr z, __LABEL463
 	ld a, h
-__LABEL474:
+__LABEL463:
 	push af
 	ld a, (ix-1)
 	cp (ix-2)
@@ -3573,24 +3500,24 @@ __LABEL474:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL475
+	jr z, __LABEL464
 	ld a, h
-__LABEL475:
+__LABEL464:
 	pop de
 	or d
-	jp z, __LABEL286
+	jp z, __LABEL276
 	ld a, (ix-5)
 	and 1
-	jp nz, __LABEL288
-	ld de, __LABEL219
+	jp nz, __LABEL278
+	ld de, __LABEL209
 	ld bc, -9
 	call __PSTORE_STR
-	jp __LABEL289
-__LABEL288:
-	ld de, __LABEL218
+	jp __LABEL279
+__LABEL278:
+	ld de, __LABEL208
 	ld bc, -9
 	call __PSTORE_STR
-__LABEL289:
+__LABEL279:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -3600,49 +3527,49 @@ __LABEL289:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL287
-__LABEL286:
+	jp __LABEL277
+__LABEL276:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-2)
 	pop hl
 	cp h
-	jp nc, __LABEL290
+	jp nc, __LABEL280
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL280
+	ld hl, __LABEL270
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL291
-__LABEL290:
+	jp __LABEL281
+__LABEL280:
 	ld a, (ix-1)
 	cp (ix-2)
-	jp nc, __LABEL292
+	jp nc, __LABEL282
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
 	call PRINT_AT
-	ld hl, __LABEL283
+	ld hl, __LABEL273
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL293
-__LABEL292:
+	jp __LABEL283
+__LABEL282:
 	ld a, (ix-5)
 	and 1
-	jp nz, __LABEL294
-	ld de, __LABEL219
+	jp nz, __LABEL284
+	ld de, __LABEL209
 	ld bc, -9
 	call __PSTORE_STR
-	jp __LABEL295
-__LABEL294:
-	ld de, __LABEL218
+	jp __LABEL285
+__LABEL284:
+	ld de, __LABEL208
 	ld bc, -9
 	call __PSTORE_STR
-__LABEL295:
+__LABEL285:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -3652,13 +3579,13 @@ __LABEL295:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL293:
-__LABEL291:
-__LABEL287:
+__LABEL283:
+__LABEL281:
+__LABEL277:
 	ld a, (ix-6)
 	ld (ix-1), a
-	jp __LABEL296
-__LABEL299:
+	jp __LABEL286
+__LABEL289:
 	ld a, (ix-5)
 	push af
 	ld a, (ix-1)
@@ -3667,44 +3594,44 @@ __LABEL299:
 	call PAPER_TMP
 	xor a
 	call INK_TMP
-	ld hl, __LABEL230
+	ld hl, __LABEL220
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL300:
+__LABEL290:
 	inc (ix-1)
-__LABEL296:
+__LABEL286:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-7)
 	pop hl
 	cp h
-	jp nc, __LABEL299
-__LABEL298:
-__LABEL273:
+	jp nc, __LABEL289
+__LABEL288:
+__LABEL263:
 	inc (ix-5)
-__LABEL269:
+__LABEL259:
 	ld a, (ix-5)
 	push af
 	ld a, 19
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL272
-__LABEL271:
+	jp z, __LABEL262
+__LABEL261:
 	ld a, 21
 	push af
 	ld a, 1
 	call PRINT_AT
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL192
+	ld hl, __LABEL182
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
 	ld a, (_Piratas.__DATA__ + 1)
 	or a
-	jp z, __LABEL302
+	jp z, __LABEL292
 	ld a, (_Piratas.__DATA__ + 1)
 	push af
 	ld a, (_Piratas.__DATA__ + 0)
@@ -3713,7 +3640,7 @@ __LABEL271:
 	call INK_TMP
 	ld a, 5
 	call PAPER_TMP
-	ld hl, __LABEL131
+	ld hl, __LABEL163
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -3726,11 +3653,11 @@ __LABEL271:
 	call PAPER_TMP
 	ld a, 1
 	call INK_TMP
-	ld hl, __LABEL129
+	ld hl, __LABEL162
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL302:
+__LABEL292:
 	ld hl, 1
 	call __PAUSE
 _ImprimirIsla__leave:
@@ -3794,26 +3721,26 @@ _GenerarPartida:
 	ld a, l
 	ld (ix-3), a
 	ld (ix-1), 0
-	jp __LABEL303
-__LABEL306:
+	jp __LABEL293
+__LABEL296:
 	ld a, (ix-2)
 	push af
 	ld h, 4
 	pop af
 	call __LTI8
 	or a
-	jp z, __LABEL309
+	jp z, __LABEL299
 	ld (ix-2), 4
-__LABEL309:
+__LABEL299:
 	ld a, (ix-3)
 	push af
 	ld a, 28
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL311
+	jp z, __LABEL301
 	ld (ix-3), 28
-__LABEL311:
+__LABEL301:
 	ld a, (ix-2)
 	push af
 	ld hl, 0
@@ -3844,22 +3771,22 @@ __LABEL311:
 	ld (hl), a
 	ld a, (ix-1)
 	dec a
-	jp nz, __LABEL312
+	jp nz, __LABEL302
 	dec (ix-2)
 	ld a, (ix-3)
 	add a, 2
 	ld (ix-3), a
-	jp __LABEL313
-__LABEL312:
+	jp __LABEL303
+__LABEL302:
 	ld a, (ix-1)
 	sub 19
-	jp nz, __LABEL314
+	jp nz, __LABEL304
 	inc (ix-2)
 	ld a, (ix-3)
 	sub 2
 	ld (ix-3), a
-	jp __LABEL315
-__LABEL314:
+	jp __LABEL305
+__LABEL304:
 	ld a, (ix-2)
 	ld l, a
 	add a, a
@@ -3931,19 +3858,19 @@ __LABEL314:
 	ex de, hl
 	ld a, l
 	ld (ix-3), a
-__LABEL315:
-__LABEL313:
-__LABEL307:
-	inc (ix-1)
+__LABEL305:
 __LABEL303:
+__LABEL297:
+	inc (ix-1)
+__LABEL293:
 	ld a, (ix-1)
 	push af
 	ld a, 20
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL306
-__LABEL305:
+	jp z, __LABEL296
+__LABEL295:
 	ld a, (_Isla.__DATA__ + 2)
 	ld l, a
 	ld h, 0
@@ -3994,8 +3921,8 @@ __LABEL305:
 	ld a, l
 	ld (ix-4), a
 	ld (ix-1), 2
-	jp __LABEL316
-__LABEL319:
+	jp __LABEL306
+__LABEL309:
 	ld a, (ix-1)
 	dec a
 	ld l, a
@@ -4085,7 +4012,7 @@ __LABEL319:
 	pop af
 	sub h
 	ccf
-	jp nc, __LABEL322
+	jp nc, __LABEL312
 	ld hl, 0
 	push hl
 	ld a, (ix-1)
@@ -4123,7 +4050,7 @@ __LABEL319:
 	call __ARRAY
 	pop af
 	ld (hl), a
-__LABEL322:
+__LABEL312:
 	ld a, (ix-1)
 	ld l, a
 	add a, a
@@ -4150,7 +4077,7 @@ __LABEL322:
 	pop hl
 	sub h
 	ccf
-	jp nc, __LABEL324
+	jp nc, __LABEL314
 	ld hl, 0
 	push hl
 	ld a, (ix-1)
@@ -4175,18 +4102,18 @@ __LABEL322:
 	call __ARRAY
 	pop af
 	ld (hl), a
-__LABEL324:
-__LABEL320:
+__LABEL314:
+__LABEL310:
 	inc (ix-1)
-__LABEL316:
+__LABEL306:
 	ld a, (ix-1)
 	push af
 	ld a, (ix-4)
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL319
-__LABEL318:
+	jp z, __LABEL309
+__LABEL308:
 	ld a, (ix-4)
 	ld l, a
 	ld h, 0
@@ -4199,8 +4126,8 @@ __LABEL318:
 	ld a, (ix-4)
 	ld (_Tesoro.__DATA__ + 1), a
 	ld (ix-1), 0
-	jp __LABEL325
-__LABEL328:
+	jp __LABEL315
+__LABEL318:
 __LABEL__nuevoPunto:
 	call RND
 	push bc
@@ -4234,7 +4161,7 @@ __LABEL__nuevoPunto:
 	ld a, (hl)
 	or a
 	jp z, __LABEL__nuevoPunto
-__LABEL331:
+__LABEL321:
 	ld a, (ix-3)
 	ld l, a
 	add a, a
@@ -4305,7 +4232,7 @@ __LABEL331:
 	pop de
 	or d
 	jp nz, __LABEL__nuevoPunto
-__LABEL333:
+__LABEL323:
 	ld a, (ix-2)
 	push af
 	ld hl, 0
@@ -4334,17 +4261,17 @@ __LABEL333:
 	call __ARRAY
 	pop af
 	ld (hl), a
-__LABEL329:
+__LABEL319:
 	inc (ix-1)
-__LABEL325:
+__LABEL315:
 	ld a, (ix-1)
 	push af
 	ld a, 9
 	pop hl
 	call __LTI8
 	or a
-	jp z, __LABEL328
-__LABEL327:
+	jp z, __LABEL318
+__LABEL317:
 	ld a, (_Camino.__DATA__ + 0)
 	ld (_Jugador.__DATA__ + 0), a
 	ld a, 1
@@ -4397,14 +4324,14 @@ _IniciarGraficosArena:
 	push af
 	xor a
 	call PRINT_AT
-	ld hl, __LABEL334
+	ld hl, __LABEL324
 	xor a
 	call __PRINTSTR
 	ld a, 16
 	push af
 	ld a, 8
 	call PRINT_AT
-	ld hl, __LABEL335
+	ld hl, __LABEL325
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4412,7 +4339,7 @@ _IniciarGraficosArena:
 	push af
 	ld a, 8
 	call PRINT_AT
-	ld hl, __LABEL336
+	ld hl, __LABEL326
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4425,7 +4352,7 @@ _IniciarGraficosArena:
 	push af
 	xor a
 	call PRINT_AT
-	ld hl, __LABEL337
+	ld hl, __LABEL327
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4451,7 +4378,7 @@ _EscaparArena:
 	ld bc, -3
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL476
+	ld hl, __LABEL465
 	ld bc, 1
 	ldir
 	call _IniciarGraficosArena
@@ -4459,7 +4386,7 @@ _EscaparArena:
 	add hl, hl
 	ld (ix-6), l
 	ld (ix-5), h
-__LABEL338:
+__LABEL328:
 	ld a, (ix-1)
 	sub 1
 	sbc a, a
@@ -4473,11 +4400,11 @@ __LABEL338:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL477
+	jr z, __LABEL466
 	ld a, h
-__LABEL477:
+__LABEL466:
 	or a
-	jp z, __LABEL339
+	jp z, __LABEL329
 	ld l, (ix-6)
 	ld h, (ix-5)
 	push hl
@@ -4485,7 +4412,7 @@ __LABEL477:
 	pop de
 	or a
 	sbc hl, de
-	jp nc, __LABEL340
+	jp nc, __LABEL330
 	ld l, (ix-6)
 	ld h, (ix-5)
 	dec hl
@@ -4498,7 +4425,7 @@ __LABEL477:
 	pop hl
 	or a
 	sbc hl, de
-	jp nz, __LABEL343
+	jp nz, __LABEL333
 	ld hl, (_ParaTeclaArena)
 	ld (ix-8), l
 	ld (ix-7), h
@@ -4517,7 +4444,7 @@ __LABEL477:
 	ld h, 50
 	pop af
 	cp h
-	jp nc, __LABEL344
+	jp nc, __LABEL334
 	ld de, __LABEL17
 	ld bc, -10
 	call __PSTORE_STR
@@ -4527,18 +4454,18 @@ __LABEL477:
 	call PRINT_AT
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL346
+	ld hl, __LABEL336
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL345
-__LABEL344:
+	jp __LABEL335
+__LABEL334:
 	ld a, (ix-4)
 	push af
 	ld h, 100
 	pop af
 	cp h
-	jp nc, __LABEL347
+	jp nc, __LABEL337
 	ld de, __LABEL24
 	ld bc, -10
 	call __PSTORE_STR
@@ -4548,12 +4475,12 @@ __LABEL344:
 	call PRINT_AT
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL349
+	ld hl, __LABEL339
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL348
-__LABEL347:
+	jp __LABEL338
+__LABEL337:
 	ld de, __LABEL10
 	ld bc, -10
 	call __PSTORE_STR
@@ -4563,17 +4490,17 @@ __LABEL347:
 	call PRINT_AT
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL350
+	ld hl, __LABEL340
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-__LABEL348:
-__LABEL345:
+__LABEL338:
+__LABEL335:
 	ld a, 1
 	call _Sonido
-__LABEL343:
-	jp __LABEL341
-__LABEL340:
+__LABEL333:
+	jp __LABEL331
+__LABEL330:
 	ld l, (ix-8)
 	ld h, (ix-7)
 	dec hl
@@ -4586,10 +4513,10 @@ __LABEL340:
 	pop hl
 	or a
 	sbc hl, de
-	jp nz, __LABEL351
+	jp nz, __LABEL341
 	ld (ix-1), 1
-	jp __LABEL352
-__LABEL351:
+	jp __LABEL342
+__LABEL341:
 	call INKEY
 	ld d, h
 	ld e, l
@@ -4605,8 +4532,8 @@ __LABEL351:
 	xor a
 	call __STREQ
 	or a
-	jp z, __LABEL353
-__LABEL355:
+	jp z, __LABEL343
+__LABEL345:
 	call INKEY
 	push hl
 	ld de, __LABEL9
@@ -4614,15 +4541,15 @@ __LABEL355:
 	ld a, 1
 	call __STRNE
 	or a
-	jp nz, __LABEL355
-__LABEL356:
+	jp nz, __LABEL345
+__LABEL346:
 	ld a, 8
 	push af
 	ld a, 15
 	call PRINT_AT
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL357
+	ld hl, __LABEL347
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -4630,7 +4557,7 @@ __LABEL356:
 	push af
 	ld a, 15
 	call PRINT_AT
-	ld hl, __LABEL358
+	ld hl, __LABEL348
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4638,19 +4565,19 @@ __LABEL356:
 	push af
 	ld a, 7
 	call PRINT_AT
-	ld hl, __LABEL359
+	ld hl, __LABEL349
 	xor a
 	call __PRINTSTR
 	inc (ix-3)
 	ld a, (ix-3)
 	and 1
-	jp nz, __LABEL360
+	jp nz, __LABEL350
 	ld a, 16
 	push af
 	ld a, (ix-3)
 	dec a
 	call PRINT_AT
-	ld hl, __LABEL362
+	ld hl, __LABEL352
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4658,18 +4585,18 @@ __LABEL356:
 	push af
 	ld a, (ix-3)
 	call PRINT_AT
-	ld hl, __LABEL336
+	ld hl, __LABEL326
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL361
-__LABEL360:
+	jp __LABEL351
+__LABEL350:
 	ld a, 16
 	push af
 	ld a, (ix-3)
 	dec a
 	call PRINT_AT
-	ld hl, __LABEL363
+	ld hl, __LABEL353
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4677,11 +4604,11 @@ __LABEL360:
 	push af
 	ld a, (ix-3)
 	call PRINT_AT
-	ld hl, __LABEL364
+	ld hl, __LABEL354
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL361:
+__LABEL351:
 	ld hl, (_HastaTeclaArena)
 	ld (ix-6), l
 	ld (ix-5), h
@@ -4689,8 +4616,8 @@ __LABEL361:
 	ld (ix-7), 0
 	ld a, 7
 	call _Sonido
-	jp __LABEL354
-__LABEL353:
+	jp __LABEL344
+__LABEL343:
 	ld l, (ix-12)
 	ld h, (ix-11)
 	push hl
@@ -4699,24 +4626,24 @@ __LABEL353:
 	xor a
 	call __STRNE
 	or a
-	jp z, __LABEL366
+	jp z, __LABEL356
 	ld (ix-1), 1
-__LABEL366:
-__LABEL354:
-__LABEL352:
-__LABEL341:
-	jp __LABEL338
-__LABEL339:
+__LABEL356:
+__LABEL344:
+__LABEL342:
+__LABEL331:
+	jp __LABEL328
+__LABEL329:
 	call _IniciarGraficosIsla
 	ld a, (ix-1)
 	dec a
-	jp nz, __LABEL367
+	jp nz, __LABEL357
 	xor a
 	jp _EscaparArena__leave
-__LABEL367:
+__LABEL357:
 	ld a, 1
 	jp _EscaparArena__leave
-__LABEL368:
+__LABEL358:
 _EscaparArena__leave:
 	ex af, af'
 	exx
@@ -4753,7 +4680,7 @@ _IniciarGraficosTemplo:
 	push af
 	ld a, 2
 	call PRINT_AT
-	ld hl, __LABEL369
+	ld hl, __LABEL359
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4769,7 +4696,7 @@ _IniciarGraficosTemplo:
 	call PAPER_TMP
 	ld a, 1
 	call FLASH_TMP
-	ld hl, __LABEL253
+	ld hl, __LABEL243
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -4779,7 +4706,7 @@ _IniciarGraficosTemplo:
 	call PRINT_AT
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL262
+	ld hl, __LABEL252
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -4787,7 +4714,7 @@ _IniciarGraficosTemplo:
 	push af
 	ld a, 24
 	call PRINT_AT
-	ld hl, __LABEL335
+	ld hl, __LABEL325
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4795,7 +4722,7 @@ _IniciarGraficosTemplo:
 	push af
 	ld a, 24
 	call PRINT_AT
-	ld hl, __LABEL336
+	ld hl, __LABEL326
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -4805,7 +4732,7 @@ _IniciarGraficosTemplo:
 	call PRINT_AT
 	ld a, 3
 	call INK_TMP
-	ld hl, __LABEL254
+	ld hl, __LABEL244
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -4815,7 +4742,7 @@ _IniciarGraficosTemplo:
 	call PRINT_AT
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL370
+	ld hl, __LABEL360
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
@@ -4827,7 +4754,7 @@ _IniciarGraficosTemplo:
 	call PRINT_AT
 	ld a, 6
 	call INK_TMP
-	ld hl, __LABEL335
+	ld hl, __LABEL325
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -4837,7 +4764,7 @@ _IniciarGraficosTemplo:
 	call PRINT_AT
 	ld a, 6
 	call INK_TMP
-	ld hl, __LABEL336
+	ld hl, __LABEL326
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -4865,7 +4792,7 @@ _SalirTemplo:
 	ld bc, -2
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL478
+	ld hl, __LABEL467
 	ld bc, 1
 	ldir
 	push ix
@@ -4873,7 +4800,7 @@ _SalirTemplo:
 	ld bc, -3
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL479
+	ld hl, __LABEL468
 	ld bc, 1
 	ldir
 	push ix
@@ -4881,7 +4808,7 @@ _SalirTemplo:
 	ld bc, -4
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL480
+	ld hl, __LABEL469
 	ld bc, 1
 	ldir
 	push ix
@@ -4889,20 +4816,20 @@ _SalirTemplo:
 	ld bc, -9
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL481
+	ld hl, __LABEL470
 	ld bc, 1
 	ldir
 	call _IniciarGraficosTemplo
-	ld de, __LABEL370
+	ld de, __LABEL360
 	ld bc, -11
 	call __PSTORE_STR
-	ld de, __LABEL371
+	ld de, __LABEL361
 	ld bc, -13
 	call __PSTORE_STR
-	ld de, __LABEL372
+	ld de, __LABEL362
 	ld bc, -15
 	call __PSTORE_STR
-__LABEL373:
+__LABEL363:
 	ld a, (ix-2)
 	push af
 	ld a, 3
@@ -4924,11 +4851,11 @@ __LABEL373:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL482
+	jr z, __LABEL471
 	ld a, h
-__LABEL482:
+__LABEL471:
 	or a
-	jp z, __LABEL374
+	jp z, __LABEL364
 	ld l, (ix-17)
 	ld h, (ix-16)
 	inc hl
@@ -4949,9 +4876,9 @@ __LABEL482:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL483
+	jr z, __LABEL472
 	ld a, h
-__LABEL483:
+__LABEL472:
 	push af
 	ld a, (ix-8)
 	push af
@@ -4973,12 +4900,12 @@ __LABEL483:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL484
+	jr z, __LABEL473
 	ld a, h
-__LABEL484:
+__LABEL473:
 	pop de
 	or d
-	jp z, __LABEL376
+	jp z, __LABEL366
 	ld (ix-17), 0
 	ld (ix-16), 0
 	ld a, (ix-8)
@@ -4992,9 +4919,9 @@ __LABEL484:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL485
+	jr z, __LABEL474
 	ld a, h
-__LABEL485:
+__LABEL474:
 	push af
 	call INKEY
 	push hl
@@ -5005,17 +4932,17 @@ __LABEL485:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL486
+	jr z, __LABEL475
 	ld a, h
-__LABEL486:
+__LABEL475:
 	or a
-	jp z, __LABEL377
+	jp z, __LABEL367
 	ld (ix-9), 16
 	ld a, 17
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL358
+	ld hl, __LABEL348
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -5023,72 +4950,72 @@ __LABEL486:
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL358
+	ld hl, __LABEL348
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL378
-__LABEL377:
+	jp __LABEL368
+__LABEL367:
 	ld a, (ix-9)
 	push af
 	ld h, 18
 	pop af
 	cp h
-	jp nc, __LABEL380
+	jp nc, __LABEL370
 	ld a, (ix-9)
 	dec a
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL358
+	ld hl, __LABEL348
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
 	inc (ix-9)
-__LABEL380:
-__LABEL378:
+__LABEL370:
+__LABEL368:
 	inc (ix-5)
 	ld a, (ix-5)
 	push af
 	ld a, 3
 	pop hl
 	cp h
-	jp nc, __LABEL382
+	jp nc, __LABEL372
 	ld (ix-5), 0
-__LABEL382:
+__LABEL372:
 	inc (ix-6)
 	ld a, (ix-6)
 	push af
 	ld a, 2
 	pop hl
 	cp h
-	jp nc, __LABEL384
+	jp nc, __LABEL374
 	ld (ix-6), 0
-__LABEL384:
+__LABEL374:
 	inc (ix-7)
 	ld a, (ix-7)
 	push af
 	ld a, 1
 	pop hl
 	cp h
-	jp nc, __LABEL386
+	jp nc, __LABEL376
 	ld (ix-7), 0
-__LABEL386:
+__LABEL376:
 	dec (ix-3)
 	ld a, (ix-3)
 	or a
-	jp nz, __LABEL388
+	jp nz, __LABEL378
 	ld (ix-3), 42
-__LABEL388:
+__LABEL378:
 	dec (ix-4)
 	ld a, (ix-4)
 	push af
 	ld h, 4
 	pop af
 	cp h
-	jp nc, __LABEL390
+	jp nc, __LABEL380
 	ld (ix-4), 37
-__LABEL390:
+__LABEL380:
 	ld a, (ix-4)
 	sub (ix-2)
 	sub 1
@@ -5105,26 +5032,26 @@ __LABEL390:
 	sbc a, a
 	pop de
 	or d
-	jp z, __LABEL392
+	jp z, __LABEL382
 	ld a, (ix-9)
 	sub 18
-	jp nz, __LABEL393
+	jp nz, __LABEL383
 	ld (ix-8), 6
 	ld (ix-4), 39
 	ld a, 2
 	call _Sonido
-	jp __LABEL394
-__LABEL393:
+	jp __LABEL384
+__LABEL383:
 	ld a, (ix-4)
 	sub (ix-2)
-	jp nz, __LABEL396
+	jp nz, __LABEL386
 	inc (ix-1)
-__LABEL396:
-__LABEL394:
-__LABEL392:
+__LABEL386:
+__LABEL384:
+__LABEL382:
 	ld a, (ix-6)
 	or a
-	jp nz, __LABEL397
+	jp nz, __LABEL387
 	ld a, 19
 	push af
 	xor a
@@ -5136,11 +5063,11 @@ __LABEL392:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	jp __LABEL398
-__LABEL397:
+	jp __LABEL388
+__LABEL387:
 	ld a, (ix-6)
 	dec a
-	jp nz, __LABEL399
+	jp nz, __LABEL389
 	ld a, 19
 	push af
 	xor a
@@ -5152,8 +5079,8 @@ __LABEL397:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	jp __LABEL400
-__LABEL399:
+	jp __LABEL390
+__LABEL389:
 	ld a, 19
 	push af
 	xor a
@@ -5165,26 +5092,26 @@ __LABEL399:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-__LABEL400:
-__LABEL398:
+__LABEL390:
+__LABEL388:
 	ld a, (ix-4)
 	push af
 	ld h, 32
 	pop af
 	cp h
-	jp nc, __LABEL401
+	jp nc, __LABEL391
 	ld a, 18
 	push af
 	ld a, (ix-4)
 	call PRINT_AT
 	ld a, 3
 	call INK_TMP
-	ld hl, __LABEL403
+	ld hl, __LABEL393
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL402
-__LABEL401:
+	jp __LABEL392
+__LABEL391:
 	ld a, 18
 	push af
 	ld a, 4
@@ -5193,13 +5120,13 @@ __LABEL401:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL402:
+__LABEL392:
 	ld a, (ix-3)
 	push af
 	ld h, 32
 	pop af
 	cp h
-	jp nc, __LABEL404
+	jp nc, __LABEL394
 	ld a, 15
 	push af
 	ld a, (ix-3)
@@ -5219,7 +5146,7 @@ __LABEL402:
 	call PAPER_TMP
 	ld a, 1
 	call FLASH_TMP
-	ld hl, __LABEL253
+	ld hl, __LABEL243
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -5229,12 +5156,12 @@ __LABEL402:
 	call PRINT_AT
 	ld a, 2
 	call INK_TMP
-	ld hl, __LABEL406
+	ld hl, __LABEL396
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL405
-__LABEL404:
+	jp __LABEL395
+__LABEL394:
 	ld a, 15
 	push af
 	ld a, 1
@@ -5251,25 +5178,25 @@ __LABEL404:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL405:
+__LABEL395:
 	ld a, (ix-8)
 	push af
 	xor a
 	pop hl
 	cp h
-	jp nc, __LABEL407
+	jp nc, __LABEL397
 	dec (ix-2)
 	dec (ix-8)
 	ld a, (ix-8)
 	or a
-	jp nz, __LABEL409
+	jp nz, __LABEL399
 	ld (ix-7), 0
 	ld a, (ix-9)
 	dec a
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL335
+	ld hl, __LABEL325
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -5277,18 +5204,18 @@ __LABEL405:
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL411
+	ld hl, __LABEL401
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL410
-__LABEL409:
+	jp __LABEL400
+__LABEL399:
 	ld a, 17
 	push af
 	ld a, (ix-2)
 	inc a
 	call PRINT_AT
-	ld hl, __LABEL358
+	ld hl, __LABEL348
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -5296,22 +5223,22 @@ __LABEL409:
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL412
+	ld hl, __LABEL402
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL410:
-	jp __LABEL408
-__LABEL407:
+__LABEL400:
+	jp __LABEL398
+__LABEL397:
 	ld a, (ix-7)
 	or a
-	jp nz, __LABEL413
+	jp nz, __LABEL403
 	ld a, (ix-9)
 	dec a
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL335
+	ld hl, __LABEL325
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -5319,18 +5246,18 @@ __LABEL407:
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL336
+	ld hl, __LABEL326
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-	jp __LABEL414
-__LABEL413:
+	jp __LABEL404
+__LABEL403:
 	ld a, (ix-9)
 	dec a
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL415
+	ld hl, __LABEL405
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
@@ -5338,22 +5265,22 @@ __LABEL413:
 	push af
 	ld a, (ix-2)
 	call PRINT_AT
-	ld hl, __LABEL364
+	ld hl, __LABEL354
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL
-__LABEL414:
+__LABEL404:
 	ld a, (ix-9)
 	sub 18
-	jp nz, __LABEL416
+	jp nz, __LABEL406
 	ld a, 3
 	call _Sonido
-	jp __LABEL417
-__LABEL416:
+	jp __LABEL407
+__LABEL406:
 	ld a, 1
 	call _Sonido
-__LABEL417:
-__LABEL408:
+__LABEL407:
+__LABEL398:
 	ld hl, 0
 	push hl
 	ld hl, _graficosPiedra
@@ -5361,14 +5288,14 @@ __LABEL408:
 	ld (23675), hl
 	ld a, (ix-5)
 	or a
-	jp nz, __LABEL418
+	jp nz, __LABEL408
 	ld a, 17
 	push af
 	ld a, 2
 	call PRINT_AT
 	ld a, 6
 	call INK_TMP
-	ld hl, __LABEL335
+	ld hl, __LABEL325
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -5378,16 +5305,51 @@ __LABEL408:
 	call PRINT_AT
 	ld a, 6
 	call INK_TMP
-	ld hl, __LABEL336
+	ld hl, __LABEL326
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL419
-__LABEL418:
+	jp __LABEL409
+__LABEL408:
 	ld a, (ix-5)
 	dec a
-	jp nz, __LABEL420
+	jp nz, __LABEL410
 	ld a, 17
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL405
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 18
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL354
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	jp __LABEL411
+__LABEL410:
+	ld a, (ix-5)
+	sub 2
+	jp nz, __LABEL412
+	ld a, 17
+	push af
+	ld a, 2
+	call PRINT_AT
+	ld a, 6
+	call INK_TMP
+	ld hl, __LABEL414
+	xor a
+	call __PRINTSTR
+	call PRINT_EOL_ATTR
+	ld a, 18
 	push af
 	ld a, 2
 	call PRINT_AT
@@ -5397,28 +5359,15 @@ __LABEL418:
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	ld a, 18
-	push af
-	ld a, 2
-	call PRINT_AT
-	ld a, 6
-	call INK_TMP
-	ld hl, __LABEL364
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL_ATTR
-	jp __LABEL421
-__LABEL420:
-	ld a, (ix-5)
-	sub 2
-	jp nz, __LABEL422
+	jp __LABEL413
+__LABEL412:
 	ld a, 17
 	push af
 	ld a, 2
 	call PRINT_AT
 	ld a, 6
 	call INK_TMP
-	ld hl, __LABEL424
+	ld hl, __LABEL416
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
@@ -5428,54 +5377,32 @@ __LABEL420:
 	call PRINT_AT
 	ld a, 6
 	call INK_TMP
-	ld hl, __LABEL425
+	ld hl, __LABEL417
 	xor a
 	call __PRINTSTR
 	call PRINT_EOL_ATTR
-	jp __LABEL423
-__LABEL422:
-	ld a, 17
-	push af
-	ld a, 2
-	call PRINT_AT
-	ld a, 6
-	call INK_TMP
-	ld hl, __LABEL426
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL_ATTR
-	ld a, 18
-	push af
-	ld a, 2
-	call PRINT_AT
-	ld a, 6
-	call INK_TMP
-	ld hl, __LABEL427
-	xor a
-	call __PRINTSTR
-	call PRINT_EOL_ATTR
-__LABEL423:
-__LABEL421:
-__LABEL419:
+__LABEL413:
+__LABEL411:
+__LABEL409:
 	ld hl, 0
 	push hl
 	ld hl, _graficosTemplo
 	call __ARRAY
 	ld (23675), hl
-__LABEL376:
-	jp __LABEL373
-__LABEL374:
+__LABEL366:
+	jp __LABEL363
+__LABEL364:
 	call _IniciarGraficosIsla
 	ld a, (ix-1)
 	sub 8
 	ccf
-	jp nc, __LABEL428
+	jp nc, __LABEL418
 	ld a, 1
 	jp _SalirTemplo__leave
-__LABEL428:
+__LABEL418:
 	xor a
 	jp _SalirTemplo__leave
-__LABEL429:
+__LABEL419:
 _SalirTemplo__leave:
 	ex af, af'
 	exx
@@ -5508,16 +5435,16 @@ _IniciarGraficosCarrera:
 	call INK
 	call COPY_ATTR
 	call CLS
-	ld hl, 233
+	ld hl, 271
 	push hl
 	ld hl, _vectImgCielo.__DATA__
 	push hl
 	call _Dibujar
-	ld a, 8
+	ld a, 12
 	push af
 	ld a, 9
 	call PRINT_AT
-	ld hl, __LABEL430
+	ld hl, __LABEL420
 	xor a
 	call __PRINTSTR
 	ld a, 18
@@ -5528,59 +5455,10 @@ _IniciarGraficosCarrera:
 	call INK_TMP
 	ld a, 7
 	call PAPER_TMP
-	ld hl, __LABEL431
+	ld hl, __LABEL421
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	ld a, 19
-	push af
-	xor a
-	call PRINT_AT
-	ld a, 4
-	call PAPER_TMP
-	ld hl, __LABEL432
-	xor a
-	call __PRINTSTR
-	call COPY_ATTR
-	ld a, 20
-	push af
-	xor a
-	call PRINT_AT
-	ld a, 4
-	call PAPER_TMP
-	ld hl, __LABEL432
-	xor a
-	call __PRINTSTR
-	call COPY_ATTR
-	ld a, 21
-	push af
-	xor a
-	call PRINT_AT
-	ld a, 4
-	call PAPER_TMP
-	ld hl, __LABEL432
-	xor a
-	call __PRINTSTR
-	call COPY_ATTR
-	ld a, 22
-	push af
-	xor a
-	call PRINT_AT
-	ld a, 4
-	call PAPER_TMP
-	ld hl, __LABEL432
-	xor a
-	call __PRINTSTR
-	call COPY_ATTR
-	xor a
-	push af
-	xor a
-	push af
-	ld a, 4
-	push af
-	ld a, 4
-	push af
-	call _AtributoUltimaLinea
 _IniciarGraficosCarrera__leave:
 	ld sp, ix
 	pop ix
@@ -5603,7 +5481,7 @@ _HuirNativos:
 	ld bc, -1
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL487
+	ld hl, __LABEL476
 	ld bc, 1
 	ldir
 	push ix
@@ -5611,32 +5489,32 @@ _HuirNativos:
 	ld bc, -2
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL488
+	ld hl, __LABEL477
 	ld bc, 1
 	ldir
 	call _IniciarGraficosCarrera
-	ld de, __LABEL433
+	ld de, __LABEL422
 	ld bc, -6
 	call __PSTORE_STR
-	ld de, __LABEL434
+	ld de, __LABEL423
 	ld bc, -8
 	call __PSTORE_STR
-	ld de, __LABEL435
+	ld de, __LABEL424
 	ld bc, -10
 	call __PSTORE_STR
-	ld de, __LABEL436
+	ld de, __LABEL425
 	ld bc, -12
 	call __PSTORE_STR
-	ld de, __LABEL335
+	ld de, __LABEL325
 	ld bc, -14
 	call __PSTORE_STR
-	ld de, __LABEL336
+	ld de, __LABEL326
 	ld bc, -16
 	call __PSTORE_STR
-	ld de, __LABEL415
+	ld de, __LABEL405
 	ld bc, -18
 	call __PSTORE_STR
-	ld de, __LABEL364
+	ld de, __LABEL354
 	ld bc, -20
 	call __PSTORE_STR
 	ld a, 16
@@ -5678,7 +5556,7 @@ _HuirNativos:
 	ld de, __LABEL17
 	ld bc, -26
 	call __PSTORE_STR
-__LABEL437:
+__LABEL426:
 	ld a, (ix-1)
 	push af
 	ld h, 21
@@ -5695,11 +5573,11 @@ __LABEL437:
 	ld h, a
 	pop af
 	or a
-	jr z, __LABEL489
+	jr z, __LABEL478
 	ld a, h
-__LABEL489:
+__LABEL478:
 	or a
-	jp z, __LABEL438
+	jp z, __LABEL427
 	ld l, (ix-22)
 	ld h, (ix-21)
 	inc hl
@@ -5714,7 +5592,7 @@ __LABEL489:
 	ld a, 1
 	call __STREQ
 	or a
-	jp z, __LABEL440
+	jp z, __LABEL429
 	ld l, (ix-24)
 	ld h, (ix-23)
 	inc hl
@@ -5728,17 +5606,17 @@ __LABEL489:
 	xor a
 	call __STREQ
 	or a
-	jp z, __LABEL441
+	jp z, __LABEL430
 	ld de, __LABEL24
 	ld bc, -26
 	call __PSTORE_STR
-	jp __LABEL442
-__LABEL441:
+	jp __LABEL431
+__LABEL430:
 	ld de, __LABEL17
 	ld bc, -26
 	call __PSTORE_STR
-__LABEL442:
-__LABEL440:
+__LABEL431:
+__LABEL429:
 	ld l, (ix-22)
 	ld h, (ix-21)
 	push hl
@@ -5747,13 +5625,13 @@ __LABEL440:
 	or a
 	sbc hl, de
 	ccf
-	jp nc, __LABEL444
+	jp nc, __LABEL433
 	ld (ix-22), 0
 	ld (ix-21), 0
 	inc (ix-1)
 	ld a, (ix-3)
 	or a
-	jp nz, __LABEL445
+	jp nz, __LABEL434
 	ld (ix-3), 1
 	ld a, 16
 	push af
@@ -5773,8 +5651,8 @@ __LABEL440:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	jp __LABEL446
-__LABEL445:
+	jp __LABEL435
+__LABEL434:
 	ld (ix-3), 0
 	ld a, 16
 	push af
@@ -5794,8 +5672,8 @@ __LABEL445:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-__LABEL446:
-__LABEL444:
+__LABEL435:
+__LABEL433:
 	ld l, (ix-24)
 	ld h, (ix-23)
 	push hl
@@ -5807,13 +5685,13 @@ __LABEL444:
 	or a
 	sbc hl, de
 	ccf
-	jp nc, __LABEL448
+	jp nc, __LABEL437
 	ld (ix-24), 0
 	ld (ix-23), 0
 	dec (ix-1)
 	ld a, (ix-3)
 	or a
-	jp nz, __LABEL449
+	jp nz, __LABEL438
 	ld a, 16
 	push af
 	ld a, (ix-1)
@@ -5832,8 +5710,8 @@ __LABEL444:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	jp __LABEL450
-__LABEL449:
+	jp __LABEL439
+__LABEL438:
 	ld a, 16
 	push af
 	ld a, (ix-1)
@@ -5852,10 +5730,10 @@ __LABEL449:
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-__LABEL450:
+__LABEL439:
 	ld a, (ix-4)
 	or a
-	jp nz, __LABEL451
+	jp nz, __LABEL440
 	ld (ix-4), 1
 	ld a, 16
 	push af
@@ -5881,12 +5759,12 @@ __LABEL450:
 	call PRINT_AT
 	ld a, 4
 	call INK_TMP
-	ld hl, __LABEL453
+	ld hl, __LABEL442
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-	jp __LABEL452
-__LABEL451:
+	jp __LABEL441
+__LABEL440:
 	ld (ix-4), 0
 	ld a, 16
 	push af
@@ -5912,14 +5790,14 @@ __LABEL451:
 	call PRINT_AT
 	ld a, 4
 	call INK_TMP
-	ld hl, __LABEL431
+	ld hl, __LABEL421
 	xor a
 	call __PRINTSTR
 	call COPY_ATTR
-__LABEL452:
-__LABEL448:
-	jp __LABEL437
-__LABEL438:
+__LABEL441:
+__LABEL437:
+	jp __LABEL426
+__LABEL427:
 	call _IniciarGraficosIsla
 	ld a, (ix-1)
 	push af
@@ -5927,13 +5805,13 @@ __LABEL438:
 	pop hl
 	sub h
 	ccf
-	jp nc, __LABEL454
+	jp nc, __LABEL443
 	ld a, 1
 	jp _HuirNativos__leave
-__LABEL454:
+__LABEL443:
 	xor a
 	jp _HuirNativos__leave
-__LABEL455:
+__LABEL444:
 _HuirNativos__leave:
 	ex af, af'
 	exx
@@ -5982,7 +5860,7 @@ _AtributoUltimaLinea:
 	ld bc, -3
 	add hl, bc
 	ex de, hl
-	ld hl, __LABEL490
+	ld hl, __LABEL479
 	ld bc, 2
 	ldir
 	ld a, (ix+5)
@@ -5993,37 +5871,37 @@ _AtributoUltimaLinea:
 	push af
 	ld a, (ix+9)
 	ld b, 6
-__LABEL491:
+__LABEL480:
 	add a, a
-	djnz __LABEL491
+	djnz __LABEL480
 	pop de
 	or d
 	push af
 	ld a, (ix+11)
 	ld b, 7
-__LABEL492:
+__LABEL481:
 	add a, a
-	djnz __LABEL492
+	djnz __LABEL481
 	pop de
 	or d
 	ld (ix-1), a
 	ld (ix-3), 223
 	ld (ix-2), 90
-	jp __LABEL456
-__LABEL459:
+	jp __LABEL445
+__LABEL448:
 	ld l, (ix-3)
 	ld h, (ix-2)
 	push hl
 	ld a, (ix-1)
 	pop hl
 	ld (hl), a
-__LABEL460:
+__LABEL449:
 	ld l, (ix-3)
 	ld h, (ix-2)
 	inc hl
 	ld (ix-3), l
 	ld (ix-2), h
-__LABEL456:
+__LABEL445:
 	ld l, (ix-3)
 	ld h, (ix-2)
 	push hl
@@ -6031,8 +5909,8 @@ __LABEL456:
 	pop de
 	or a
 	sbc hl, de
-	jp nc, __LABEL459
-__LABEL458:
+	jp nc, __LABEL448
+__LABEL447:
 _AtributoUltimaLinea__leave:
 	ld sp, ix
 	pop ix
@@ -6879,238 +6757,6 @@ __LABEL127:
 	DEFB 61h
 	DEFB 2Dh
 __LABEL128:
-	DEFW 0009h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-__LABEL129:
-	DEFW 0001h
-	DEFB 92h
-__LABEL130:
-	DEFW 0009h
-	DEFB 53h
-	DEFB 75h
-	DEFB 20h
-	DEFB 62h
-	DEFB 61h
-	DEFB 72h
-	DEFB 63h
-	DEFB 6Fh
-	DEFB 28h
-__LABEL131:
-	DEFW 0001h
-	DEFB 93h
-__LABEL132:
-	DEFW 0012h
-	DEFB 29h
-	DEFB 20h
-	DEFB 65h
-	DEFB 73h
-	DEFB 74h
-	DEFB 61h
-	DEFB 20h
-	DEFB 64h
-	DEFB 65h
-	DEFB 20h
-	DEFB 63h
-	DEFB 61h
-	DEFB 6Dh
-	DEFB 69h
-	DEFB 6Eh
-	DEFB 6Fh
-	DEFB 20h
-	DEFB 61h
-__LABEL133:
-	DEFW 001Fh
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 20h
-	DEFB 69h
-	DEFB 73h
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 2Ch
-	DEFB 20h
-	DEFB 74h
-	DEFB 75h
-	DEFB 20h
-	DEFB 6Dh
-	DEFB 69h
-	DEFB 73h
-	DEFB 69h
-	DEFB 6Fh
-	DEFB 6Eh
-	DEFB 20h
-	DEFB 65h
-	DEFB 73h
-	DEFB 20h
-	DEFB 65h
-	DEFB 6Eh
-	DEFB 63h
-	DEFB 6Fh
-	DEFB 6Eh
-	DEFB 74h
-	DEFB 72h
-	DEFB 61h
-	DEFB 72h
-__LABEL134:
-	DEFW 001Eh
-	DEFB 65h
-	DEFB 6Ch
-	DEFB 20h
-	DEFB 74h
-	DEFB 65h
-	DEFB 73h
-	DEFB 6Fh
-	DEFB 72h
-	DEFB 6Fh
-	DEFB 20h
-	DEFB 61h
-	DEFB 6Eh
-	DEFB 74h
-	DEFB 65h
-	DEFB 73h
-	DEFB 20h
-	DEFB 64h
-	DEFB 65h
-	DEFB 20h
-	DEFB 71h
-	DEFB 75h
-	DEFB 65h
-	DEFB 20h
-	DEFB 6Ch
-	DEFB 6Ch
-	DEFB 65h
-	DEFB 67h
-	DEFB 75h
-	DEFB 65h
-	DEFB 6Eh
-__LABEL135:
-	DEFW 0015h
-	DEFB 79h
-	DEFB 20h
-	DEFB 74h
-	DEFB 65h
-	DEFB 20h
-	DEFB 70h
-	DEFB 75h
-	DEFB 65h
-	DEFB 64h
-	DEFB 61h
-	DEFB 6Eh
-	DEFB 20h
-	DEFB 63h
-	DEFB 61h
-	DEFB 70h
-	DEFB 74h
-	DEFB 75h
-	DEFB 72h
-	DEFB 61h
-	DEFB 72h
-	DEFB 2Eh
-__LABEL136:
-	DEFW 001Dh
-	DEFB 50h
-	DEFB 65h
-	DEFB 72h
-	DEFB 6Fh
-	DEFB 20h
-	DEFB 6Fh
-	DEFB 6Ah
-	DEFB 6Fh
-	DEFB 21h
-	DEFB 20h
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 20h
-	DEFB 69h
-	DEFB 73h
-	DEFB 6Ch
-	DEFB 61h
-	DEFB 20h
-	DEFB 6Eh
-	DEFB 6Fh
-	DEFB 20h
-	DEFB 65h
-	DEFB 73h
-	DEFB 74h
-	DEFB 61h
-	DEFB 20h
-	DEFB 74h
-	DEFB 61h
-	DEFB 6Eh
-__LABEL137:
-	DEFW 001Ah
-	DEFB 64h
-	DEFB 65h
-	DEFB 73h
-	DEFB 69h
-	DEFB 65h
-	DEFB 72h
-	DEFB 74h
-	DEFB 61h
-	DEFB 20h
-	DEFB 63h
-	DEFB 6Fh
-	DEFB 6Dh
-	DEFB 6Fh
-	DEFB 20h
-	DEFB 70h
-	DEFB 65h
-	DEFB 6Eh
-	DEFB 73h
-	DEFB 61h
-	DEFB 62h
-	DEFB 61h
-	DEFB 6Eh
-	DEFB 20h
-	DEFB 6Ch
-	DEFB 6Fh
-	DEFB 73h
-__LABEL138:
-	DEFW 0017h
-	DEFB 70h
-	DEFB 69h
-	DEFB 72h
-	DEFB 61h
-	DEFB 74h
-	DEFB 61h
-	DEFB 73h
-	DEFB 20h
-	DEFB 79h
-	DEFB 20h
-	DEFB 73h
-	DEFB 65h
-	DEFB 72h
-	DEFB 61h
-	DEFB 20h
-	DEFB 75h
-	DEFB 6Eh
-	DEFB 20h
-	DEFB 76h
-	DEFB 69h
-	DEFB 61h
-	DEFB 6Ah
-	DEFB 65h
-__LABEL139:
-	DEFW 000Ah
-	DEFB 70h
-	DEFB 65h
-	DEFB 6Ch
-	DEFB 69h
-	DEFB 67h
-	DEFB 72h
-	DEFB 6Fh
-	DEFB 73h
-	DEFB 6Fh
-	DEFB 2Eh
-__LABEL140:
 	DEFW 001Eh
 	DEFB 50h
 	DEFB 61h
@@ -7142,7 +6788,7 @@ __LABEL140:
 	DEFB 6Ch
 	DEFB 61h
 	DEFB 73h
-__LABEL141:
+__LABEL129:
 	DEFW 001Eh
 	DEFB 74h
 	DEFB 65h
@@ -7174,7 +6820,7 @@ __LABEL141:
 	DEFB 79h
 	DEFB 6Fh
 	DEFB 72h
-__LABEL142:
+__LABEL130:
 	DEFW 001Eh
 	DEFB 64h
 	DEFB 65h
@@ -7206,7 +6852,7 @@ __LABEL142:
 	DEFB 63h
 	DEFB 68h
 	DEFB 6Fh
-__LABEL143:
+__LABEL131:
 	DEFW 001Ch
 	DEFB 65h
 	DEFB 6Dh
@@ -7236,7 +6882,7 @@ __LABEL143:
 	DEFB 20h
 	DEFB 64h
 	DEFB 65h
-__LABEL144:
+__LABEL132:
 	DEFW 0020h
 	DEFB 61h
 	DEFB 6Eh
@@ -7270,7 +6916,7 @@ __LABEL144:
 	DEFB 71h
 	DEFB 75h
 	DEFB 65h
-__LABEL145:
+__LABEL133:
 	DEFW 003Dh
 	DEFB 63h
 	DEFB 75h
@@ -7333,7 +6979,7 @@ __LABEL145:
 	DEFB 6Ah
 	DEFB 6Fh
 	DEFB 2Eh
-__LABEL146:
+__LABEL134:
 	DEFW 001Bh
 	DEFB 4Ch
 	DEFB 61h
@@ -7362,7 +7008,7 @@ __LABEL146:
 	DEFB 64h
 	DEFB 65h
 	DEFB 6Ch
-__LABEL147:
+__LABEL135:
 	DEFW 001Ch
 	DEFB 74h
 	DEFB 65h
@@ -7392,7 +7038,7 @@ __LABEL147:
 	DEFB 69h
 	DEFB 6Eh
 	DEFB 6Fh
-__LABEL148:
+__LABEL136:
 	DEFW 001Eh
 	DEFB 70h
 	DEFB 65h
@@ -7424,7 +7070,7 @@ __LABEL148:
 	DEFB 64h
 	DEFB 61h
 	DEFB 73h
-__LABEL149:
+__LABEL137:
 	DEFW 0018h
 	DEFB 74h
 	DEFB 69h
@@ -7450,7 +7096,7 @@ __LABEL149:
 	DEFB 6Ch
 	DEFB 6Fh
 	DEFB 73h
-__LABEL150:
+__LABEL138:
 	DEFW 001Fh
 	DEFB 70h
 	DEFB 69h
@@ -7483,7 +7129,7 @@ __LABEL150:
 	DEFB 6Ch
 	DEFB 61h
 	DEFB 2Eh
-__LABEL151:
+__LABEL139:
 	DEFW 001Ch
 	DEFB 4Dh
 	DEFB 75h
@@ -7513,7 +7159,7 @@ __LABEL151:
 	DEFB 72h
 	DEFB 61h
 	DEFB 21h
-__LABEL154:
+__LABEL142:
 	DEFW 0011h
 	DEFB 44h
 	DEFB 49h
@@ -7532,19 +7178,25 @@ __LABEL154:
 	DEFB 2Dh
 	DEFB 39h
 	DEFB 29h
-__LABEL155:
+__LABEL143:
 	DEFW 0001h
 	DEFB 30h
-__LABEL156:
+__LABEL144:
 	DEFW 0001h
 	DEFB 39h
-__LABEL168:
+__LABEL156:
 	DEFW 0001h
 	DEFB 0A0h
-__LABEL171:
+__LABEL159:
 	DEFW 0001h
 	DEFB 0A1h
-__LABEL174:
+__LABEL162:
+	DEFW 0001h
+	DEFB 92h
+__LABEL163:
+	DEFW 0001h
+	DEFB 93h
+__LABEL164:
 	DEFW 0019h
 	DEFB 20h
 	DEFB 4Ch
@@ -7571,10 +7223,10 @@ __LABEL174:
 	DEFB 44h
 	DEFB 4Fh
 	DEFB 21h
-__LABEL186:
+__LABEL176:
 	DEFW 0001h
 	DEFB 94h
-__LABEL187:
+__LABEL177:
 	DEFW 001Eh
 	DEFB 20h
 	DEFB 41h
@@ -7606,10 +7258,10 @@ __LABEL187:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL190:
+__LABEL180:
 	DEFW 0001h
 	DEFB 91h
-__LABEL191:
+__LABEL181:
 	DEFW 001Fh
 	DEFB 20h
 	DEFB 45h
@@ -7642,7 +7294,7 @@ __LABEL191:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL192:
+__LABEL182:
 	DEFW 001Dh
 	DEFB 20h
 	DEFB 20h
@@ -7673,7 +7325,7 @@ __LABEL192:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL195:
+__LABEL185:
 	DEFW 001Ah
 	DEFB 20h
 	DEFB 4Eh
@@ -7701,7 +7353,7 @@ __LABEL195:
 	DEFB 4Eh
 	DEFB 21h
 	DEFB 20h
-__LABEL198:
+__LABEL188:
 	DEFW 0016h
 	DEFB 20h
 	DEFB 53h
@@ -7725,7 +7377,7 @@ __LABEL198:
 	DEFB 52h
 	DEFB 21h
 	DEFB 20h
-__LABEL199:
+__LABEL189:
 	DEFW 001Fh
 	DEFB 20h
 	DEFB 20h
@@ -7758,10 +7410,10 @@ __LABEL199:
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL202:
+__LABEL192:
 	DEFW 0001h
 	DEFB 90h
-__LABEL203:
+__LABEL193:
 	DEFW 001Eh
 	DEFB 20h
 	DEFB 43h
@@ -7793,25 +7445,25 @@ __LABEL203:
 	DEFB 44h
 	DEFB 4Fh
 	DEFB 21h
-__LABEL218:
+__LABEL208:
 	DEFW 0001h
 	DEFB 98h
-__LABEL219:
+__LABEL209:
 	DEFW 0001h
 	DEFB 99h
-__LABEL230:
+__LABEL220:
 	DEFW 0001h
 	DEFB 9Fh
-__LABEL253:
+__LABEL243:
 	DEFW 0001h
 	DEFB 9Ch
-__LABEL254:
+__LABEL244:
 	DEFW 0001h
 	DEFB 9Dh
-__LABEL255:
+__LABEL245:
 	DEFW 0001h
 	DEFB 9Eh
-__LABEL256:
+__LABEL246:
 	DEFW 001Bh
 	DEFB 20h
 	DEFB 49h
@@ -7840,19 +7492,19 @@ __LABEL256:
 	DEFB 4Fh
 	DEFB 52h
 	DEFB 4Fh
-__LABEL262:
+__LABEL252:
 	DEFW 0001h
 	DEFB 9Bh
-__LABEL268:
+__LABEL258:
 	DEFW 0001h
 	DEFB 9Ah
-__LABEL280:
+__LABEL270:
 	DEFW 0001h
 	DEFB 97h
-__LABEL283:
+__LABEL273:
 	DEFW 0001h
 	DEFB 96h
-__LABEL334:
+__LABEL324:
 	DEFW 0020h
 	DEFB 98h
 	DEFB 99h
@@ -7886,15 +7538,15 @@ __LABEL334:
 	DEFB 99h
 	DEFB 9Ah
 	DEFB 9Bh
-__LABEL335:
+__LABEL325:
 	DEFW 0002h
 	DEFB 90h
 	DEFB 91h
-__LABEL336:
+__LABEL326:
 	DEFW 0002h
 	DEFB 92h
 	DEFB 93h
-__LABEL337:
+__LABEL327:
 	DEFW 0020h
 	DEFB 45h
 	DEFB 53h
@@ -7928,39 +7580,39 @@ __LABEL337:
 	DEFB 55h
 	DEFB 45h
 	DEFB 21h
-__LABEL346:
+__LABEL336:
 	DEFW 0005h
 	DEFB 9Ch
 	DEFB 20h
 	DEFB 9Ch
 	DEFB 20h
 	DEFB 9Ch
-__LABEL349:
+__LABEL339:
 	DEFW 0005h
 	DEFB 9Dh
 	DEFB 20h
 	DEFB 9Dh
 	DEFB 20h
 	DEFB 9Dh
-__LABEL350:
+__LABEL340:
 	DEFW 0005h
 	DEFB 9Eh
 	DEFB 20h
 	DEFB 9Eh
 	DEFB 20h
 	DEFB 9Eh
-__LABEL357:
+__LABEL347:
 	DEFW 0005h
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
 	DEFB 20h
-__LABEL358:
+__LABEL348:
 	DEFW 0002h
 	DEFB 20h
 	DEFB 20h
-__LABEL359:
+__LABEL349:
 	DEFW 0015h
 	DEFB 9Bh
 	DEFB 98h
@@ -7983,21 +7635,21 @@ __LABEL359:
 	DEFB 99h
 	DEFB 9Ah
 	DEFB 9Bh
-__LABEL362:
+__LABEL352:
 	DEFW 0003h
 	DEFB 20h
 	DEFB 90h
 	DEFB 91h
-__LABEL363:
+__LABEL353:
 	DEFW 0003h
 	DEFB 20h
 	DEFB 94h
 	DEFB 95h
-__LABEL364:
+__LABEL354:
 	DEFW 0002h
 	DEFB 96h
 	DEFB 97h
-__LABEL369:
+__LABEL359:
 	DEFW 001Eh
 	DEFB 53h
 	DEFB 41h
@@ -8029,7 +7681,7 @@ __LABEL369:
 	DEFB 20h
 	DEFB 4Dh
 	DEFB 21h
-__LABEL370:
+__LABEL360:
 	DEFW 0020h
 	DEFB 98h
 	DEFB 99h
@@ -8063,7 +7715,7 @@ __LABEL370:
 	DEFB 9Ah
 	DEFB 98h
 	DEFB 99h
-__LABEL371:
+__LABEL361:
 	DEFW 0020h
 	DEFB 99h
 	DEFB 9Ah
@@ -8097,7 +7749,7 @@ __LABEL371:
 	DEFB 98h
 	DEFB 99h
 	DEFB 9Ah
-__LABEL372:
+__LABEL362:
 	DEFW 0020h
 	DEFB 9Ah
 	DEFB 98h
@@ -8131,47 +7783,47 @@ __LABEL372:
 	DEFB 99h
 	DEFB 9Ah
 	DEFB 98h
-__LABEL403:
+__LABEL393:
 	DEFW 0002h
 	DEFB 9Dh
 	DEFB 20h
-__LABEL406:
+__LABEL396:
 	DEFW 0002h
 	DEFB 9Bh
 	DEFB 20h
-__LABEL411:
+__LABEL401:
 	DEFW 0004h
 	DEFB 92h
 	DEFB 93h
 	DEFB 20h
 	DEFB 20h
-__LABEL412:
+__LABEL402:
 	DEFW 0004h
 	DEFB 20h
 	DEFB 9Eh
 	DEFB 9Fh
 	DEFB 20h
-__LABEL415:
+__LABEL405:
 	DEFW 0002h
 	DEFB 94h
 	DEFB 95h
-__LABEL424:
+__LABEL414:
 	DEFW 0002h
 	DEFB 98h
 	DEFB 99h
-__LABEL425:
+__LABEL415:
 	DEFW 0002h
 	DEFB 9Ah
 	DEFB 9Bh
-__LABEL426:
+__LABEL416:
 	DEFW 0002h
 	DEFB 9Ch
 	DEFB 9Dh
-__LABEL427:
+__LABEL417:
 	DEFW 0002h
 	DEFB 9Eh
 	DEFB 9Fh
-__LABEL430:
+__LABEL420:
 	DEFW 000Eh
 	DEFB 43h
 	DEFB 4Fh
@@ -8187,7 +7839,7 @@ __LABEL430:
 	DEFB 4Fh
 	DEFB 2Fh
 	DEFB 50h
-__LABEL431:
+__LABEL421:
 	DEFW 0020h
 	DEFB 0A0h
 	DEFB 0A1h
@@ -8221,41 +7873,7 @@ __LABEL431:
 	DEFB 0A1h
 	DEFB 0A0h
 	DEFB 0A1h
-__LABEL432:
-	DEFW 0020h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-	DEFB 20h
-__LABEL433:
+__LABEL422:
 	DEFW 0008h
 	DEFB 20h
 	DEFB 98h
@@ -8265,7 +7883,7 @@ __LABEL433:
 	DEFB 98h
 	DEFB 99h
 	DEFB 20h
-__LABEL434:
+__LABEL423:
 	DEFW 0008h
 	DEFB 20h
 	DEFB 9Ah
@@ -8275,7 +7893,7 @@ __LABEL434:
 	DEFB 9Ah
 	DEFB 9Bh
 	DEFB 20h
-__LABEL435:
+__LABEL424:
 	DEFW 0008h
 	DEFB 20h
 	DEFB 9Ch
@@ -8285,7 +7903,7 @@ __LABEL435:
 	DEFB 9Ch
 	DEFB 9Dh
 	DEFB 20h
-__LABEL436:
+__LABEL425:
 	DEFW 0008h
 	DEFB 20h
 	DEFB 9Eh
@@ -8295,7 +7913,7 @@ __LABEL436:
 	DEFB 9Eh
 	DEFB 9Fh
 	DEFB 20h
-__LABEL453:
+__LABEL442:
 	DEFW 0020h
 	DEFB 0A1h
 	DEFB 0A0h
@@ -8399,7 +8017,7 @@ __ADDF:	; Addition
 
 		jp __FPSTACK_POP
 
-#line 8316 "IslaTesoro.zxbas"
+#line 7934 "IslaTesoro.zxbas"
 #line 1 "alloc.asm"
 
 ; vim: ts=4:et:sw=4:
@@ -8753,7 +8371,7 @@ __MEM_SUBTRACT:
 
 	        ENDP
 
-#line 8317 "IslaTesoro.zxbas"
+#line 7935 "IslaTesoro.zxbas"
 #line 1 "array.asm"
 
 ; vim: ts=4:et:sw=4:
@@ -8923,7 +8541,7 @@ TMP_ARR_PTR:
 
 		ENDP
 
-#line 8318 "IslaTesoro.zxbas"
+#line 7936 "IslaTesoro.zxbas"
 #line 1 "bor16.asm"
 
 ; vim:ts=4:et:
@@ -8945,7 +8563,7 @@ __BOR16:
 
 	    ret
 
-#line 8319 "IslaTesoro.zxbas"
+#line 7937 "IslaTesoro.zxbas"
 #line 1 "border.asm"
 
 	; __FASTCALL__ Routine to change de border
@@ -8955,7 +8573,7 @@ __BOR16:
 
 	; Nothing to do! (Directly from the ZX Spectrum ROM)
 
-#line 8320 "IslaTesoro.zxbas"
+#line 7938 "IslaTesoro.zxbas"
 #line 1 "bright.asm"
 
 	; Sets bright flag in ATTR_P permanently
@@ -9012,7 +8630,7 @@ BRIGHT_TMP:
 		ld hl, ATTR_T
 		jr __SET_BRIGHT
 	    ENDP
-#line 8321 "IslaTesoro.zxbas"
+#line 7939 "IslaTesoro.zxbas"
 #line 1 "chr.asm"
 
 	; CHR$(x, y, x) returns the string CHR$(x) + CHR$(y) + CHR$(z)
@@ -9090,7 +8708,7 @@ __CHR_END:
 
 			ENDP
 
-#line 8322 "IslaTesoro.zxbas"
+#line 7940 "IslaTesoro.zxbas"
 #line 1 "circle.asm"
 
 	; Bresenham's like circle algorithm
@@ -9578,7 +9196,7 @@ __CIRCLE_PLOT:
 			ret
 
 			ENDP
-#line 8323 "IslaTesoro.zxbas"
+#line 7941 "IslaTesoro.zxbas"
 
 #line 1 "copy_attr.asm"
 
@@ -10486,7 +10104,7 @@ __REFRESH_TMP:
 
 		ENDP
 
-#line 8325 "IslaTesoro.zxbas"
+#line 7943 "IslaTesoro.zxbas"
 #line 1 "divf.asm"
 
 
@@ -10549,7 +10167,7 @@ __DIVBYZERO:
 
 		ENDP
 
-#line 8326 "IslaTesoro.zxbas"
+#line 7944 "IslaTesoro.zxbas"
 #line 1 "draw.asm"
 
 	; DRAW using bresenhams algorithm and screen positioning
@@ -11035,7 +10653,7 @@ __FASTPLOTEND:
 
 	    ENDP
 
-#line 8327 "IslaTesoro.zxbas"
+#line 7945 "IslaTesoro.zxbas"
 #line 1 "draw3.asm"
 
 	; -----------------------------------------------------------
@@ -11542,7 +11160,7 @@ SUM_B:
 	        jp      __DRAW          ;;forward to LINE-DRAW (Fastcalled)
 
 	        ENDP
-#line 8328 "IslaTesoro.zxbas"
+#line 7946 "IslaTesoro.zxbas"
 #line 1 "eq16.asm"
 
 __EQ16:	; Test if 16bit values HL == DE
@@ -11553,7 +11171,7 @@ __EQ16:	; Test if 16bit values HL == DE
 			inc a
 			ret
 
-#line 8329 "IslaTesoro.zxbas"
+#line 7947 "IslaTesoro.zxbas"
 
 #line 1 "free.asm"
 
@@ -11746,7 +11364,7 @@ __MEM_BLOCK_JOIN:  ; Joins current block (pointed by HL) with next one (pointed 
 
 	        ENDP
 
-#line 8331 "IslaTesoro.zxbas"
+#line 7949 "IslaTesoro.zxbas"
 #line 1 "ftou32reg.asm"
 
 #line 1 "neg32.asm"
@@ -11874,7 +11492,7 @@ __FTOU8:	; Converts float in C ED LH to Unsigned byte in A
 		ld a, l
 		ret
 
-#line 8332 "IslaTesoro.zxbas"
+#line 7950 "IslaTesoro.zxbas"
 #line 1 "gtf.asm"
 
 #line 1 "u32tofreg.asm"
@@ -11994,7 +11612,7 @@ __GTF:	; A > B
 		call __FPSTACK_POP
 		jp __FTOU8; Convert to 8 bits
 
-#line 8333 "IslaTesoro.zxbas"
+#line 7951 "IslaTesoro.zxbas"
 
 #line 1 "inkey.asm"
 
@@ -12058,7 +11676,7 @@ __EMPTY_INKEY:
 
 		ENDP
 
-#line 8335 "IslaTesoro.zxbas"
+#line 7953 "IslaTesoro.zxbas"
 #line 1 "lei8.asm"
 
 __LEI8: ; Signed <= comparison for 8bit int
@@ -12082,7 +11700,7 @@ checkParity:
 	    inc a       ; True
 	    ret
 	    ENDP
-#line 8336 "IslaTesoro.zxbas"
+#line 7954 "IslaTesoro.zxbas"
 #line 1 "loadstr.asm"
 
 
@@ -12128,7 +11746,7 @@ __LOADSTR:		; __FASTCALL__ entry
 			ldir	; Copies string (length number included)
 			pop hl	; Recovers destiny in hl as result
 			ret
-#line 8337 "IslaTesoro.zxbas"
+#line 7955 "IslaTesoro.zxbas"
 #line 1 "ltf.asm"
 
 
@@ -12157,11 +11775,11 @@ __LTF:	; A < B
 		call __FPSTACK_POP
 		jp __FTOU8 ; Convert to 8 bits
 
-#line 8338 "IslaTesoro.zxbas"
+#line 7956 "IslaTesoro.zxbas"
 #line 1 "lti8.asm"
 
 
-#line 8339 "IslaTesoro.zxbas"
+#line 7957 "IslaTesoro.zxbas"
 #line 1 "mul32.asm"
 
 #line 1 "_mul32.asm"
@@ -12254,7 +11872,7 @@ __TO32BIT:  ; Converts H'L'HLB'C'AC to DEHL (Discards H'L'HL)
 			ret
 
 
-#line 8340 "IslaTesoro.zxbas"
+#line 7958 "IslaTesoro.zxbas"
 #line 1 "mulf.asm"
 
 
@@ -12278,7 +11896,7 @@ __MULF:	; Multiplication
 
 		jp __FPSTACK_POP
 
-#line 8341 "IslaTesoro.zxbas"
+#line 7959 "IslaTesoro.zxbas"
 
 
 #line 1 "pause.asm"
@@ -12289,7 +11907,7 @@ __PAUSE:
 		ld b, h
 	    ld c, l
 	    jp 1F3Dh  ; PAUSE_1
-#line 8344 "IslaTesoro.zxbas"
+#line 7962 "IslaTesoro.zxbas"
 #line 1 "ploadf.asm"
 
 	; Parameter / Local var load
@@ -12335,7 +11953,7 @@ __PLOADF:
 	    add hl, de
 	    jp __LOADF
 
-#line 8345 "IslaTesoro.zxbas"
+#line 7963 "IslaTesoro.zxbas"
 
 
 #line 1 "print_eol_attr.asm"
@@ -12349,7 +11967,7 @@ __PLOADF:
 PRINT_EOL_ATTR:
 		call PRINT_EOL
 		jp COPY_ATTR
-#line 8348 "IslaTesoro.zxbas"
+#line 7966 "IslaTesoro.zxbas"
 #line 1 "printstr.asm"
 
 
@@ -12408,7 +12026,7 @@ __PRINT_STR:
 
 			ENDP
 
-#line 8349 "IslaTesoro.zxbas"
+#line 7967 "IslaTesoro.zxbas"
 #line 1 "pstoref.asm"
 
 	; Stores FP number in A ED CB at location HL+IX
@@ -12458,7 +12076,7 @@ __PSTOREF:
 		pop de
 	    jp __STOREF
 
-#line 8350 "IslaTesoro.zxbas"
+#line 7968 "IslaTesoro.zxbas"
 #line 1 "pstorestr.asm"
 
 ; vim:ts=4:et:sw=4
@@ -12779,7 +12397,7 @@ __PSTORE_STR:
 	    add hl, bc
 	    jp __STORE_STR
 
-#line 8351 "IslaTesoro.zxbas"
+#line 7969 "IslaTesoro.zxbas"
 #line 1 "pstorestr2.asm"
 
 ; vim:ts=4:et:sw=4
@@ -12838,7 +12456,7 @@ __PSTORE_STR2:
 	    add hl, bc
 	    jp __STORE_STR2
 
-#line 8352 "IslaTesoro.zxbas"
+#line 7970 "IslaTesoro.zxbas"
 #line 1 "random.asm"
 
 	; RANDOM functions
@@ -12958,7 +12576,7 @@ RND_LOOP:
 
 	    ENDP
 
-#line 8353 "IslaTesoro.zxbas"
+#line 7971 "IslaTesoro.zxbas"
 #line 1 "sgnf.asm"
 
 #line 1 "sgn.asm"
@@ -13005,7 +12623,7 @@ __ENDSGN:
 
 #line 2 "sgnf.asm"
 
-#line 8354 "IslaTesoro.zxbas"
+#line 7972 "IslaTesoro.zxbas"
 #line 1 "sgni8.asm"
 
 	; Returns SGN (SIGN) for 8 bits signed integer
@@ -13018,7 +12636,7 @@ __SGNI8:
 		neg
 		ret
 
-#line 8355 "IslaTesoro.zxbas"
+#line 7973 "IslaTesoro.zxbas"
 
 
 #line 1 "strcat.asm"
@@ -13167,7 +12785,7 @@ __STRCATEND:
 
 			ENDP
 
-#line 8358 "IslaTesoro.zxbas"
+#line 7976 "IslaTesoro.zxbas"
 #line 1 "string.asm"
 
 	; String library
@@ -13396,7 +13014,7 @@ __FREE_END:
 
 			ENDP
 
-#line 8359 "IslaTesoro.zxbas"
+#line 7977 "IslaTesoro.zxbas"
 
 #line 1 "strslice.asm"
 
@@ -13506,7 +13124,7 @@ __FREE_ON_EXIT:
 
 		ENDP
 
-#line 8361 "IslaTesoro.zxbas"
+#line 7979 "IslaTesoro.zxbas"
 #line 1 "sub32.asm"
 
 	; SUB32
@@ -13536,7 +13154,7 @@ __SUB32:
 		push bc		; puts return address back
 		exx
 		ret
-#line 8362 "IslaTesoro.zxbas"
+#line 7980 "IslaTesoro.zxbas"
 #line 1 "subf.asm"
 
 
@@ -13563,7 +13181,7 @@ __SUBF:	; Subtraction
 
 		jp __FPSTACK_POP
 
-#line 8363 "IslaTesoro.zxbas"
+#line 7981 "IslaTesoro.zxbas"
 
 #line 1 "val.asm"
 
@@ -13686,7 +13304,7 @@ __RET_ZERO:	; Returns 0 Floating point on error
 
 		ENDP
 
-#line 8365 "IslaTesoro.zxbas"
+#line 7983 "IslaTesoro.zxbas"
 
 ZXBASIC_USER_DATA:
 	_input_LastK EQU 23560
@@ -13716,7 +13334,7 @@ _cuenta:
 _res:
 	DEFB 00, 00
 _imgCaptura:
-	DEFW __LABEL493
+	DEFW __LABEL482
 _imgCaptura.__DATA__.__PTR__:
 	DEFW _imgCaptura.__DATA__
 _imgCaptura.__DATA__:
@@ -17629,11 +17247,11 @@ _imgCaptura.__DATA__:
 	DEFB 6Ah
 	DEFB 6Ah
 	DEFB 39h
-__LABEL493:
+__LABEL482:
 	DEFW 0000h
 	DEFB 01h
 _imgArena:
-	DEFW __LABEL494
+	DEFW __LABEL483
 _imgArena.__DATA__.__PTR__:
 	DEFW _imgArena.__DATA__
 _imgArena.__DATA__:
@@ -21349,11 +20967,11 @@ _imgArena.__DATA__:
 	DEFB 70h
 	DEFB 70h
 	DEFB 02h
-__LABEL494:
+__LABEL483:
 	DEFW 0000h
 	DEFB 01h
 _imgLanzas:
-	DEFW __LABEL495
+	DEFW __LABEL484
 _imgLanzas.__DATA__.__PTR__:
 	DEFW _imgLanzas.__DATA__
 _imgLanzas.__DATA__:
@@ -25126,11 +24744,11 @@ _imgLanzas.__DATA__:
 	DEFB 50h
 	DEFB 50h
 	DEFB 47h
-__LABEL495:
+__LABEL484:
 	DEFW 0000h
 	DEFB 01h
 _imgTesoro:
-	DEFW __LABEL496
+	DEFW __LABEL485
 _imgTesoro.__DATA__.__PTR__:
 	DEFW _imgTesoro.__DATA__
 _imgTesoro.__DATA__:
@@ -28254,11 +27872,11 @@ _imgTesoro.__DATA__:
 	DEFB 70h
 	DEFB 70h
 	DEFB 9Eh
-__LABEL496:
+__LABEL485:
 	DEFW 0000h
 	DEFB 01h
 _imgPiedra:
-	DEFW __LABEL497
+	DEFW __LABEL486
 _imgPiedra.__DATA__.__PTR__:
 	DEFW _imgPiedra.__DATA__
 _imgPiedra.__DATA__:
@@ -31098,252 +30716,290 @@ _imgPiedra.__DATA__:
 	DEFB 7Ah
 	DEFB 7Ah
 	DEFB 02h
-__LABEL497:
+__LABEL486:
 	DEFW 0000h
 	DEFB 01h
 _vectImgCielo:
-	DEFW __LABEL498
+	DEFW __LABEL487
 _vectImgCielo.__DATA__.__PTR__:
 	DEFW _vectImgCielo.__DATA__
 _vectImgCielo.__DATA__:
 	DEFB 0CAh
-	DEFB 0AEh
-	DEFB 11h
-	DEFB 0Bh
-	DEFB 0AFh
-	DEFB 1Eh
-	DEFB 0Ch
-	DEFB 0A9h
-	DEFB 26h
-	DEFB 0Ah
-	DEFB 0A2h
-	DEFB 0CCh
-	DEFB 04h
-	DEFB 0A7h
-	DEFB 0D2h
-	DEFB 08h
-	DEFB 0AAh
-	DEFB 0DAh
-	DEFB 05h
-	DEFB 0A4h
-	DEFB 0D8h
-	DEFB 06h
-	DEFB 8Ch
-	DEFB 2Ah
-	DEFB 08h
-	DEFB 8Fh
-	DEFB 30h
-	DEFB 08h
-	DEFB 89h
-	DEFB 34h
-	DEFB 07h
-	DEFB 0CCh
-	DEFB 15h
-	DEFB 0D0h
-	DEFB 1Ch
-	DEFB 0CCh
-	DEFB 1Fh
-	DEFB 0CAh
-	DEFB 1Ah
-	DEFB 0D4h
-	DEFB 1Eh
-	DEFB 0DAh
-	DEFB 17h
-	DEFB 0D8h
-	DEFB 14h
-	DEFB 0DCh
-	DEFB 13h
-	DEFB 0D8h
-	DEFB 18h
+	DEFB 9Fh
 	DEFB 0DBh
-	DEFB 16h
-	DEFB 2Bh
 	DEFB 12h
-	DEFB 27h
-	DEFB 08h
-	DEFB 21h
+	DEFB 0CCh
 	DEFB 1Bh
-	DEFB 1Bh
-	DEFB 12h
-	DEFB 18h
-	DEFB 12h
-	DEFB 0Dh
-	DEFB 37h
-	DEFB 2Ah
-	DEFB 2Dh
-	DEFB 2Ch
-	DEFB 2Bh
-	DEFB 33h
-	DEFB 34h
-	DEFB 34h
-	DEFB 39h
-	DEFB 38h
-	DEFB 33h
-	DEFB 30h
-	DEFB 39h
-	DEFB 2Eh
 	DEFB 0CBh
-	DEFB 94h
-	DEFB 0A5h
-	DEFB 93h
-	DEFB 0C2h
-	DEFB 04h
-	DEFB 7Eh
 	DEFB 0CAh
-	DEFB 91h
-	DEFB 0C5h
-	DEFB 07h
-	DEFB 94h
 	DEFB 0A0h
+	DEFB 10h
+	DEFB 07h
+	DEFB 0A0h
+	DEFB 20h
+	DEFB 0Eh
+	DEFB 0A9h
+	DEFB 2Ch
 	DEFB 08h
-	DEFB 0CBh
-	DEFB 8Eh
-	DEFB 0A5h
-	DEFB 8Ch
-	DEFB 0B1h
-	DEFB 86h
-	DEFB 0Ch
-	DEFB 8Ch
-	DEFB 0B1h
-	DEFB 90h
-	DEFB 0C1h
-	DEFB 85h
-	DEFB 44h
+	DEFB 9Bh
+	DEFB 2Fh
+	DEFB 0Ah
 	DEFB 0CCh
-	DEFB 2Dh
-	DEFB 0B2h
-	DEFB 2Dh
-	DEFB 0C7h
-	DEFB 2Bh
-	DEFB 9Eh
+	DEFB 1Ch
+	DEFB 1Bh
+	DEFB 23h
+	DEFB 32h
+	DEFB 15h
+	DEFB 31h
+	DEFB 18h
+	DEFB 2Ah
+	DEFB 21h
+	DEFB 29h
+	DEFB 1Bh
+	DEFB 2Ch
+	DEFB 1Ch
+	DEFB 2Fh
+	DEFB 20h
+	DEFB 15h
+	DEFB 20h
+	DEFB 10h
 	DEFB 0CAh
-	DEFB 0A4h
-	DEFB 61h
-	DEFB 13h
+	DEFB 0A6h
+	DEFB 5Ah
+	DEFB 0Ah
+	DEFB 0A6h
+	DEFB 62h
+	DEFB 0Ch
+	DEFB 0ADh
+	DEFB 6Dh
+	DEFB 08h
 	DEFB 0CCh
+	DEFB 1Eh
+	DEFB 64h
 	DEFB 19h
-	DEFB 65h
+	DEFB 5Fh
+	DEFB 0Fh
+	DEFB 62h
+	DEFB 14h
+	DEFB 69h
+	DEFB 11h
+	DEFB 72h
+	DEFB 1Ah
+	DEFB 53h
+	DEFB 0CAh
+	DEFB 93h
+	DEFB 90h
+	DEFB 09h
+	DEFB 91h
+	DEFB 9Bh
+	DEFB 0Ah
+	DEFB 9Bh
+	DEFB 0A3h
+	DEFB 07h
+	DEFB 0CCh
+	DEFB 2Ch
+	DEFB 9Eh
+	DEFB 2Dh
+	DEFB 95h
+	DEFB 2Bh
+	DEFB 8Ah
+	DEFB 28h
+	DEFB 0A0h
+	DEFB 22h
+	DEFB 0A3h
+	DEFB 0CAh
+	DEFB 70h
+	DEFB 48h
+	DEFB 07h
+	DEFB 70h
+	DEFB 57h
+	DEFB 07h
+	DEFB 0CDh
+	DEFB 0Ah
+	DEFB 0Ah
+	DEFB 0Ah
+	DEFB 0Bh
+	DEFB 09h
+	DEFB 0Bh
+	DEFB 0Ah
+	DEFB 09h
+	DEFB 0Ah
+	DEFB 08h
+	DEFB 09h
+	DEFB 08h
+	DEFB 0CAh
+	DEFB 77h
+	DEFB 79h
+	DEFB 06h
+	DEFB 77h
+	DEFB 87h
+	DEFB 07h
+	DEFB 0CDh
+	DEFB 09h
+	DEFB 10h
+	DEFB 09h
+	DEFB 11h
+	DEFB 08h
+	DEFB 11h
+	DEFB 09h
+	DEFB 0Fh
+	DEFB 09h
+	DEFB 0Eh
+	DEFB 08h
+	DEFB 0Eh
+	DEFB 0CAh
+	DEFB 86h
+	DEFB 59h
+	DEFB 06h
+	DEFB 86h
+	DEFB 66h
+	DEFB 06h
+	DEFB 0CDh
+	DEFB 07h
+	DEFB 0Ch
+	DEFB 07h
+	DEFB 0Dh
+	DEFB 06h
+	DEFB 0Dh
+	DEFB 07h
+	DEFB 0Bh
+	DEFB 07h
+	DEFB 0Ah
+	DEFB 06h
+	DEFB 0Ah
 	DEFB 0FFh
 	DEFB 38h
-	DEFB 3Dh
-	DEFB 3Dh
-	DEFB 02h
 	DEFB 38h
-	DEFB 38h
-	DEFB 19h
-	DEFB 3Dh
-	DEFB 3Dh
-	DEFB 04h
-	DEFB 38h
-	DEFB 38h
-	DEFB 02h
-	DEFB 3Eh
-	DEFB 3Eh
-	DEFB 03h
-	DEFB 38h
-	DEFB 38h
-	DEFB 0Fh
-	DEFB 3Dh
-	DEFB 3Dh
-	DEFB 05h
-	DEFB 38h
-	DEFB 38h
-	DEFB 00h
-	DEFB 3Eh
-	DEFB 3Eh
-	DEFB 04h
-	DEFB 38h
-	DEFB 38h
-	DEFB 08h
+	DEFB 22h
 	DEFB 3Dh
 	DEFB 3Dh
 	DEFB 01h
 	DEFB 38h
 	DEFB 38h
-	DEFB 03h
-	DEFB 3Dh
-	DEFB 3Dh
-	DEFB 04h
-	DEFB 38h
-	DEFB 38h
-	DEFB 00h
-	DEFB 3Eh
-	DEFB 3Eh
-	DEFB 04h
-	DEFB 38h
-	DEFB 38h
-	DEFB 08h
-	DEFB 3Dh
-	DEFB 3Dh
 	DEFB 01h
-	DEFB 38h
-	DEFB 38h
-	DEFB 06h
 	DEFB 3Dh
 	DEFB 3Dh
-	DEFB 00h
-	DEFB 38h
-	DEFB 38h
-	DEFB 01h
-	DEFB 3Eh
-	DEFB 3Eh
-	DEFB 04h
-	DEFB 38h
-	DEFB 38h
-	DEFB 02h
-	DEFB 3Dh
-	DEFB 3Dh
-	DEFB 07h
-	DEFB 38h
-	DEFB 38h
-	DEFB 06h
-	DEFB 3Dh
-	DEFB 3Dh
-	DEFB 02h
-	DEFB 38h
-	DEFB 38h
-	DEFB 00h
-	DEFB 3Eh
-	DEFB 3Eh
 	DEFB 03h
-	DEFB 38h
-	DEFB 38h
-	DEFB 02h
-	DEFB 3Dh
-	DEFB 3Dh
-	DEFB 05h
-	DEFB 38h
-	DEFB 38h
-	DEFB 08h
-	DEFB 3Dh
-	DEFB 3Dh
-	DEFB 02h
 	DEFB 38h
 	DEFB 38h
 	DEFB 09h
+	DEFB 3Eh
+	DEFB 3Eh
+	DEFB 01h
+	DEFB 38h
+	DEFB 38h
+	DEFB 03h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 03h
+	DEFB 38h
+	DEFB 38h
+	DEFB 01h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 03h
+	DEFB 38h
+	DEFB 38h
+	DEFB 08h
+	DEFB 3Eh
+	DEFB 3Eh
+	DEFB 03h
+	DEFB 38h
+	DEFB 38h
+	DEFB 01h
 	DEFB 3Dh
 	DEFB 3Dh
 	DEFB 05h
 	DEFB 38h
 	DEFB 38h
-	DEFB 08h
+	DEFB 00h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 03h
+	DEFB 38h
+	DEFB 38h
+	DEFB 02h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 01h
+	DEFB 38h
+	DEFB 38h
+	DEFB 01h
+	DEFB 3Eh
+	DEFB 3Eh
+	DEFB 03h
+	DEFB 38h
+	DEFB 38h
+	DEFB 01h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 05h
+	DEFB 38h
+	DEFB 38h
+	DEFB 00h
 	DEFB 3Dh
 	DEFB 3Dh
 	DEFB 02h
 	DEFB 38h
 	DEFB 38h
-	DEFB 0FFh
+	DEFB 01h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 03h
 	DEFB 38h
 	DEFB 38h
-	DEFB 0FFh
+	DEFB 01h
+	DEFB 3Eh
+	DEFB 3Eh
+	DEFB 03h
+	DEFB 38h
+	DEFB 38h
+	DEFB 02h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 04h
+	DEFB 38h
+	DEFB 38h
+	DEFB 06h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 04h
+	DEFB 38h
+	DEFB 38h
+	DEFB 01h
+	DEFB 3Eh
+	DEFB 3Eh
+	DEFB 03h
+	DEFB 38h
+	DEFB 38h
+	DEFB 11h
+	DEFB 3Dh
+	DEFB 3Dh
+	DEFB 02h
+	DEFB 38h
+	DEFB 38h
+	DEFB 03h
+	DEFB 3Eh
+	DEFB 3Eh
+	DEFB 01h
 	DEFB 38h
 	DEFB 38h
 	DEFB 14h
-__LABEL498:
+	DEFB 3Dh
+	DEFB 38h
+	DEFB 38h
+	DEFB 0FFh
+	DEFB 38h
+	DEFB 38h
+	DEFB 69h
+	DEFB 24h
+	DEFB 24h
+	DEFB 9Eh
+__LABEL487:
 	DEFW 0000h
 	DEFB 01h
 _vectImgTemplo:
-	DEFW __LABEL499
+	DEFW __LABEL488
 _vectImgTemplo.__DATA__.__PTR__:
 	DEFW _vectImgTemplo.__DATA__
 _vectImgTemplo.__DATA__:
@@ -31493,11 +31149,11 @@ _vectImgTemplo.__DATA__:
 	DEFB 07h
 	DEFB 07h
 	DEFB 0FCh
-__LABEL499:
+__LABEL488:
 	DEFW 0000h
 	DEFB 01h
 _vectImgArena:
-	DEFW __LABEL500
+	DEFW __LABEL489
 _vectImgArena.__DATA__.__PTR__:
 	DEFW _vectImgArena.__DATA__
 _vectImgArena.__DATA__:
@@ -31979,11 +31635,11 @@ _vectImgArena.__DATA__:
 	DEFB 00h
 	DEFB 00h
 	DEFB 0BEh
-__LABEL500:
+__LABEL489:
 	DEFW 0000h
 	DEFB 01h
 _solidPattern:
-	DEFW __LABEL501
+	DEFW __LABEL490
 _solidPattern.__DATA__.__PTR__:
 	DEFW _solidPattern.__DATA__
 _solidPattern.__DATA__:
@@ -31995,11 +31651,11 @@ _solidPattern.__DATA__:
 	DEFB 0FFh
 	DEFB 0FFh
 	DEFB 0FFh
-__LABEL501:
+__LABEL490:
 	DEFW 0000h
 	DEFB 01h
 _graficosGenerales:
-	DEFW __LABEL502
+	DEFW __LABEL491
 _graficosGenerales.__DATA__.__PTR__:
 	DEFW _graficosGenerales.__DATA__
 _graficosGenerales.__DATA__:
@@ -32163,12 +31819,12 @@ _graficosGenerales.__DATA__:
 	DEFB 0BDh
 	DEFB 42h
 	DEFB 3Ch
-__LABEL502:
+__LABEL491:
 	DEFW 0001h
 	DEFW 0008h
 	DEFB 01h
 _graficosCarrera:
-	DEFW __LABEL503
+	DEFW __LABEL492
 _graficosCarrera.__DATA__.__PTR__:
 	DEFW _graficosCarrera.__DATA__
 _graficosCarrera.__DATA__:
@@ -32316,11 +31972,11 @@ _graficosCarrera.__DATA__:
 	DEFB 0FFh
 	DEFB 0BFh
 	DEFB 0FFh
-__LABEL503:
+__LABEL492:
 	DEFW 0000h
 	DEFB 01h
 _graficosPiedra:
-	DEFW __LABEL504
+	DEFW __LABEL493
 _graficosPiedra.__DATA__.__PTR__:
 	DEFW _graficosPiedra.__DATA__
 _graficosPiedra.__DATA__:
@@ -32452,11 +32108,11 @@ _graficosPiedra.__DATA__:
 	DEFB 04h
 	DEFB 18h
 	DEFB 0E0h
-__LABEL504:
+__LABEL493:
 	DEFW 0000h
 	DEFB 01h
 _graficosTemplo:
-	DEFW __LABEL505
+	DEFW __LABEL494
 _graficosTemplo.__DATA__.__PTR__:
 	DEFW _graficosTemplo.__DATA__
 _graficosTemplo.__DATA__:
@@ -32588,11 +32244,11 @@ _graficosTemplo.__DATA__:
 	DEFB 0CBh
 	DEFB 0AFh
 	DEFB 12h
-__LABEL505:
+__LABEL494:
 	DEFW 0000h
 	DEFB 01h
 _graficosArena:
-	DEFW __LABEL506
+	DEFW __LABEL495
 _graficosArena.__DATA__.__PTR__:
 	DEFW _graficosArena.__DATA__
 _graficosArena.__DATA__:
@@ -32716,11 +32372,11 @@ _graficosArena.__DATA__:
 	DEFB 7Eh
 	DEFB 3Ch
 	DEFB 18h
-__LABEL506:
+__LABEL495:
 	DEFW 0000h
 	DEFB 01h
 _Isla:
-	DEFW __LABEL507
+	DEFW __LABEL496
 _Isla.__DATA__.__PTR__:
 	DEFW _Isla.__DATA__
 _Isla.__DATA__:
@@ -32766,12 +32422,12 @@ _Isla.__DATA__:
 	DEFB 00h
 	DEFB 00h
 	DEFB 00h
-__LABEL507:
+__LABEL496:
 	DEFW 0001h
 	DEFW 0002h
 	DEFB 01h
 _Camino:
-	DEFW __LABEL508
+	DEFW __LABEL497
 _Camino.__DATA__.__PTR__:
 	DEFW _Camino.__DATA__
 _Camino.__DATA__:
@@ -32794,21 +32450,21 @@ _Camino.__DATA__:
 	DEFB 00h
 	DEFB 00h
 	DEFB 00h
-__LABEL508:
+__LABEL497:
 	DEFW 0000h
 	DEFB 01h
 _Tesoro:
-	DEFW __LABEL509
+	DEFW __LABEL498
 _Tesoro.__DATA__.__PTR__:
 	DEFW _Tesoro.__DATA__
 _Tesoro.__DATA__:
 	DEFB 00h
 	DEFB 00h
-__LABEL509:
+__LABEL498:
 	DEFW 0000h
 	DEFB 01h
 _ArenasMovedizas:
-	DEFW __LABEL510
+	DEFW __LABEL499
 _ArenasMovedizas.__DATA__.__PTR__:
 	DEFW _ArenasMovedizas.__DATA__
 _ArenasMovedizas.__DATA__:
@@ -32832,51 +32488,51 @@ _ArenasMovedizas.__DATA__:
 	DEFB 00h
 	DEFB 00h
 	DEFB 00h
-__LABEL510:
+__LABEL499:
 	DEFW 0001h
 	DEFW 0002h
 	DEFB 01h
 _Jugador:
-	DEFW __LABEL511
+	DEFW __LABEL500
 _Jugador.__DATA__.__PTR__:
 	DEFW _Jugador.__DATA__
 _Jugador.__DATA__:
 	DEFB 00h
 	DEFB 00h
-__LABEL511:
+__LABEL500:
 	DEFW 0000h
 	DEFB 01h
 _Piratas:
-	DEFW __LABEL512
+	DEFW __LABEL501
 _Piratas.__DATA__.__PTR__:
 	DEFW _Piratas.__DATA__
 _Piratas.__DATA__:
 	DEFB 00h
 	DEFB 00h
-__LABEL512:
+__LABEL501:
 	DEFW 0000h
 	DEFB 01h
-__LABEL462:
+__LABEL451:
 	DEFB 00h
 	DEFB 40h
-__LABEL463:
+__LABEL452:
 	DEFB 00h
 	DEFB 58h
-__LABEL476:
+__LABEL465:
 	DEFB 08h
-__LABEL478:
+__LABEL467:
 	DEFB 18h
-__LABEL479:
+__LABEL468:
 	DEFB 10h
-__LABEL480:
+__LABEL469:
 	DEFB 07h
-__LABEL481:
+__LABEL470:
 	DEFB 12h
-__LABEL487:
+__LABEL476:
 	DEFB 0Ch
-__LABEL488:
+__LABEL477:
 	DEFB 1Ch
-__LABEL490:
+__LABEL479:
 	DEFB 0FFh
 	DEFB 5Ah
 ZXBASIC_MEM_HEAP:

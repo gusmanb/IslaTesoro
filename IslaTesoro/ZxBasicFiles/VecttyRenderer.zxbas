@@ -118,7 +118,7 @@ sub Dibujar(ImageSource as uinteger, Length as uinteger)
             x0 = peek(imgAddr + 1)
 			imgAddr = imgAddr + 2
 
-			print at x0, y0 ; " ";
+			print at y0, x0 ; " ";
 
         end if
 

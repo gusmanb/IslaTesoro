@@ -421,22 +421,22 @@ print "-Pulsa una tecla-"
 
 Esperar()
 
-cls
+'cls
 
-print at 0,0;"         "; ink 1; paper 7; "\C"
-print at 1,0;"Su barco("; ink 2; "\D"; ink 7 ; ") esta de camino a"
-print        "la isla, tu mision es encontrar"
-print        "el tesoro antes de que lleguen"
-print        "y te puedan capturar."
-print
-print        "Pero ojo! la isla no esta tan"
-print        "desierta como pensaban los"
-print        "piratas y sera un viaje"
-print        "peligroso."
-print
-print at 21, 0; "-Pulsa una tecla-"
+'print at 0,0;"         "; ink 1; paper 7; "\C"
+'print at 1,0;"Su barco("; ink 2; "\D"; ink 7 ; ") esta de camino a"
+'print        "la isla, tu mision es encontrar"
+'print        "el tesoro antes de que lleguen"
+'print        "y te puedan capturar."
+'print
+'print        "Pero ojo! la isla no esta tan"
+'print        "desierta como pensaban los"
+'print        "piratas y sera un viaje"
+'print        "peligroso."
+'print
+'print at 21, 0; "-Pulsa una tecla-"
 
-Esperar()
+'Esperar()
 
 cls
 
@@ -1299,18 +1299,18 @@ sub IniciarGraficosCarrera()
     ink 0
     cls
 
-    Dibujar(@vectImgCielo(0), 233)
+    Dibujar(@vectImgCielo(0), 271)
 
-    print at 8, 9; "CORRE! USA O/P";
+    print at 12, 9; "CORRE! USA O/P";
 
     PRINT AT 18,0; INK 4; paper 7; "\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R\Q\R";
-    PRINT AT 19,0; PAPER 4; "                                ";
-    PRINT AT 20,0; PAPER 4; "                                ";
-    PRINT AT 21,0; PAPER 4; "                                ";
-    PRINT AT 22,0; PAPER 4; "                                ";
+    'PRINT AT 19,0; PAPER 4; "                                ";
+    'PRINT AT 20,0; PAPER 4; "                                ";
+    'PRINT AT 21,0; PAPER 4; "                                ";
+    'PRINT AT 22,0; PAPER 4; "                                ";
     'PRINT AT 23,0; PAPER 4; "                                ";
 
-    AtributoUltimaLinea(4,4,0,0)
+    'AtributoUltimaLinea(4,4,0,0)
 
 end sub
 
