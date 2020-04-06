@@ -16,13 +16,36 @@ namespace Vectty
     public partial class SpeccyDrawControl : UserControl
     {
         public event EventHandler HistoryChanged;
-
+        public event EventHandler PolyToolChanged;
         public ZXAttribute ActiveAttribute { get; private set; } = new ZXAttribute();
         public SpeccyDrawControlTool Tool { get; set; }
         public SpeccyDrawControlMode Mode { get; set; }
+        SpeccyDrawControlBGMode bgMode;
+        public SpeccyDrawControlBGMode BackgroundMode { get { return bgMode; } set { bgMode = value; this.Invalidate(); } }
         public bool Grid { get; set; } = true;
         public bool CanUndo { get { return undo.Count > 0; } }
         public bool CanRedo { get { return redo.Count > 0; } }
+        int scale = 2;
+        public new int Scale { get { return scale; } set { scale = value; SpeccyDrawControl_Resize(this, EventArgs.Empty); } }
+        public bool PolyTool { get; private set; }
+        Image bg;
+        Image bgCheckered;
+        public new Image BackgroundImage
+        {
+            get { return bg; }
+            set
+            {
+                if (value.Size.Width != 256 || value.Size.Height != 192)
+                    throw new BadImageFormatException("Image must be 256x192 pixels.");
+
+                if (bg != null)
+                    bg.Dispose();
+
+                bg = value.Clone() as Image;
+                CreateCheckered();
+                Invalidate();
+            }
+        }
 
         Bitmap pixels;
         ZXChar[,] chars = new ZXChar[32, 24];
@@ -42,7 +65,7 @@ namespace Vectty
         List<SCState> undo = new List<SCState>();
         List<SCState> redo = new List<SCState>();
 
-
+        bool toolEnabled = false;
 
         public SpeccyDrawControl()
         {
@@ -222,6 +245,7 @@ namespace Vectty
 
                 var g = Graphics.FromImage(pixels);
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+
                 g.DrawImage(bmp, Point.Empty);
                 g.Dispose();
                 bmp.Dispose();
@@ -289,13 +313,34 @@ namespace Vectty
 
                 SCAction lastAction = null;
 
+                bool onPolygon = false;
+
                 for (int buc = 0; buc < actions.Count; buc++)
                 {
                     SCAction currentAction = actions[buc];
-                    if (buc == 0 || lastAction.Tool != currentAction.Tool)
+
+                    if (buc == 0 || lastAction.Tool != currentAction.Tool || (onPolygon && lastAction.EndPoint != currentAction.StartPoint))
                     {
-                        byte action = (byte)(200 + ((byte)currentAction.Tool));
-                        cpActions.Add(action);
+                        byte action;
+
+                        if (buc < actions.Count + 1 &&
+                            currentAction.Tool == SpeccyDrawControlTool.Line &&
+                            actions[buc + 1].Tool == SpeccyDrawControlTool.Line &&
+                            currentAction.EndPoint == actions[buc + 1].StartPoint)
+                        {
+                            onPolygon = true;
+                            action = 250;
+                            cpActions.Add(action);
+                            cpActions.Add((byte)(191 - currentAction.StartPoint.Y));
+                            cpActions.Add((byte)currentAction.StartPoint.X);
+                        }
+                        else
+                        {
+                            onPolygon = false;
+                            action = (byte)(200 + ((byte)currentAction.Tool));
+                            cpActions.Add(action);
+                        }
+
                     }
 
                     lastAction = currentAction;
@@ -307,8 +352,12 @@ namespace Vectty
                     {
                         case SpeccyDrawControlTool.Line:
 
-                            cpActions.Add((byte)(191 - currentAction.StartPoint.Y));
-                            cpActions.Add((byte)currentAction.StartPoint.X);
+                            if (!onPolygon)
+                            {
+                                cpActions.Add((byte)(191 - currentAction.StartPoint.Y));
+                                cpActions.Add((byte)currentAction.StartPoint.X);
+                            }
+
                             cpActions.Add((byte)(191 - currentAction.EndPoint.Y));
                             cpActions.Add((byte)currentAction.EndPoint.X);
 
@@ -424,6 +473,31 @@ namespace Vectty
             catch { return false; }
         }
 
+        private void CreateCheckered()
+        {
+
+            if (bgCheckered != null)
+                bgCheckered.Dispose();
+
+            Bitmap bmpCheckered = new Bitmap(bg.Width, bg.Height, bg.PixelFormat);
+            Bitmap bmpbg = bg as Bitmap;
+
+            Graphics g = Graphics.FromImage(bmpCheckered);
+            g.Clear(Color.Transparent);
+            g.Dispose();
+
+            for (int x = 0; x < 256; x++)
+            {
+                for (int y = 0; y < 192; y ++)
+                {
+                    if((x + y) % 2 == 0)
+                        bmpCheckered.SetPixel(x, y, bmpbg.GetPixel(x, y));
+                }
+            }
+
+            bgCheckered = bmpCheckered;
+        }
+
         private void CreateUndo(bool ForHistory = true)
         {
             SCState history = new SCState(pixels, chars, actions);
@@ -454,23 +528,36 @@ namespace Vectty
         }
         private void SpeccyDrawControl_Resize(object sender, EventArgs e)
         {
-            if(this.Width != 512 || this.Height != 384)
-                this.Size = new Size(512, 384);
+            if(this.Width != 256 * scale || this.Height != 192 * scale)
+                this.Size = new Size(256 * scale, 192 * scale);
         }
-        
+
         protected override void OnPaint(PaintEventArgs e)
         {
+
+            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
             for (int x = 0; x < 32; x++)
             {
                 for (int y = 0; y < 24; y++)
                 {
                     Brush b = new SolidBrush(chars[x, y].Attribute.RGBPaper);
-                    e.Graphics.FillRectangle(b, chars[x, y].DoubleArea);
+                    e.Graphics.FillRectangle(b, chars[x, y].DoubleArea(scale));
                     b.Dispose();
-                    if(Grid)
-                        e.Graphics.DrawRectangle(Pens.Black, chars[x, y].GridArea);
+
+                    if (bgMode == SpeccyDrawControlBGMode.Over && bg != null)
+                        e.Graphics.DrawImage(bg, chars[x, y].DoubleArea(scale), chars[x, y].Area, GraphicsUnit.Pixel);
+                    else if(bgMode == SpeccyDrawControlBGMode.Interlaced && bgCheckered != null)
+                        e.Graphics.DrawImage(bgCheckered, chars[x, y].DoubleArea(scale), chars[x, y].Area, GraphicsUnit.Pixel);
+
+                    if (Grid)
+                        e.Graphics.DrawRectangle(Pens.Black, chars[x, y].GridArea(scale));
                 }
+
             }
+
         }
 
         private bool DrawCircle(int centerX, int centerY, int radius, Bitmap bmp, bool UpdateAttributes = true)
@@ -766,10 +853,15 @@ namespace Vectty
         
         private void drawBox_MouseDown(object sender, MouseEventArgs e)
         {
+
+            //Console.WriteLine("DOWN");
+
             if (arcPhase == 0)
                 CreateUndo();
 
-            startPoint = new Point((int)Math.Floor(e.X / 2.0), (int)Math.Floor(e.Y / 2.0));
+            toolEnabled = true;
+
+            startPoint = new Point(e.X / scale, e.Y / scale);
 
             switch (Tool)
             {
@@ -833,13 +925,31 @@ namespace Vectty
 
                     break;
 
+                case SpeccyDrawControlTool.Line:
+
+                    if (actions.Count > 0 && actions.Last().EndPoint == startPoint)
+                    {
+                        PolyTool = true;
+
+                        if (PolyToolChanged != null)
+                            PolyToolChanged(this, EventArgs.Empty);
+                    }
+
+                    break;
+
             }
         }
         private void drawBox_MouseUp(object sender, MouseEventArgs e)
         {
+            //Console.WriteLine("UP");
+            if (!toolEnabled)
+                return;
+
+            toolEnabled = false;
+
             tempBox.Visible = false;
 
-            var endPoint = new Point((int)Math.Floor(e.X / 2.0), (int)Math.Floor(e.Y / 2.0));
+            var endPoint = new Point(e.X / scale, e.Y / scale);
             SCAction action;
 
             switch (Tool)
@@ -851,6 +961,14 @@ namespace Vectty
                         action = new SCAction { EndPoint = endPoint, StartPoint = startPoint, Tool = SpeccyDrawControlTool.Line };
                         actions.Add(action);
                         Invalidate();
+                    }
+
+                    if (PolyTool)
+                    {
+                        PolyTool = false;
+
+                        if (PolyToolChanged != null)
+                            PolyToolChanged(this, EventArgs.Empty);
                     }
 
                     break;
@@ -921,10 +1039,16 @@ namespace Vectty
         }
         private void drawBox_MouseMove(object sender, MouseEventArgs e)
         {
+
+            //Console.WriteLine("MOVE");
+
+            if (!toolEnabled)
+                return;
+
             if (e.Button != MouseButtons.Left)
                 return;
 
-            Point midPoint = new Point((int)Math.Floor(e.X / 2.0), (int)Math.Floor(e.Y / 2.0));
+            Point midPoint = new Point(e.X / scale, e.Y / scale);
 
             switch (Tool)
             {
@@ -1039,14 +1163,15 @@ namespace Vectty
             if (Chr == null)
                 return;
 
+            bool updatePixels = false;
+
             if (Mode == SpeccyDrawControlMode.Ink || Mode == SpeccyDrawControlMode.InkPaper)
             {
                 if (Chr.Attribute.Ink != ActiveAttribute.Ink || Chr.Attribute.Bright != ActiveAttribute.Bright)
                 {
                     Chr.Attribute.Ink = ActiveAttribute.Ink;
                     Chr.Attribute.Bright = ActiveAttribute.Bright;
-                    UpdatePixels(Chr);
-                    Invalidate();
+                    updatePixels = true;                    
                 }
             }
 
@@ -1054,11 +1179,19 @@ namespace Vectty
             {
                 if (Chr.Attribute.Paper != ActiveAttribute.Paper || Chr.Attribute.Bright != ActiveAttribute.Bright)
                 {
+
+                    if (Chr.Attribute.Bright != ActiveAttribute.Bright)
+                        updatePixels = true;
+
                     Chr.Attribute.Paper = ActiveAttribute.Paper;
                     Chr.Attribute.Bright = ActiveAttribute.Bright;
-                    Invalidate();
                 }
             }
+
+            if(updatePixels)
+                UpdatePixels(Chr);
+
+            Invalidate();
         }
         private bool DeletePixels(ZXChar chrD)
         {
@@ -1221,6 +1354,11 @@ namespace Vectty
             }
 
         }
+
+        private void tempBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            tempBox.Visible = false;
+        }
     }
 
     public enum SpeccyDrawControlTool
@@ -1240,6 +1378,13 @@ namespace Vectty
         Ink,
         Paper,
         InkPaper
+    }
+
+    public enum SpeccyDrawControlBGMode
+    {
+        Disabled,
+        Interlaced,
+        Over
     }
 
     public enum SpeccyDrawExportMode

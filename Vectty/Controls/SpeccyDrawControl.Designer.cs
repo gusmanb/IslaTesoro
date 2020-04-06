@@ -45,6 +45,7 @@
             this.tempBox.TabIndex = 1;
             this.tempBox.TabStop = false;
             this.tempBox.Visible = false;
+            this.tempBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tempBox_MouseDown);
             // 
             // drawBox
             // 

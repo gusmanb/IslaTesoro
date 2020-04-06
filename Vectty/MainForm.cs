@@ -12,9 +12,65 @@ namespace Vectty
 {
     public partial class MainForm : Form
     {
+        SpeccyDrawControl drawArea;
+        Form containerForm;
         public MainForm()
         {
             InitializeComponent();
+            cbScale.SelectedIndex = 1;
+            cbScale.SelectedIndexChanged += CbScale_SelectedIndexChanged;
+
+            cbBGMode.SelectedIndex = 0;
+            cbBGMode.SelectedIndexChanged += cbBGMode_SelectedIndexChanged;
+
+            drawArea = new SpeccyDrawControl();
+            drawArea.Scale = 2;
+            drawArea.Tool = SpeccyDrawControlTool.Line;
+            drawArea.Mode = SpeccyDrawControlMode.Bitmap;
+            drawArea.ActiveAttribute.Bright = false;
+            drawArea.ActiveAttribute.Ink = ZXClasses.ZXColor.Black;
+            drawArea.ActiveAttribute.Paper = ZXClasses.ZXColor.White;
+            drawArea.HistoryChanged += drawArea_HistoryChanged;
+            drawArea.PolyToolChanged += DrawArea_PolyToolChanged;
+
+            containerForm = new Form();
+            containerForm.FormBorderStyle = FormBorderStyle.FixedSingle;
+            containerForm.TopLevel = false;
+            containerForm.ClientSize = drawArea.Size;
+            containerForm.MaximizeBox = false;
+            containerForm.MinimizeBox = false;
+            containerForm.FormClosing += containerForm_FormClosing;
+
+            containerForm.Controls.Add(drawArea);
+            containerForm.Move += ContainerForm_Move;
+            drawArea.Location = Point.Empty;
+            drawArea.Visible = false;
+
+            windowPanel.Controls.Add(containerForm);
+            containerForm.Visible = true;
+            drawArea.Visible = true;
+
+        }
+
+        private void DrawArea_PolyToolChanged(object sender, EventArgs e)
+        {
+            pnlExtra.Visible = drawArea.PolyTool;
+        }
+
+        private void ContainerForm_Move(object sender, EventArgs e)
+        {
+            windowPanel.AutoScroll = true;
+        }
+
+        private void containerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
+        private void CbScale_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            drawArea.Scale = int.Parse(cbScale.SelectedItem.ToString());
+            containerForm.ClientSize = drawArea.Size;
         }
 
         private void btnBlackPaper_Click(object sender, EventArgs e)
@@ -264,5 +320,26 @@ namespace Vectty
             }
         }
 
+        private void btnBG_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dlg = new OpenFileDialog())
+            {
+                try
+                {
+                    dlg.Filter = "Bitmaps (*.bmp)|*.bmp|PNG image (*.png)|*.png|JPEG image (*.jpg)|*.jpg";
+
+                    if (dlg.ShowDialog() != DialogResult.OK)
+                        return;
+
+                    drawArea.BackgroundImage = Image.FromFile(dlg.FileName);
+                }
+                catch { MessageBox.Show("Error loading background image", "Error"); }
+            }
+        }
+
+        private void cbBGMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            drawArea.BackgroundMode = (SpeccyDrawControlBGMode)cbBGMode.SelectedIndex;
+        }
     }
 }

@@ -1,0 +1,1 @@
+﻿Dim buffer(6911) as uByte at 32768 'double buffer

@@ -183,6 +183,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <None Include="Icons\Poly.png" />
+    <None Include="Icons\Over.png" />
+    <None Include="Icons\Interlaced.png" />
+    <None Include="Icons\Empty.png" />
+    <None Include="Icons\Background.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

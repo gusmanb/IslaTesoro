@@ -1,0 +1,17 @@
+﻿
+sub testParameters(Param1 as uInteger, Param2 as uInteger)
+
+asm
+
+    ld hl, (_Param1)
+    ld (_Param1), hl
+    inc hl
+    ld hl,(_Param2)
+    inc hl
+    ld (_Param1), hl
+
+end asm
+
+end sub
+
+testParameters(1,2)

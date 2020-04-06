@@ -30,15 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+            this.windowPanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.pnlMode = new System.Windows.Forms.Panel();
-            this.pnlTool = new System.Windows.Forms.Panel();
-            this.pnlBright = new System.Windows.Forms.Panel();
             this.pnlInk = new System.Windows.Forms.Panel();
             this.pnlPaper = new System.Windows.Forms.Panel();
             this.strpColors = new System.Windows.Forms.ToolStrip();
@@ -62,8 +60,22 @@
             this.btnYellowInk = new System.Windows.Forms.ToolStripButton();
             this.btnWhiteInk = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnBright = new System.Windows.Forms.ToolStripButton();
             this.strpTools = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.strpFile = new System.Windows.Forms.ToolStrip();
+            this.strpActions = new System.Windows.Forms.ToolStrip();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.cbScale = new System.Windows.Forms.ToolStripComboBox();
+            this.cbBGMode = new System.Windows.Forms.ToolStripComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.pnlExtra = new System.Windows.Forms.Panel();
+            this.pnlMode = new System.Windows.Forms.Panel();
+            this.pnlTool = new System.Windows.Forms.Panel();
+            this.pnlBright = new System.Windows.Forms.Panel();
+            this.btnBright = new System.Windows.Forms.ToolStripButton();
             this.btnLine = new System.Windows.Forms.ToolStripButton();
             this.btnRect = new System.Windows.Forms.ToolStripButton();
             this.btnCircle = new System.Windows.Forms.ToolStripButton();
@@ -71,25 +83,20 @@
             this.btnFill = new System.Windows.Forms.ToolStripButton();
             this.btnErase = new System.Windows.Forms.ToolStripButton();
             this.btnBrush = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.btnBitmap = new System.Windows.Forms.ToolStripButton();
             this.btnInk = new System.Windows.Forms.ToolStripButton();
             this.btnPaper = new System.Windows.Forms.ToolStripButton();
             this.btnInkPaper = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnSetPaper = new System.Windows.Forms.ToolStripButton();
             this.btnSetInk = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnGrid = new System.Windows.Forms.ToolStripButton();
-            this.strpFile = new System.Windows.Forms.ToolStrip();
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.btnExport = new System.Windows.Forms.ToolStripButton();
-            this.strpActions = new System.Windows.Forms.ToolStrip();
             this.btnUndo = new System.Windows.Forms.ToolStripButton();
             this.btnRedo = new System.Windows.Forms.ToolStripButton();
-            this.drawArea = new Vectty.SpeccyDrawControl();
+            this.btnBG = new System.Windows.Forms.ToolStripButton();
+            this.btnGrid = new System.Windows.Forms.ToolStripButton();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.LeftToolStripPanel.SuspendLayout();
             this.toolStripContainer1.RightToolStripPanel.SuspendLayout();
@@ -100,6 +107,7 @@
             this.strpTools.SuspendLayout();
             this.strpFile.SuspendLayout();
             this.strpActions.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -109,9 +117,9 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.windowPanel);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.panel1);
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.drawArea);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(570, 470);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(624, 504);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             // 
             // toolStripContainer1.LeftToolStripPanel
@@ -125,18 +133,31 @@
             // 
             this.toolStripContainer1.RightToolStripPanel.BackColor = System.Drawing.SystemColors.Control;
             this.toolStripContainer1.RightToolStripPanel.Controls.Add(this.strpTools);
-            this.toolStripContainer1.Size = new System.Drawing.Size(632, 495);
+            this.toolStripContainer1.Size = new System.Drawing.Size(686, 529);
             this.toolStripContainer1.TabIndex = 0;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.strpFile);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.strpActions);
+            // 
+            // windowPanel
+            // 
+            this.windowPanel.AutoScroll = true;
+            this.windowPanel.AutoSize = true;
+            this.windowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.windowPanel.Location = new System.Drawing.Point(0, 0);
+            this.windowPanel.Name = "windowPanel";
+            this.windowPanel.Size = new System.Drawing.Size(624, 478);
+            this.windowPanel.TabIndex = 2;
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.pnlExtra);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label1);
@@ -148,15 +169,15 @@
             this.panel1.Controls.Add(this.pnlInk);
             this.panel1.Controls.Add(this.pnlPaper);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 444);
+            this.panel1.Location = new System.Drawing.Point(0, 478);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(570, 26);
+            this.panel1.Size = new System.Drawing.Size(624, 26);
             this.panel1.TabIndex = 1;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(216, 6);
+            this.label5.Location = new System.Drawing.Point(211, 6);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(34, 13);
             this.label5.TabIndex = 9;
@@ -165,7 +186,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(165, 6);
+            this.label4.Location = new System.Drawing.Point(161, 6);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(28, 13);
             this.label4.TabIndex = 8;
@@ -183,7 +204,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(108, 6);
+            this.label3.Location = new System.Drawing.Point(105, 6);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 7;
@@ -198,36 +219,11 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Paper";
             // 
-            // pnlMode
-            // 
-            this.pnlMode.BackgroundImage = global::Vectty.Properties.Resources.Bitmap;
-            this.pnlMode.Location = new System.Drawing.Point(256, 5);
-            this.pnlMode.Name = "pnlMode";
-            this.pnlMode.Size = new System.Drawing.Size(16, 16);
-            this.pnlMode.TabIndex = 4;
-            // 
-            // pnlTool
-            // 
-            this.pnlTool.BackgroundImage = global::Vectty.Properties.Resources.Line;
-            this.pnlTool.Location = new System.Drawing.Point(194, 5);
-            this.pnlTool.Name = "pnlTool";
-            this.pnlTool.Size = new System.Drawing.Size(16, 16);
-            this.pnlTool.TabIndex = 3;
-            // 
-            // pnlBright
-            // 
-            this.pnlBright.BackgroundImage = global::Vectty.Properties.Resources.BrightOff;
-            this.pnlBright.Enabled = false;
-            this.pnlBright.Location = new System.Drawing.Point(143, 5);
-            this.pnlBright.Name = "pnlBright";
-            this.pnlBright.Size = new System.Drawing.Size(16, 16);
-            this.pnlBright.TabIndex = 2;
-            // 
             // pnlInk
             // 
             this.pnlInk.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.pnlInk.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlInk.Location = new System.Drawing.Point(86, 5);
+            this.pnlInk.Location = new System.Drawing.Point(83, 5);
             this.pnlInk.Name = "pnlInk";
             this.pnlInk.Size = new System.Drawing.Size(16, 16);
             this.pnlInk.TabIndex = 1;
@@ -484,22 +480,6 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(36, 6);
             // 
-            // btnBright
-            // 
-            this.btnBright.AutoSize = false;
-            this.btnBright.BackColor = System.Drawing.Color.Transparent;
-            this.btnBright.BackgroundImage = global::Vectty.Properties.Resources.Bright;
-            this.btnBright.CheckOnClick = true;
-            this.btnBright.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnBright.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.btnBright.ImageTransparentColor = System.Drawing.Color.Maroon;
-            this.btnBright.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
-            this.btnBright.Name = "btnBright";
-            this.btnBright.Padding = new System.Windows.Forms.Padding(8, 4, 8, 4);
-            this.btnBright.Size = new System.Drawing.Size(16, 16);
-            this.btnBright.Text = "Brightness on/off";
-            this.btnBright.Click += new System.EventHandler(this.btnBright_Click);
-            // 
             // strpTools
             // 
             this.strpTools.Dock = System.Windows.Forms.DockStyle.None;
@@ -519,12 +499,152 @@
             this.toolStripSeparator3,
             this.btnSetPaper,
             this.btnSetInk,
-            this.toolStripSeparator4,
-            this.btnGrid});
+            this.toolStripSeparator4});
             this.strpTools.Location = new System.Drawing.Point(0, 3);
             this.strpTools.Name = "strpTools";
-            this.strpTools.Size = new System.Drawing.Size(24, 351);
+            this.strpTools.Size = new System.Drawing.Size(24, 328);
             this.strpTools.TabIndex = 0;
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(22, 6);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(22, 6);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(22, 6);
+            // 
+            // strpFile
+            // 
+            this.strpFile.Dock = System.Windows.Forms.DockStyle.None;
+            this.strpFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNew,
+            this.btnOpen,
+            this.btnSave,
+            this.btnExport});
+            this.strpFile.Location = new System.Drawing.Point(3, 0);
+            this.strpFile.Name = "strpFile";
+            this.strpFile.Size = new System.Drawing.Size(104, 25);
+            this.strpFile.TabIndex = 1;
+            // 
+            // strpActions
+            // 
+            this.strpActions.Dock = System.Windows.Forms.DockStyle.None;
+            this.strpActions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnUndo,
+            this.btnRedo});
+            this.strpActions.Location = new System.Drawing.Point(107, 0);
+            this.strpActions.Name = "strpActions";
+            this.strpActions.Size = new System.Drawing.Size(58, 25);
+            this.strpActions.TabIndex = 2;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel3,
+            this.cbScale,
+            this.btnBG,
+            this.btnGrid,
+            this.cbBGMode});
+            this.toolStrip1.Location = new System.Drawing.Point(167, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(252, 25);
+            this.toolStrip1.TabIndex = 3;
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(34, 22);
+            this.toolStripLabel3.Text = "Scale";
+            // 
+            // cbScale
+            // 
+            this.cbScale.AutoSize = false;
+            this.cbScale.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbScale.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "4",
+            "8"});
+            this.cbScale.Name = "cbScale";
+            this.cbScale.Size = new System.Drawing.Size(32, 23);
+            // 
+            // cbBGMode
+            // 
+            this.cbBGMode.AutoSize = false;
+            this.cbBGMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBGMode.Items.AddRange(new object[] {
+            "Disabled",
+            "Interlaced",
+            "Over"});
+            this.cbBGMode.Name = "cbBGMode";
+            this.cbBGMode.Size = new System.Drawing.Size(124, 23);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(267, 6);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 13);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "Extra";
+            // 
+            // pnlExtra
+            // 
+            this.pnlExtra.BackgroundImage = global::Vectty.Properties.Resources.Poly;
+            this.pnlExtra.Location = new System.Drawing.Point(298, 5);
+            this.pnlExtra.Name = "pnlExtra";
+            this.pnlExtra.Size = new System.Drawing.Size(16, 16);
+            this.pnlExtra.TabIndex = 5;
+            this.pnlExtra.Visible = false;
+            // 
+            // pnlMode
+            // 
+            this.pnlMode.BackgroundImage = global::Vectty.Properties.Resources.Bitmap;
+            this.pnlMode.Location = new System.Drawing.Point(245, 5);
+            this.pnlMode.Name = "pnlMode";
+            this.pnlMode.Size = new System.Drawing.Size(16, 16);
+            this.pnlMode.TabIndex = 4;
+            // 
+            // pnlTool
+            // 
+            this.pnlTool.BackgroundImage = global::Vectty.Properties.Resources.Line;
+            this.pnlTool.Location = new System.Drawing.Point(189, 5);
+            this.pnlTool.Name = "pnlTool";
+            this.pnlTool.Size = new System.Drawing.Size(16, 16);
+            this.pnlTool.TabIndex = 3;
+            // 
+            // pnlBright
+            // 
+            this.pnlBright.BackgroundImage = global::Vectty.Properties.Resources.BrightOff;
+            this.pnlBright.Enabled = false;
+            this.pnlBright.Location = new System.Drawing.Point(139, 5);
+            this.pnlBright.Name = "pnlBright";
+            this.pnlBright.Size = new System.Drawing.Size(16, 16);
+            this.pnlBright.TabIndex = 2;
+            // 
+            // btnBright
+            // 
+            this.btnBright.AutoSize = false;
+            this.btnBright.BackColor = System.Drawing.Color.Transparent;
+            this.btnBright.BackgroundImage = global::Vectty.Properties.Resources.Bright;
+            this.btnBright.CheckOnClick = true;
+            this.btnBright.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnBright.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnBright.ImageTransparentColor = System.Drawing.Color.Maroon;
+            this.btnBright.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
+            this.btnBright.Name = "btnBright";
+            this.btnBright.Padding = new System.Windows.Forms.Padding(8, 4, 8, 4);
+            this.btnBright.Size = new System.Drawing.Size(16, 16);
+            this.btnBright.Text = "Brightness on/off";
+            this.btnBright.Click += new System.EventHandler(this.btnBright_Click);
             // 
             // btnLine
             // 
@@ -596,11 +716,6 @@
             this.btnBrush.Text = "Attribute brush";
             this.btnBrush.Click += new System.EventHandler(this.btnBrush_Click);
             // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(22, 6);
-            // 
             // btnBitmap
             // 
             this.btnBitmap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -641,11 +756,6 @@
             this.btnInkPaper.Text = "Ink + Paper mode";
             this.btnInkPaper.Click += new System.EventHandler(this.btnInkPaper_Click);
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(22, 6);
-            // 
             // btnSetPaper
             // 
             this.btnSetPaper.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -665,34 +775,6 @@
             this.btnSetInk.Size = new System.Drawing.Size(22, 20);
             this.btnSetInk.Text = "Fill Ink";
             this.btnSetInk.Click += new System.EventHandler(this.btnSetInk_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(22, 6);
-            // 
-            // btnGrid
-            // 
-            this.btnGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnGrid.Image = global::Vectty.Properties.Resources.Grid;
-            this.btnGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnGrid.Name = "btnGrid";
-            this.btnGrid.Size = new System.Drawing.Size(22, 20);
-            this.btnGrid.Text = "Toggle grid";
-            this.btnGrid.Click += new System.EventHandler(this.btnGrid_Click);
-            // 
-            // strpFile
-            // 
-            this.strpFile.Dock = System.Windows.Forms.DockStyle.None;
-            this.strpFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnNew,
-            this.btnOpen,
-            this.btnSave,
-            this.btnExport});
-            this.strpFile.Location = new System.Drawing.Point(3, 0);
-            this.strpFile.Name = "strpFile";
-            this.strpFile.Size = new System.Drawing.Size(104, 25);
-            this.strpFile.TabIndex = 1;
             // 
             // btnNew
             // 
@@ -734,17 +816,6 @@
             this.btnExport.Text = "Export";
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
-            // strpActions
-            // 
-            this.strpActions.Dock = System.Windows.Forms.DockStyle.None;
-            this.strpActions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnUndo,
-            this.btnRedo});
-            this.strpActions.Location = new System.Drawing.Point(107, 0);
-            this.strpActions.Name = "strpActions";
-            this.strpActions.Size = new System.Drawing.Size(58, 25);
-            this.strpActions.TabIndex = 2;
-            // 
             // btnUndo
             // 
             this.btnUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -767,30 +838,38 @@
             this.btnRedo.Text = "toolStripButton8";
             this.btnRedo.Click += new System.EventHandler(this.btnRedo_Click);
             // 
-            // drawArea
+            // btnBG
             // 
-            this.drawArea.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.drawArea.Grid = true;
-            this.drawArea.Location = new System.Drawing.Point(29, 30);
-            this.drawArea.Margin = new System.Windows.Forms.Padding(0);
-            this.drawArea.Mode = Vectty.SpeccyDrawControlMode.Bitmap;
-            this.drawArea.Name = "drawArea";
-            this.drawArea.Size = new System.Drawing.Size(512, 384);
-            this.drawArea.TabIndex = 0;
-            this.drawArea.Tool = Vectty.SpeccyDrawControlTool.Line;
-            this.drawArea.HistoryChanged += new System.EventHandler(this.drawArea_HistoryChanged);
+            this.btnBG.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnBG.Image = global::Vectty.Properties.Resources.Background;
+            this.btnBG.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnBG.Name = "btnBG";
+            this.btnBG.Size = new System.Drawing.Size(23, 22);
+            this.btnBG.Text = "toolStripButton1";
+            this.btnBG.Click += new System.EventHandler(this.btnBG_Click);
+            // 
+            // btnGrid
+            // 
+            this.btnGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnGrid.Image = global::Vectty.Properties.Resources.Grid;
+            this.btnGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnGrid.Name = "btnGrid";
+            this.btnGrid.Size = new System.Drawing.Size(23, 22);
+            this.btnGrid.Text = "Toggle grid";
+            this.btnGrid.Click += new System.EventHandler(this.btnGrid_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(632, 495);
+            this.ClientSize = new System.Drawing.Size(686, 529);
             this.Controls.Add(this.toolStripContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Vectty";
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
+            this.toolStripContainer1.ContentPanel.PerformLayout();
             this.toolStripContainer1.LeftToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.LeftToolStripPanel.PerformLayout();
             this.toolStripContainer1.RightToolStripPanel.ResumeLayout(false);
@@ -809,6 +888,8 @@
             this.strpFile.PerformLayout();
             this.strpActions.ResumeLayout(false);
             this.strpActions.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -816,7 +897,6 @@
         #endregion
 
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
-        private SpeccyDrawControl drawArea;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel pnlBright;
         private System.Windows.Forms.Panel pnlInk;
@@ -869,13 +949,21 @@
         private System.Windows.Forms.ToolStripButton btnSetInk;
         private System.Windows.Forms.ToolStripButton btnSetPaper;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripButton btnGrid;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolStripButton btnArc;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton btnGrid;
+        private System.Windows.Forms.ToolStripComboBox cbScale;
+        private System.Windows.Forms.ToolStripButton btnBG;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private System.Windows.Forms.ToolStripComboBox cbBGMode;
+        private System.Windows.Forms.Panel windowPanel;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Panel pnlExtra;
     }
 }
 

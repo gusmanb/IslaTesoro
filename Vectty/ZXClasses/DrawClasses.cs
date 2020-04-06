@@ -137,8 +137,8 @@ namespace Vectty.ZXClasses
     public class ZXChar
     {
         public Rectangle Area { get; private set; }
-        public Rectangle GridArea { get; private set; }
-        public Rectangle DoubleArea { get; private set; }
+        public Rectangle GridArea(int Scale) { return new Rectangle(Area.X  * Scale + 1, Area.Y * Scale + 1, Area.Width * Scale - 1, Area.Height * Scale - 1); }
+        public Rectangle DoubleArea(int Scale) { return new Rectangle(Area.X * Scale, Area.Y * Scale, Area.Width * Scale, Area.Height * Scale); }
 
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -149,8 +149,6 @@ namespace Vectty.ZXClasses
             this.X = X;
             this.Y = Y;
             Area = new Rectangle(X * 8, Y * 8, 8, 8);
-            GridArea =   new Rectangle(Area.X * 2, Area.Y * 2, Area.Width * 2 - 1, Area.Height * 2 - 1);
-            DoubleArea = new Rectangle(Area.X * 2, Area.Y * 2, Area.Width * 2, Area.Height * 2);
             Attribute = new ZXAttribute();
         }
 

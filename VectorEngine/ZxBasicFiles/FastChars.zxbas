@@ -1,0 +1,9 @@
+﻿sub DrawStore(SourceAddress as uInteger, TargetAddress as uInteger, x as uByte, y as uByte)
+
+    asm
+
+        
+
+    end asm
+
+end sub
